@@ -31,7 +31,7 @@ To avoid write conflicts and keep handoffs cheap (file-based, not context-based)
 ## Artifacts
 
 - `docs/specs/<feature>.md` — the spec. Idea and requirements, readable by engineers AND product managers. No code, no file paths.
-- `docs/plans/<feature>.md` — the implementation plan. Ordered steps with complete literal code, plus file-ownership groups for parallel implementation.
+- `docs/plans/<feature>.md` — the implementation plan. Ordered steps, each with complete literal code or a manual action.
 
 ## Workflow
 
@@ -70,7 +70,7 @@ Propose **2-3 genuinely different** approaches (not variations of one). For each
 
 ### Phase 4 — Write the spec
 
-Write `docs/specs/<feature>.md` using the structure in [references/spec-template.md](references/spec-template.md). Describe the idea and requirements — what and why, never how. No code, no file paths, no module names. A product manager and an engineer must both understand it.
+Write `docs/specs/<feature>.md` using the structure in [references/spec-template.md](references/spec-template.md) — fill in its `<...>` placeholders. Describe the idea and requirements — what and why, never how. No code, no file paths, no module names. A product manager and an engineer must both understand it.
 
 ### Phase 5 — Spec review loop
 
@@ -86,7 +86,7 @@ Dispatch `craft-architect` with the approved spec. It returns a clean high-level
 
 ### Phase 8 — Write the plan
 
-Write `docs/plans/<feature>.md` yourself, following [references/plan-template.md](references/plan-template.md). Seed it with the architect's design summary, then fill in ordered steps — each with the target file path and **complete literal code**, complete enough that a coder reproduces it verbatim with zero invention — plus file-ownership groups for parallelism. Make it a well-formatted document (file links, code blocks, tables, headers) as the template describes.
+Write `docs/plans/<feature>.md` yourself, following [references/plan-template.md](references/plan-template.md) — fill in its `<...>` placeholders. Seed it with the architect's design summary, then fill in ordered steps — each with the target file path and **complete literal code**, complete enough that a coder reproduces it verbatim with zero invention. A step may instead be a **manual action** the user runs (DDL, migration, seed/backfill script, package install, env var); place it in order and mark it manual so it isn't handed to a coder. Make it a well-formatted document (file links, code blocks, tables, headers) as the template describes.
 
 ### Phase 9 — Code review loop
 
@@ -98,7 +98,7 @@ Present the plan doc. Incorporate the user's edits directly. Do not proceed unti
 
 ### Phase 11 — Implement in parallel
 
-Read the file-ownership groups from the plan. Dispatch one `craft-coder` per group whose dependencies are satisfied, **in parallel** where groups are disjoint and independent; sequence dependent groups in waves. Each coder implements its steps EXACTLY as written. After all groups land, run the project's build/typecheck/tests and report results. Fix only what's needed to make verification pass, then summarize what was built.
+Walk the steps in order and dispatch `craft-coder` for the file steps. You decide the parallelism: run coders **in parallel** for steps that touch disjoint files with no ordering dependency, and sequence dependent steps in waves. Assign each coder a specific set of steps. Each coder implements its steps EXACTLY as written. When you reach a **manual step**, pause and have the user run it (don't run DDL, migrations, or destructive scripts on their behalf), then continue. After all steps land, run the project's build/typecheck/tests and report results. Fix only what's needed to make verification pass, then summarize what was built.
 
 ## Guardrails
 

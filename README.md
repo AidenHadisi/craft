@@ -44,7 +44,7 @@ flowchart TD
 ### Artifacts it produces (in the target repo)
 
 - `docs/specs/<feature>.md` — the spec: idea and requirements, readable by engineers and product managers alike. No code.
-- `docs/plans/<feature>.md` — the implementation plan: ordered steps with complete literal code and file-ownership groups for parallel implementation.
+- `docs/plans/<feature>.md` — the implementation plan: ordered steps, each with complete literal code or a manual action. The orchestrator decides at dispatch time which steps can be coded in parallel.
 
 ## Install
 

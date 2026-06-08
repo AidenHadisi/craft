@@ -78,7 +78,9 @@ Interview the user to close every gap the exploration left open. Ask **one quest
 
 ### Phase 3 — Present design options
 
-Propose **2-3 genuinely different** approaches (not variations of one). For each: a one-line summary, how it works, and its key trade-off. Recommend one. Let the user pick or compose a hybrid. The chosen approach constrains the spec.
+The bar is the **best** solution, not the first one that works. Before drafting options, push past the obvious answer: consider how a strong engineer who knows this codebase's conventions would solve it, what established patterns and best practices apply, and what the simplest design that fully satisfies the spec looks like. Every option you present must clear that bar — discard any that only "works."
+
+Propose **2-3 genuinely different** approaches (not variations of one). For each: a one-line summary, how it works, and its key trade-off. Recommend one, and say why it's the strongest. Let the user pick or compose a hybrid. The chosen approach constrains the spec.
 
 ### Phase 4 — Write the spec
 

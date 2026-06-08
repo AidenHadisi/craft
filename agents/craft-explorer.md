@@ -45,6 +45,9 @@ The real flow, step by step. Entry points, data flow, key branches, side effects
 - Libraries already used for common needs (HTTP, validation, dates, logging).
 - Target runtime version.
 
+### Existing-code smells
+If the feature will modify code in this slice, note smells the architect should weigh: god object, feature envy, shotgun surgery, primitive obsession, long parameter list, duplicated logic, leaky abstraction. Facts only — name the symbol and the smell, don't propose the fix or design a refactor. Omit if the slice is greenfield.
+
 ### Gotchas
 Surprises, coupling, footguns, or anything that would trip up an implementer.
 ```

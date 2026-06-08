@@ -70,7 +70,7 @@ Propose **2-3 genuinely different** approaches (not variations of one). For each
 
 ### Phase 4 — Write the spec
 
-Write `docs/specs/<feature>.md` using the structure in [references/spec-template.md](references/spec-template.md) — fill in its `<...>` placeholders. Describe the idea and requirements — what and why, never how. No code, no file paths, no module names. A product manager and an engineer must both understand it.
+Write `docs/specs/<feature>.md`, mirroring the structure and depth of the worked example in [references/example-spec.md](references/example-spec.md). Describe the idea and requirements — what and why, never how. No code, no file paths, no module names. A product manager and an engineer must both understand it.
 
 ### Phase 5 — Spec review loop
 
@@ -82,11 +82,11 @@ Present the spec. Expect back-and-forth: incorporate the user's edits and re-pre
 
 ### Phase 7 — Architect the design
 
-Dispatch `craft-architect` with the approved spec. It returns a clean high-level design: module map, boundaries, data flow, key interfaces, libraries to use, test seams, and an ordered list of build steps — but no literal code.
+Dispatch `craft-architect` with the approved spec. It returns a clean high-level design: overview, module map, boundaries & data flow, data model, key interfaces, libraries, cross-cutting concerns, a complexity budget (what it deliberately does *not* build), change scenarios, ADR-style design decisions, refactoring notes (only when existing code is touched), test seams, and an ordered list of build steps — but no literal code. This is the main architecture lever; treat its reasoning, not just its file list, as the deliverable.
 
 ### Phase 8 — Write the plan
 
-Write `docs/plans/<feature>.md` yourself, following [references/plan-template.md](references/plan-template.md) — fill in its `<...>` placeholders. Seed it with the architect's design summary, then fill in ordered steps — each with the target file path and **complete literal code**, complete enough that a coder reproduces it verbatim with zero invention. A step may instead be a **manual action** the user runs (DDL, migration, seed/backfill script, package install, env var); place it in order and mark it manual so it isn't handed to a coder. Make it a well-formatted document (file links, code blocks, tables, headers) as the template describes.
+Write `docs/plans/<feature>.md` yourself, mirroring the structure and depth of the worked example in [references/example-plan.md](references/example-plan.md). Carry the architect's full design into the plan's `## Architecture & design` section — refine it, don't compress it; its subsections (module map, data flow diagram, complexity budget, change scenarios, design decisions, etc.) match the architect's output 1:1, so this is mostly copy-then-tighten. The design section owns the *why and the shape*; the steps own the *what*, so don't restate step-level code up there. Then fill in ordered steps — each with the target file path and **complete literal code**, complete enough that a coder reproduces it verbatim with zero invention. A step may instead be a **manual action** the user runs (DDL, migration, seed/backfill script, package install, env var); place it in order and mark it manual so it isn't handed to a coder (see Step 1 of the example). Make it a well-formatted document (file links, code blocks, tables, headers) like the example.
 
 ### Phase 9 — Code review loop
 
@@ -103,5 +103,6 @@ Walk the steps in order and dispatch `craft-coder` for the file steps. You decid
 ## Guardrails
 
 - Never let the agent skip the spec or plan review loops — they are the quality levers.
+- Complexity must earn its place. Prefer the simplest design that satisfies the spec; treat over-engineering (speculative abstraction, layers and patterns with no present payoff) as a defect just like under-engineering.
 - Keep your own messages to the user concise; the artifacts carry the detail.
 - If the user invokes `/craft` mid-task with context already gathered, you may compress Phases 0-2, but never skip the spec, the design choice, or the review gates.

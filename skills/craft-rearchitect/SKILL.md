@@ -5,9 +5,9 @@ description: Disciplined audit of an existing feature's code — explore what's 
 
 # Craft Rearchitect
 
-`craft-rearchitect` inspects code that **already exists** and produces a comprehensive report on how to improve its design and architecture — judged against the same principles, with the same discipline of separating analysis from opinion.
+`craft-rearchitect` inspects code that **already exists** and produces a comprehensive report on how to improve its design and architecture — judged against the same principles `craft` builds with, and held to the same discipline: evidence before opinion, and genuine defects kept separate from valid trade-offs.
 
-You are the **orchestrator**. You drive the phases, dispatch explorers in parallel, evaluate the findings yourself, and deliver one report directly in the chat. This skill is **analysis-only**: you produce no `docs/` artifacts and you write no code. Nothing in the repo changes.
+You are the **orchestrator**. You drive the phases, dispatch explorers in parallel, evaluate the findings yourself, and deliver one report directly in the chat. This skill is **analysis-only** — no `docs/` artifacts, no code changes, nothing in the repo is modified.
 
 ## Subagents you dispatch
 

@@ -15,7 +15,7 @@ You are the **orchestrator**: you drive the phases below, dispatch the subagents
 |---|---|---|
 | `craft-explorer` | Gather context: logic + conventions/patterns | nothing (readonly) |
 | `craft-spec-reviewer` | Gate the spec for clarity & completeness | nothing (readonly) |
-| `craft-architect` | Decompose the feature into Tasks; freeze the contracts | plan: architecture + Task skeleton |
+| `craft-architect` | Decompose into Tasks; fix boundaries and name the seams | plan: architecture + Task skeleton |
 | `craft-designer` | Design one Task to files/functions + write its code | plan: one Task's body |
 | `craft-code-reviewer` | Review the plan's code before it ships | nothing (readonly) |
 | `craft-coder` | Implement assigned Tasks exactly | repo source |
@@ -24,10 +24,10 @@ When you dispatch one, pass **only the inputs it can't already see** — its rol
 
 ## The two artifacts
 
-Derive a short kebab-case `<feature>` slug (e.g. `oauth-login`) and use it for both files.
+Derive a short kebab-case `<feature>` slug (e.g. `oauth-login`) and use it for both files. **You create both files**; each writer then fills in its own sections, so a subagent only ever edits a file that already exists.
 
-- **`docs/specs/<feature>.md`** — the spec: the idea and requirements, readable by engineers and product managers alike. No code, no file paths. *You* write this.
-- **`docs/plans/<feature>.md`** — the plan: the architecture and decomposition, then ordered Tasks whose subtasks carry complete literal code or a manual action. The *subagents* write this — `craft-architect` the architecture + Task skeleton, `craft-designer` each Task's body — straight into the file, so their full reasoning survives instead of collapsing to a summary on the way back. You never hand-edit the plan; send every change to the owning agent. Repo source is written only by `craft-coder`, during implementation.
+- **`docs/specs/<feature>.md`** — the spec: the idea and requirements, readable by engineers and product managers alike. No code, no file paths. *You* author it start to finish.
+- **`docs/plans/<feature>.md`** — the plan: architecture, decomposition, then ordered Tasks whose subtasks carry complete literal code or a manual action. You create it with just a title and a spec link; the subagents fill it in (`craft-architect` writes the architecture + Task skeleton, `craft-designer` writes each Task's body) straight into the file so their full reasoning survives intact. Never hand-edit the plan yourself — route every change to the owning agent. Repo source is written only by `craft-coder` during implementation.
 
 ## Workflow
 
@@ -41,10 +41,10 @@ Track progress with this checklist:
 - [ ] Phase 4: Write the spec
 - [ ] Phase 5: Spec review loop (craft-spec-reviewer)
 - [ ] Phase 6: User approves spec
-- [ ] Phase 7: Decompose the feature (craft-architect writes the plan's architecture + Task skeleton)
+- [ ] Phase 7: Decompose the feature (craft-architect writes the plan's architecture: boundaries + seams + Task skeleton)
 - [ ] Phase 8: User approves the architecture (refine via craft-architect)
-- [ ] Phase 9: Per-Task loop — design+write (craft-designer) → review (craft-code-reviewer) → user approves the Task
-- [ ] Phase 10: Final integration review loop (craft-code-reviewer)
+- [ ] Phase 9: Per-Task loop — design+write (craft-designer) → user approves the Task
+- [ ] Phase 10: Code review (craft-code-reviewer) — the full plan, once
 - [ ] Phase 11: User approves plan
 - [ ] Phase 12: Implement by Task in parallel (craft-coder), then verify
 ```
@@ -62,7 +62,7 @@ Slice: <the one focused area to investigate>
 Starting points: <files/dirs/symbols if you know them, else "locate them yourself">
 ```
 
-Each returns logic AND the repo's conventions/patterns. Synthesize their reports into a short context briefing for yourself; do not dump raw reports on the user. Keep that briefing — Phase 7 hands it to the architect and Phase 9 to each designer, neither of which saw this phase.
+Each returns logic AND the repo's conventions/patterns. Synthesize their reports into a short **context briefing** for yourself (don't dump raw reports on the user). Keep the briefing — you'll hand it to the architect in Phase 7 and to each designer in Phase 9, neither of which saw this phase.
 
 ### Phase 2 — Interview the user
 
@@ -94,20 +94,34 @@ Present the spec. Expect back-and-forth: incorporate the user's edits and re-pre
 
 ### Phase 7 — Decompose the feature
 
-Dispatch `craft-architect` to carve the feature into Tasks. It **writes the plan doc itself** — so you get its full reasoning on disk, not a lossy summary. Dispatch with:
+First create the plan file `docs/plans/<feature>.md` with just its title and a link to the spec — nothing else:
+
+```markdown
+# Implementation Plan: <feature>
+
+> Spec: [docs/specs/<feature>.md](docs/specs/<feature>.md)
+```
+
+Then dispatch `craft-architect` to carve the feature into Tasks. It fills the plan directly, so you get its full reasoning on disk. Dispatch with:
 
 ```
-Plan file to create: docs/plans/<feature>.md
+Plan file: docs/plans/<feature>.md
 Scope: the whole <feature>
 Spec: docs/specs/<feature>.md
 Context briefing: <conventions, target runtime version, existing-code smells, and constraints from Phase 1 — the architect didn't see exploration and can't re-derive these>
 ```
 
-It writes `## Architecture & design` (components, data-flow diagram, the **contracts at the seams**, data model, cross-cutting concerns, complexity budget, design decisions), a `## Tasks` skeleton (one header per Task with its dependencies and exposed contract), and a `## Verification` placeholder — then returns a short confirmation. **Read the plan doc** to learn the Tasks and contracts; that's your source of truth, not the confirmation message.
+It writes three sections, then returns a short confirmation:
+
+- `## Architecture & design` — components, data-flow diagram, the **seams** between Tasks (each named conceptually: what crosses it, in which direction, with what guarantees), the data model as entities + invariants, cross-cutting concerns, complexity budget, and design decisions.
+- `## Tasks` — a skeleton, one header per Task with its dependencies and exposed capability.
+- `## Verification` — a placeholder.
+
+It writes **no signatures, types, files, or schema** — those are fixed per Task in Phase 9. **Read the plan doc** to learn the Tasks and seams; that's your source of truth, not the confirmation message.
 
 ### Phase 8 — User approves the architecture
 
-Present the decomposition to the user: the Task breakdown, the data flow, and the frozen contracts at the seams (summarize from the doc; don't dump the whole section). The user may push back, reshape boundaries, merge or split Tasks, or change a contract. On any substantive change, **re-dispatch `craft-architect`** with the feedback to revise its sections in place:
+Present the decomposition to the user: the Task breakdown, the data flow, and the seams between Tasks (summarize from the doc; don't dump the whole section). The user may push back, reshape boundaries, merge or split Tasks, or redraw a seam. On any substantive change, **re-dispatch `craft-architect`** with the feedback to revise its sections in place:
 
 ```
 Plan file: docs/plans/<feature>.md
@@ -116,46 +130,40 @@ Spec: docs/specs/<feature>.md
 Context briefing: <same briefing>
 ```
 
-Loop until the user approves. The contracts are **frozen only after this gate** — every Task design in Phase 9 honors them, so getting the architecture right here is what makes the rest safe.
+Loop until the user approves. The **boundaries are frozen only after this gate** — every Task design in Phase 9 honors them. The concrete contracts aren't fixed here; they crystallize per Task in Phase 9, each frozen once its Task is approved. Getting the boundaries right here is what makes that incremental design safe.
 
-### Phase 9 — Per-Task design, write, review, and approve
+### Phase 9 — Per-Task design and approve
 
 Walk the Tasks **in dependency order**. For each Task K:
 
-1. **Design + write (9a).** Dispatch `craft-designer` to design Task K and write its body (design note + ordered subtasks with **complete literal code**, or a **manual action**) into the plan under the existing `### Task K` header:
+1. **Design + write.** Dispatch `craft-designer` to design Task K and write its body (design note + ordered subtasks with **complete literal code**, or a **manual action**) into the plan under the existing `### Task K` header:
    ```
    Plan file: docs/plans/<feature>.md
    Scope: Task K — <component>
-   Contracts to honor: read the ## Architecture & design section of the plan — honor the seams Task K consumes and exposes, don't redefine them
+   Boundary to honor: read the ## Architecture & design seam for Task K — design behind it, don't reshape it
+   Upstream contracts: read the already-designed bodies of the Tasks K depends on and build on their public contracts exactly
    Spec: docs/specs/<feature>.md
    Context briefing: <the same briefing from Phase 7>
    ```
-   It returns a short confirmation; the code is in the doc.
-2. **Review (9b).** Dispatch `craft-code-reviewer` scoped to this Task with:
-   ```
-   Plan: docs/plans/<feature>.md
-   Spec: docs/specs/<feature>.md
-   Review scope: Task K only
-   ```
-   For any Critical/High finding, re-dispatch `craft-designer` with the findings to revise Task K in place; re-review until none remain (surface Medium/Low as notes).
-3. **User approves the Task (9c).** Present Task K's design (the design note, the contract it satisfies, and the shape of the code — not a full dump). The user may refine; route changes back through `craft-designer`, then re-review if the change is substantive. Loop until the user approves, then move to the next Task. If a change would break a **frozen contract** (touching the architecture or an earlier Task), stop and return to Phase 8.
+   It returns a short confirmation; the code is in the doc. Once the user approves, the public contract it defined is **frozen** for the Tasks that depend on it.
+2. **User approves the Task.** Present Task K's design (the design note, the contract it exposes, and the shape of the code — not a full dump). The user may refine; route changes back through `craft-designer`. Loop until the user approves, then move to the next Task. If a refinement would **reshape a boundary**, stop and return to Phase 8 (that's the architect's). If it would **break an already-approved upstream Task's contract**, re-design that upstream Task (and re-approve it) before resuming here.
 
-Designing in dependency order means every contract a Task consumes is already frozen and approved before you design it, so you never need a neighbor's internals — only its contract.
+Designing in dependency order means every contract a Task consumes is already designed and approved before you design it, so you never need a neighbor's internals — only its now-frozen public contract.
 
-### Phase 10 — Final integration review
+### Phase 10 — Code review
 
-Dispatch `craft-code-reviewer` over the whole plan — same block as 9b but with **no** `Review scope` line, so it sees every Task:
+Once all Tasks are designed and approved, dispatch `craft-code-reviewer` over the **full plan** in one pass:
 
 ```
 Plan: docs/plans/<feature>.md
 Spec: docs/specs/<feature>.md
 ```
 
-Focus is cross-task integration: do the subtasks honor the frozen contracts, do the seams actually line up, is anything unwired. This is lighter than the per-Task passes because each Task was already reviewed. Route each Critical/High back to the **owning agent** — `craft-designer` for a Task-body fix, `craft-architect` for an architecture/contract fix — and re-review until none remain.
+It reviews correctness, modernization/cleanliness, and over-engineering across every Task plus cross-task integration (do the seams line up, is anything unwired, do the contracts match). Route each Critical/High finding back to the **owning agent** — `craft-designer` for a Task-body fix, `craft-architect` for an architecture/contract fix — then re-review until none remain.
 
 ### Phase 11 — User approves plan
 
-Present the finished plan doc for a final holistic sign-off (each Task was already approved in Phase 9, so this is lighter — confirm the whole hangs together post-integration). Any last edits route to the owning agent — `craft-architect` for the architecture, `craft-designer` for a Task — never your own hand-edit. Do not proceed until the user explicitly approves.
+Present the finished plan for a final holistic sign-off. Each Task was already approved individually, so this is lighter — just confirm the whole hangs together after the review pass. Route any last edits to the owning agent (`craft-architect` for architecture, `craft-designer` for a Task). Do not proceed until the user explicitly approves.
 
 ### Phase 12 — Implement by Task in parallel
 

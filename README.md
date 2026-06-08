@@ -4,7 +4,7 @@ A Cursor plugin for building features the right way.
 
 AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by separating thinking from typing: it gathers context, aligns with you, weighs multiple approaches and picks the strongest, writes a non-technical spec, decomposes the system into components, designs each one down to the code up front, reviews it — and only then implements, in parallel, exactly as planned.
 
-The bar throughout is the **best** solution — sound design and established best practices, not the first thing that works. The quality levers that hold that bar are the design-options step, a two-altitude design pass (a system **architect** that freezes the contracts, then a **designer** per component), and review plus user-approval gates at the spec, the architecture, and every component, so problems get caught on paper where they're cheap to fix.
+The bar throughout is the **best** solution — sound design and established best practices, not the first thing that works. Quality levers: a design-options step, a two-altitude design pass (system **architect** fixes boundaries → per-component **designer** fills in contracts and code), and user-approval gates at the spec, the architecture, and every component — so problems get caught on paper where they're cheap to fix.
 
 ## What's inside
 
@@ -16,7 +16,7 @@ Two orchestrator skills. `craft` looks forward — it writes the spec, then disp
 | `craft-rearchitect` | skill (`/craft-rearchitect`) | Audits existing code; reports findings + a refactoring roadmap (no docs, no code changes) |
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions, in parallel |
 | `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness |
-| `craft-architect` | subagent | Decomposes the feature into Tasks and freezes the contracts; writes the plan's architecture |
+| `craft-architect` | subagent | Decomposes the feature into Tasks, fixes the boundaries, and names the seams; writes the plan's architecture |
 | `craft-designer` | subagent | Designs one Task to files/functions and writes its literal code into the plan |
 | `craft-code-reviewer` | subagent (readonly) | Reviews the planned code before it ships |
 | `craft-coder` | subagent | Implements the plan verbatim, in parallel |
@@ -37,16 +37,14 @@ flowchart TD
     userspec --> decompose["craft-architect writes architecture + Task skeleton (docs/plans)"]
     decompose --> archgate["User approves architecture"]
     archgate -->|reshape| decompose
-    archgate -->|approved, contracts frozen| taskloop{"Per Task, in dependency order"}
+    archgate -->|approved, boundaries frozen| taskloop{"Per Task, in dependency order"}
     taskloop --> design["craft-designer writes Task body + exact code"]
-    design --> taskrev["craft-code-reviewer (this Task)"]
-    taskrev -->|Critical/High| design
-    taskrev -->|clean| taskgate["User approves this Task"]
+    design --> taskgate["User approves this Task"]
     taskgate -->|refine| design
     taskgate -->|approved| taskloop
-    taskloop -->|all Tasks done| integrev["craft-code-reviewer (integration)"]
-    integrev -->|Critical/High| design
-    integrev -->|clean| userplan["User approves plan"]
+    taskloop -->|all Tasks done| coderev["craft-code-reviewer (full plan)"]
+    coderev -->|Critical/High| design
+    coderev -->|clean| userplan["User approves plan"]
     userplan --> build["craft-coder per Task (parallel)"]
     build --> verify["Build + tests, report"]
 ```
@@ -54,7 +52,7 @@ flowchart TD
 ### Artifacts it produces (in the target repo)
 
 - `docs/specs/<feature>.md` — the spec: idea and requirements, readable by engineers and product managers alike. No code.
-- `docs/plans/<feature>.md` — the implementation plan: a decomposition (architecture, boundaries, frozen contracts) written by `craft-architect`, plus ordered Tasks whose bodies — subtasks carrying complete literal code or a manual action — are written by `craft-designer`. The orchestrator decides at dispatch time which Tasks can be coded in parallel.
+- `docs/plans/<feature>.md` — the implementation plan. The orchestrator creates it (title + spec link); `craft-architect` fills in the decomposition (architecture, conceptual boundaries, and the seams between Tasks); `craft-designer` fills in each Task's body — subtasks carrying the concrete contract plus complete literal code or a manual action. The orchestrator decides at dispatch time which Tasks can be coded in parallel.
 
 ## Install
 
@@ -103,7 +101,7 @@ It explores the target with parallel `craft-explorer` subagents, evaluates the c
 ## Design notes
 
 - **File-based handoffs.** The architect and designer write their design straight into the plan doc rather than returning it as a message, so their full reasoning survives intact instead of collapsing to a summary. The orchestrator then reads the doc back.
-- **Single-writer rule.** Each artifact has one writer-type: the orchestrator writes the spec, `craft-architect` then `craft-designer` write the plan (sequentially, never at once), and only `craft-coder` writes real source. Refinements always route back to the owning agent.
+- **Single-writer rule.** The orchestrator creates both files and authors the spec; `craft-architect` then `craft-designer` fill in the plan (sequentially, never at once); only `craft-coder` writes real source. A subagent only ever edits a file that already exists, and refinements always route back to the owning agent.
 - **Readonly where it counts.** Explorers and all reviewers are readonly; the architect and designer can write only the plan doc, never repo source.
 - **Concise on purpose.** Each subagent doc is kept tight — verbose instructions degrade model performance.
 

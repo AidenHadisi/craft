@@ -5,14 +5,14 @@
 ## Architecture & design
 
 ### Overview
-A thin vertical slice across three components — persistence, HTTP, frontend — added with no new infrastructure. Each component is one Task. Persistence is isolated behind a `Store` so HTTP depends on a local interface, not on pgx; the saved query is stored as a `jsonb` blob so it survives URL-format changes. The shape matches the repo's existing store + handler convention, so nothing new has to be learned to read it.
+A thin vertical slice across three components — persistence, HTTP, frontend — added with no new infrastructure. Each component is one Task. Persistence is isolated behind a storage boundary so HTTP depends on a local abstraction, not on the database driver; the saved query is stored opaquely so it survives URL-format changes. The shape matches the repo's existing store + handler convention, so nothing new has to be learned to read it.
 
 ### Tasks (units)
-| Task | Component | Responsibility | Owns (paths) | Depends on | Exposes (contract) |
+| Task | Component | Responsibility | Owns (area) | Depends on | Exposes (capability) |
 |---|---|---|---|---|---|
-| 1 | Storage | All SQL for saved searches | `internal/savedsearch/` | — | `savedSearchStore` (List/Upsert/Delete) + `SavedSearch` row |
-| 2 | HTTP API | Auth scoping, validation, DTO mapping, routing | `internal/httpapi/saved_searches.go`, `router.go` | Task 1 | `GET/POST/DELETE /api/saved-searches` (camelCase JSON) |
-| 3 | Frontend | Fetch wrappers + list UI (run, delete) | `web/src/api/savedSearches.ts`, `web/src/components/SavedSearchList.tsx` | Task 2 | — (leaf) |
+| 1 | Storage | All SQL for saved searches | `internal/savedsearch/` | — | list / upsert / delete a user's saved searches |
+| 2 | HTTP API | Auth scoping, validation, DTO mapping, routing | `internal/httpapi/` | Task 1 | REST endpoints to list / save / delete a user's searches |
+| 3 | Frontend | Fetch wrappers + list UI (run, delete) | `web/src/` (saved-search api + list component) | Task 2 | — (leaf) |
 
 ### Boundaries & data flow
 Dependency direction is one-way: `httpapi → savedsearch → db`, and on the client `component → api module → fetch`. The `savedsearch` package never imports HTTP types; the handler talks to a local interface that `*savedsearch.Store` satisfies. The component never calls `fetch` directly — only the API module does.
@@ -25,17 +25,19 @@ flowchart LR
   S --> DB[(saved_searches)]
 ```
 
-### Contracts (frozen)
-**Storage seam** — the `savedSearchStore` interface the HTTP layer depends on and Task 1 satisfies:
+### Seams
+**Storage seam** (Task 1 → Task 2, one-way: HTTP depends on storage, never the reverse). The HTTP layer relies on a storage capability that:
 
-- `List(ctx, userID) ([]SavedSearch, error)` — that user's searches, newest first.
-- `Upsert(ctx, userID, name, query) (SavedSearch, error)` — creates, or replaces the query for an existing `(userID, name)`. Postcondition: exactly one row for that pair.
-- `Delete(ctx, userID, id) error` — removes the row only if it belongs to `userID`; deleting another user's row is a no-op, not an error.
+- lists a user's searches, **newest first**;
+- saves a search, **upserting by `(user, name)`** so a duplicate name replaces rather than duplicates — exactly one record per pair;
+- deletes a search **scoped to its owner**, so a user can never touch another's row (deleting a non-owned row is a no-op, not an error).
 
-**REST seam** — what the frontend depends on and Task 2 serves: `GET /api/saved-searches` (list, newest first), `POST` (save/upsert, 400 on empty name), `DELETE /api/saved-searches/{id}` (204).
+The concrete method signatures and row type are fixed in Task 1's design and read from there by Task 2.
+
+**REST seam** (Task 2 → Task 3). The frontend relies on endpoints to list (newest first), save (rejecting an empty name), and delete a user's searches, over HTTP with camelCase JSON. The concrete routes, status codes, and payloads are fixed in Task 2's design.
 
 ### Data model
-`saved_searches(id, user_id, name, query jsonb, created_at, updated_at)`. Invariant: at most one row per `(user_id, name)`, enforced by a unique index and relied on by `Upsert`'s `ON CONFLICT`. `user_id` scopes every row to its owner; the query payload is opaque `jsonb` owned by the frontend's search model.
+A **saved-search** entity, **owned by the Storage component**, scoped to a user. Invariant: **at most one saved search per `(user, name)`** — relied on by the save/upsert capability. The saved query is opaque payload owned by the frontend's search model; storage treats it as a blob. Columns, types, and DDL are fixed in Task 1's design.
 
 ### Libraries
 - `pgx/v5` for Postgres — already the repo's driver; no new dependency. Standard-library `net/http` and `encoding/json` cover routing and serialization, so no framework is added.
@@ -57,12 +59,11 @@ The simplest design that satisfies the spec. Rejected as premature: a service/us
 None — greenfield (all files are new), so there is no existing code to refactor first.
 
 ### Test seams
-- Handler tested against a fake `savedSearchStore`: validation (empty name → 400), status codes, and that every call is scoped by the context `userID`.
-- Store tested against a test database: upsert-on-name replaces rather than duplicates, and `List` returns newest-first.
+Each component is verified through its public surface — the handler against a fake storage, the store against a test database, the UI against the fetch layer. The concrete cases live in each Task's design.
 
 ## Tasks
 
-### Task 1 — Storage   (depends on: none · exposes: `savedSearchStore` contract)
+### Task 1 — Storage   (depends on: none · exposes: list / upsert / delete a user's saved searches)
 
 Owns all SQL behind a small store. `Upsert` implements save/rename-by-name in one statement; `List` returns newest first; `Delete` is scoped by `userID` so a user can never delete another user's row.
 
@@ -158,7 +159,7 @@ func (s *Store) Delete(ctx context.Context, userID, id int64) error {
 }
 ```
 
-### Task 2 — HTTP API   (depends on: Task 1 · exposes: `/api/saved-searches`)
+### Task 2 — HTTP API   (depends on: Task 1 · exposes: REST list / save / delete endpoints)
 
 Validates input, scopes every call to the authenticated user, maps store rows to camelCase JSON. Depends on the store via the frozen `savedSearchStore` interface so it's unit-testable. Empty/whitespace names are rejected with 400 before any DB call.
 

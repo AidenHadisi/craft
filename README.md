@@ -51,13 +51,19 @@ flowchart TD
 
 ### Local (development)
 
-Symlink or copy this repo into Cursor's local plugin directory, then reload the window:
+The plugin must live as a **real directory** inside Cursor's local plugin folder. Recent Cursor builds reject a symlink whose target points outside `~/.cursor/plugins/local/` (`loadUserLocalPlugin ... rejected: symlink target ... is outside`), so clone or move the repo directly into place:
 
 ```bash
-ln -s "$PWD" ~/.cursor/plugins/local/craft
+git clone git@github.com:AidenHadisi/craft.git ~/.cursor/plugins/local/craft
 ```
 
-In Cursor: open the Command Palette → "Reload Window". Confirm `/craft` and the `/craft-*` subagents appear.
+If you keep your working copy elsewhere, put the real repo under `~/.cursor/plugins/local/craft` and symlink *back* to your preferred location (a symlink that points into the plugins dir is fine; one that points out of it is not):
+
+```bash
+ln -s ~/.cursor/plugins/local/craft ~/your/workspace/craft
+```
+
+Then open the Command Palette → "Reload Window". Confirm `/craft` and `/craft-rearchitect` appear in Settings → Rules and that the `craft-*` subagents are available.
 
 ### Marketplace / git
 

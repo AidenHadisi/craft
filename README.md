@@ -8,11 +8,12 @@ The quality levers are the dedicated **architect** and two **review gates** (one
 
 ## What's inside
 
-One orchestrator skill that drives the workflow by writing the spec and plan itself and dispatching five specialized subagents.
+Two orchestrator skills. `craft` looks forward — it designs and builds a new feature by writing the spec and plan itself and dispatching five specialized subagents. `craft-rearchitect` looks backward — it audits code that already exists and reports how to improve its architecture, reusing the explorer for parallel discovery.
 
 | Component | Type | Role |
 |---|---|---|
-| `craft` | skill (`/craft`) | Orchestrates the pipeline; writes the spec and the plan |
+| `craft` | skill (`/craft`) | Orchestrates the build pipeline; writes the spec and the plan |
+| `craft-rearchitect` | skill (`/craft-rearchitect`) | Audits existing code; reports findings + a refactoring roadmap (no docs, no code changes) |
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions, in parallel |
 | `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness |
 | `craft-architect` | subagent (readonly) | Designs a clean, modular, idiomatic solution |
@@ -73,6 +74,16 @@ In any project, start a feature with:
 Then follow the phases — answer the interview, pick a design, approve the spec, approve the plan. The agent handles the rest, including dispatching the coders in parallel.
 
 You can also invoke any subagent directly when you want just that step, e.g. `/craft-architect` on an existing spec.
+
+### Auditing existing code
+
+When the code already exists and you want to know how to improve its design, use the backward-looking skill instead:
+
+```
+/craft-rearchitect the order checkout flow
+```
+
+It explores the target with parallel `craft-explorer` subagents, evaluates the current design against the same principles `craft` builds with (deep modules, cohesion/coupling, the complexity budget in both directions, modern/idiomatic usage), and delivers a comprehensive report right in the chat: a verdict, an architecture map, severity-ranked findings, a target design, and an ordered refactoring roadmap. It is analysis-only — it writes no `docs/` artifacts and changes no code. When you want to act on a roadmap item, hand it to `/craft`.
 
 ## Design notes
 

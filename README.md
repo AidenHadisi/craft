@@ -2,9 +2,9 @@
 
 A Cursor plugin for building features the right way.
 
-AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by separating thinking from typing: it gathers context, aligns with you, chooses a design, writes a non-technical spec, architects a clean solution, writes the full implementation code up front, reviews it — and only then implements, in parallel, exactly as planned.
+AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by separating thinking from typing: it gathers context, aligns with you, weighs multiple approaches and picks the strongest, writes a non-technical spec, architects a clean solution, writes the full implementation code up front, reviews it — and only then implements, in parallel, exactly as planned.
 
-The quality levers are the dedicated **architect** and two **review gates** (one for the spec, one for the code), so problems get caught on paper where they're cheap to fix.
+The bar throughout is the **best** solution — sound design and established best practices, not the first thing that works. The quality levers that hold that bar are the design-options step, the dedicated **architect**, and two **review gates** (one for the spec, one for the code), so problems get caught on paper where they're cheap to fix.
 
 ## What's inside
 
@@ -27,7 +27,7 @@ flowchart TD
     start["/craft"] --> understand["Restate task"]
     understand --> explore["Explore (parallel craft-explorer)"]
     explore --> interview["Interview the user"]
-    interview --> designs["Present 2-3 designs, user picks"]
+    interview --> designs["Present 2-3 best-in-class designs, user picks"]
     designs --> spec["Write spec (docs/specs)"]
     spec --> specrev["craft-spec-reviewer"]
     specrev -->|needs changes| spec

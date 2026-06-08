@@ -5,7 +5,7 @@ description: Disciplined audit of an existing feature's code — explore what's 
 
 # Craft Rearchitect
 
-The backward-looking companion to `craft`. Where `craft` designs a new feature before any code is written, `craft-rearchitect` inspects code that **already exists** and produces a comprehensive report on how to improve its design and architecture — judged against the same principles, with the same discipline of separating analysis from opinion.
+`craft-rearchitect` inspects code that **already exists** and produces a comprehensive report on how to improve its design and architecture — judged against the same principles, with the same discipline of separating analysis from opinion.
 
 You are the **orchestrator**. You drive the phases, dispatch explorers in parallel, evaluate the findings yourself, and deliver one report directly in the chat. This skill is **analysis-only**: you produce no `docs/` artifacts and you write no code. Nothing in the repo changes.
 

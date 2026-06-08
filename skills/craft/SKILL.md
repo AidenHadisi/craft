@@ -7,7 +7,7 @@ description: Disciplined end-to-end workflow for building a non-trivial feature 
 
 A pipeline that produces clean, modular, idiomatic code instead of typical AI slop. It works by separating thinking from typing: context-gathering, alignment, design, and a fully-specified plan all happen *before* any real code is written, and dedicated reviewer subagents gate each artifact.
 
-You are the **orchestrator**: you drive the phases below, dispatch the subagents, and gate each step. You write the spec; the subagents write the plan and the code. Don't skip phases.
+You are the **orchestrator**: you drive the phases below, dispatch the subagents, and gate each step. You write the spec; the subagents write the plan and the code. Don't skip phases — though if the user invokes `/craft` mid-task with context already in hand, you may compress Phases 0–2 (never the spec, the design choice, or any gate).
 
 ## Subagents you dispatch
 
@@ -167,13 +167,3 @@ Your task: Task <N> (subtasks <N>.1..<N>.k) — implement these and no others.
 ```
 
 You decide the parallelism: run coders **in parallel** for Tasks that touch disjoint files with no dependency, and sequence dependent Tasks in waves. Each coder implements its Task's subtasks EXACTLY as written. When you reach a **manual subtask**, pause and have the user run it (don't run DDL, migrations, or destructive scripts on their behalf), then continue. After all Tasks land, run the project's build/typecheck/tests and report results. Fix only what's needed to make verification pass, then summarize what was built.
-
-## Guardrails
-
-- Never skip a gate: the spec review, the spec approval, the **architecture approval (Phase 8)**, the per-Task code review, the **per-Task approval (Phase 9c)**, and the final plan approval are all quality levers.
-- The architect freezes the cross-Task contracts and the user approves them before any Task is designed; every Task design honors them, never redefines them. That approved, frozen seam is what makes incremental design safe — if a later change would break it, return to Phase 8.
-- Never hand-edit the plan. Route every refinement to its owning agent — `craft-architect` for the architecture, `craft-designer` for a Task.
-- Don't over-decompose — a small feature may be a single Task. Match the structure to the work, not the other way around.
-- Complexity must earn its place. Prefer the simplest design that satisfies the spec; treat over-engineering (speculative abstraction, layers and patterns with no present payoff) as a defect just like under-engineering.
-- Keep your own messages to the user concise; the artifacts carry the detail.
-- If the user invokes `/craft` mid-task with context already gathered, you may compress Phases 0-2, but never skip the spec, the design choice, or the review and approval gates.

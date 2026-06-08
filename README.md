@@ -2,21 +2,22 @@
 
 A Cursor plugin for building features the right way.
 
-AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by separating thinking from typing: it gathers context, aligns with you, weighs multiple approaches and picks the strongest, writes a non-technical spec, architects a clean solution, writes the full implementation code up front, reviews it — and only then implements, in parallel, exactly as planned.
+AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by separating thinking from typing: it gathers context, aligns with you, weighs multiple approaches and picks the strongest, writes a non-technical spec, decomposes the system into components, designs each one down to the code up front, reviews it — and only then implements, in parallel, exactly as planned.
 
-The bar throughout is the **best** solution — sound design and established best practices, not the first thing that works. The quality levers that hold that bar are the design-options step, the dedicated **architect**, and two **review gates** (one for the spec, one for the code), so problems get caught on paper where they're cheap to fix.
+The bar throughout is the **best** solution — sound design and established best practices, not the first thing that works. The quality levers that hold that bar are the design-options step, a two-altitude design pass (a system **architect** that freezes the contracts, then a **designer** per component), and review plus user-approval gates at the spec, the architecture, and every component, so problems get caught on paper where they're cheap to fix.
 
 ## What's inside
 
-Two orchestrator skills. `craft` looks forward — it designs and builds a new feature by writing the spec and plan itself and dispatching five specialized subagents. `craft-rearchitect` looks backward — it audits code that already exists and reports how to improve its architecture, reusing the explorer for parallel discovery.
+Two orchestrator skills. `craft` looks forward — it writes the spec, then dispatches specialized subagents that write the plan and build the feature. `craft-rearchitect` looks backward — it audits code that already exists and reports how to improve its architecture, reusing the explorer for parallel discovery.
 
 | Component | Type | Role |
 |---|---|---|
-| `craft` | skill (`/craft`) | Orchestrates the build pipeline; writes the spec and the plan |
+| `craft` | skill (`/craft`) | Orchestrates the build pipeline; writes the spec and gates every step |
 | `craft-rearchitect` | skill (`/craft-rearchitect`) | Audits existing code; reports findings + a refactoring roadmap (no docs, no code changes) |
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions, in parallel |
 | `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness |
-| `craft-architect` | subagent (readonly) | Decomposes the system, then designs each component |
+| `craft-architect` | subagent | Decomposes the feature into Tasks and freezes the contracts; writes the plan's architecture |
+| `craft-designer` | subagent | Designs one Task to files/functions and writes its literal code into the plan |
 | `craft-code-reviewer` | subagent (readonly) | Reviews the planned code before it ships |
 | `craft-coder` | subagent | Implements the plan verbatim, in parallel |
 
@@ -28,21 +29,23 @@ flowchart TD
     understand --> explore["Explore (parallel craft-explorer)"]
     explore --> interview["Interview the user"]
     interview --> designs["Present 2-3 best-in-class designs, user picks"]
-    designs --> spec["Write spec (docs/specs)"]
+    designs --> spec["Orchestrator writes spec (docs/specs)"]
     spec --> specrev["craft-spec-reviewer"]
     specrev -->|needs changes| spec
     specrev -->|pass| userspec["User approves spec"]
     userspec -->|significant edits| specrev
-    userspec --> decompose["craft-architect: decompose into Tasks + frozen contracts"]
-    decompose --> skeleton["Orchestrator writes plan skeleton (docs/plans)"]
-    skeleton --> taskloop{"Per Task, in dependency order"}
-    taskloop --> design["craft-architect: design this component"]
-    design --> write["Orchestrator writes subtasks: exact code"]
-    write --> taskrev["craft-code-reviewer (this Task)"]
-    taskrev -->|Critical/High| write
-    taskrev -->|clean| taskloop
+    userspec --> decompose["craft-architect writes architecture + Task skeleton (docs/plans)"]
+    decompose --> archgate["User approves architecture"]
+    archgate -->|reshape| decompose
+    archgate -->|approved, contracts frozen| taskloop{"Per Task, in dependency order"}
+    taskloop --> design["craft-designer writes Task body + exact code"]
+    design --> taskrev["craft-code-reviewer (this Task)"]
+    taskrev -->|Critical/High| design
+    taskrev -->|clean| taskgate["User approves this Task"]
+    taskgate -->|refine| design
+    taskgate -->|approved| taskloop
     taskloop -->|all Tasks done| integrev["craft-code-reviewer (integration)"]
-    integrev -->|Critical/High| write
+    integrev -->|Critical/High| design
     integrev -->|clean| userplan["User approves plan"]
     userplan --> build["craft-coder per Task (parallel)"]
     build --> verify["Build + tests, report"]
@@ -51,7 +54,7 @@ flowchart TD
 ### Artifacts it produces (in the target repo)
 
 - `docs/specs/<feature>.md` — the spec: idea and requirements, readable by engineers and product managers alike. No code.
-- `docs/plans/<feature>.md` — the implementation plan: a decomposition (architecture, boundaries, frozen contracts) plus ordered Tasks, each broken into subtasks carrying complete literal code or a manual action. The orchestrator decides at dispatch time which Tasks can be coded in parallel.
+- `docs/plans/<feature>.md` — the implementation plan: a decomposition (architecture, boundaries, frozen contracts) written by `craft-architect`, plus ordered Tasks whose bodies — subtasks carrying complete literal code or a manual action — are written by `craft-designer`. The orchestrator decides at dispatch time which Tasks can be coded in parallel.
 
 ## Install
 
@@ -83,7 +86,7 @@ In any project, start a feature with:
 /craft add OAuth login for the dashboard
 ```
 
-Then follow the phases — answer the interview, pick a design, approve the spec, approve the plan. The agent handles the rest, including dispatching the coders in parallel.
+Then follow the phases — answer the interview, pick a design, approve the spec, approve the architecture, then approve each Task as it's designed. The agent handles the rest, including dispatching the coders in parallel.
 
 You can also invoke any subagent directly when you want just that step, e.g. `/craft-architect` on an existing spec.
 
@@ -99,8 +102,9 @@ It explores the target with parallel `craft-explorer` subagents, evaluates the c
 
 ## Design notes
 
-- **Single-writer rule.** The orchestrator writes both the spec and the plan (including the plan's code); only `craft-coder` writes real source. Handoffs are file-based, which keeps context cheap and avoids write conflicts.
-- **Readonly where it counts.** Explorers and all reviewers are readonly, so they can't drift into making changes.
+- **File-based handoffs.** The architect and designer write their design straight into the plan doc rather than returning it as a message, so their full reasoning survives intact instead of collapsing to a summary. The orchestrator then reads the doc back.
+- **Single-writer rule.** Each artifact has one writer-type: the orchestrator writes the spec, `craft-architect` then `craft-designer` write the plan (sequentially, never at once), and only `craft-coder` writes real source. Refinements always route back to the owning agent.
+- **Readonly where it counts.** Explorers and all reviewers are readonly; the architect and designer can write only the plan doc, never repo source.
 - **Concise on purpose.** Each subagent doc is kept tight — verbose instructions degrade model performance.
 
 ## License

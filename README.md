@@ -16,7 +16,7 @@ Two orchestrator skills. `craft` looks forward — it designs and builds a new f
 | `craft-rearchitect` | skill (`/craft-rearchitect`) | Audits existing code; reports findings + a refactoring roadmap (no docs, no code changes) |
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions, in parallel |
 | `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness |
-| `craft-architect` | subagent (readonly) | Designs a clean, modular, idiomatic solution |
+| `craft-architect` | subagent (readonly) | Decomposes the system, then designs each component |
 | `craft-code-reviewer` | subagent (readonly) | Reviews the planned code before it ships |
 | `craft-coder` | subagent | Implements the plan verbatim, in parallel |
 
@@ -33,19 +33,25 @@ flowchart TD
     specrev -->|needs changes| spec
     specrev -->|pass| userspec["User approves spec"]
     userspec -->|significant edits| specrev
-    userspec --> arch["craft-architect: clean design"]
-    arch --> implwrite["Orchestrator writes plan: exact code (docs/plans)"]
-    implwrite --> coderev["craft-code-reviewer"]
-    coderev -->|Critical/High| implwrite
-    coderev -->|clean| userplan["User approves plan"]
-    userplan --> build["craft-coder x N (parallel)"]
+    userspec --> decompose["craft-architect: decompose into Tasks + frozen contracts"]
+    decompose --> skeleton["Orchestrator writes plan skeleton (docs/plans)"]
+    skeleton --> taskloop{"Per Task, in dependency order"}
+    taskloop --> design["craft-architect: design this component"]
+    design --> write["Orchestrator writes subtasks: exact code"]
+    write --> taskrev["craft-code-reviewer (this Task)"]
+    taskrev -->|Critical/High| write
+    taskrev -->|clean| taskloop
+    taskloop -->|all Tasks done| integrev["craft-code-reviewer (integration)"]
+    integrev -->|Critical/High| write
+    integrev -->|clean| userplan["User approves plan"]
+    userplan --> build["craft-coder per Task (parallel)"]
     build --> verify["Build + tests, report"]
 ```
 
 ### Artifacts it produces (in the target repo)
 
 - `docs/specs/<feature>.md` — the spec: idea and requirements, readable by engineers and product managers alike. No code.
-- `docs/plans/<feature>.md` — the implementation plan: ordered steps, each with complete literal code or a manual action. The orchestrator decides at dispatch time which steps can be coded in parallel.
+- `docs/plans/<feature>.md` — the implementation plan: a decomposition (architecture, boundaries, frozen contracts) plus ordered Tasks, each broken into subtasks carrying complete literal code or a manual action. The orchestrator decides at dispatch time which Tasks can be coded in parallel.
 
 ## Install
 

@@ -5,18 +5,17 @@
 ## Architecture & design
 
 ### Overview
-A thin vertical slice across three layers — persistence, HTTP, frontend — added with no new infrastructure. Persistence is isolated behind a `Store` so the HTTP layer depends on a local interface, not on pgx. The saved query is stored as a `jsonb` blob so it survives URL-format changes. The shape matches the repo's existing store + handler convention, so nothing new has to be learned to read it.
+A thin vertical slice across three components — persistence, HTTP, frontend — added with no new infrastructure. Each component is one Task. Persistence is isolated behind a `Store` so HTTP depends on a local interface, not on pgx; the saved query is stored as a `jsonb` blob so it survives URL-format changes. The shape matches the repo's existing store + handler convention, so nothing new has to be learned to read it.
 
-### Module map
-| Module | Path | Responsibility | Public interface | Hides | Status |
+### Tasks (units)
+| Task | Component | Responsibility | Owns (paths) | Depends on | Exposes (contract) |
 |---|---|---|---|---|---|
-| `savedsearch.Store` | `internal/savedsearch/store.go` | All SQL for saved searches | `List(ctx, userID)`, `Upsert(ctx, userID, name, query)`, `Delete(ctx, userID, id)` | SQL text, pgx, upsert mechanics | new |
-| `SavedSearchHandler` | `internal/httpapi/saved_searches.go` | HTTP: auth scoping, validation, DTO mapping | `List/Save/Delete(w, r)` | wire format, status codes, trimming | new |
-| `savedSearches` API | `web/src/api/savedSearches.ts` | Typed fetch wrappers | `listSavedSearches/saveSearch/deleteSavedSearch` | fetch, credentials, URLs | new |
-| `SavedSearchList` | `web/src/components/SavedSearchList.tsx` | Render list, run on click, delete | `<SavedSearchList onRun={...} />` | load + local list state | new |
+| 1 | Storage | All SQL for saved searches | `internal/savedsearch/` | — | `savedSearchStore` (List/Upsert/Delete) + `SavedSearch` row |
+| 2 | HTTP API | Auth scoping, validation, DTO mapping, routing | `internal/httpapi/saved_searches.go`, `router.go` | Task 1 | `GET/POST/DELETE /api/saved-searches` (camelCase JSON) |
+| 3 | Frontend | Fetch wrappers + list UI (run, delete) | `web/src/api/savedSearches.ts`, `web/src/components/SavedSearchList.tsx` | Task 2 | — (leaf) |
 
 ### Boundaries & data flow
-Dependency direction is one-way: `httpapi → savedsearch → db`. The `savedsearch` package never imports HTTP types; the handler talks to a local `savedSearchStore` interface that `*savedsearch.Store` satisfies. On the frontend the component never calls `fetch` directly — only the API module does.
+Dependency direction is one-way: `httpapi → savedsearch → db`, and on the client `component → api module → fetch`. The `savedsearch` package never imports HTTP types; the handler talks to a local interface that `*savedsearch.Store` satisfies. The component never calls `fetch` directly — only the API module does.
 
 ```mermaid
 flowchart LR
@@ -26,53 +25,50 @@ flowchart LR
   S --> DB[(saved_searches)]
 ```
 
-### Data model
-`saved_searches(id, user_id, name, query jsonb, created_at, updated_at)`.
-Invariant: at most one row per `(user_id, name)`, enforced by a unique index and relied on by `Upsert`'s `ON CONFLICT`. `user_id` scopes every row to its owner; the query payload is opaque `jsonb` owned by the frontend's search model.
+### Contracts (frozen)
+**Storage seam** — the `savedSearchStore` interface the HTTP layer depends on and Task 1 satisfies:
 
-### Key interfaces / contracts
-`savedSearchStore` is defined in `httpapi` and satisfied by `*savedsearch.Store`:
-- `List(ctx, userID) ([]SavedSearch, error)` — returns that user's searches, newest first.
+- `List(ctx, userID) ([]SavedSearch, error)` — that user's searches, newest first.
 - `Upsert(ctx, userID, name, query) (SavedSearch, error)` — creates, or replaces the query for an existing `(userID, name)`. Postcondition: exactly one row for that pair.
-- `Delete(ctx, userID, id) error` — removes the row only if it belongs to `userID`; deleting someone else's row is a no-op, not an error.
+- `Delete(ctx, userID, id) error` — removes the row only if it belongs to `userID`; deleting another user's row is a no-op, not an error.
 
-This interface is the seam tests attach to.
+**REST seam** — what the frontend depends on and Task 2 serves: `GET /api/saved-searches` (list, newest first), `POST` (save/upsert, 400 on empty name), `DELETE /api/saved-searches/{id}` (204).
+
+### Data model
+`saved_searches(id, user_id, name, query jsonb, created_at, updated_at)`. Invariant: at most one row per `(user_id, name)`, enforced by a unique index and relied on by `Upsert`'s `ON CONFLICT`. `user_id` scopes every row to its owner; the query payload is opaque `jsonb` owned by the frontend's search model.
 
 ### Libraries
-- `pgx/v5` for Postgres access — already the repo's DB driver; no new dependency. Standard-library `net/http` and `encoding/json` cover routing and serialization, so no framework is added.
+- `pgx/v5` for Postgres — already the repo's driver; no new dependency. Standard-library `net/http` and `encoding/json` cover routing and serialization, so no framework is added.
 
 ### Cross-cutting concerns
 - **Authz:** `userID` comes from request context; every store call is scoped by it, and `Delete` filters on `user_id` so cross-user deletes affect zero rows.
 - **Validation:** names are trimmed and required at the HTTP boundary — empty/whitespace returns 400 before any DB call.
-- **Errors:** the store returns raw errors; the handler maps them to a status code plus a safe message and never leaks SQL detail to the client.
+- **Errors:** the store returns raw errors; the handler maps them to a status code plus a safe message and never leaks SQL detail.
 
 ### Complexity budget
-This is deliberately the simplest design that satisfies the spec:
-- **No service/use-case layer** between handler and store — the logic is thin (validate, scope, persist), so a third layer would be a shallow pass-through. Rejected.
-- **No Strategy/registry for filter types** — the query is one opaque `jsonb` blob, so the backend needs no knowledge of filter shapes. Rejected normalized per-filter columns (would force a migration on every new filter, buying nothing here).
-- **No generic `Repository[T]` abstraction** — one concrete store with three methods is clearer than a generic nobody else reuses yet.
-
-### Change scenarios
-- **New filter types in search:** absorbed for free — they ride inside the `jsonb` query; no backend change.
-- **"Most recently used" ordering instead of newest-first:** isolated to `Store.List`'s `ORDER BY` plus a touch of `updated_at`; the interface and handler are untouched.
+The simplest design that satisfies the spec. Rejected as premature: a service/use-case layer between handler and store (the logic is thin — validate, scope, persist — so a third layer is a shallow pass-through); a Strategy/registry for filter types (the query is one opaque `jsonb` blob); a generic `Repository[T]` (one concrete store with three methods is clearer). Three Tasks is the natural split — one per architectural boundary, not more.
 
 ### Design decisions
-- **Upsert on `(user_id, name)`** over read-then-write: one statement, race-free, and it satisfies "duplicate name updates existing" in the database rather than the app. Rejected app-level check-then-insert (TOCTOU race).
+- **Upsert on `(user_id, name)`** over read-then-write: one statement, race-free, satisfies "duplicate name updates existing" in the database. Rejected app-level check-then-insert (TOCTOU race).
 - **`jsonb` query blob** over normalized filter columns: query shape can evolve without migrations. Trade-off accepted: individual filters aren't indexable, which the spec's scale (tens per user) doesn't need.
 - **Store interface defined in `httpapi`**, not exported from `savedsearch`: the consumer owns the abstraction it needs, keeping `savedsearch` free of HTTP-driven shapes.
 
 ### Refactoring notes
-None — this feature is greenfield (all files are new), so there is no existing code to refactor first.
+None — greenfield (all files are new), so there is no existing code to refactor first.
 
 ### Test seams
 - Handler tested against a fake `savedSearchStore`: validation (empty name → 400), status codes, and that every call is scoped by the context `userID`.
 - Store tested against a test database: upsert-on-name replaces rather than duplicates, and `List` returns newest-first.
 
-## Steps
+## Tasks
 
-### Step 1 — Create the `saved_searches` table
+### Task 1 — Storage   (depends on: none · exposes: `savedSearchStore` contract)
 
-Run this migration before deploying the backend. It creates the table and the unique index that the upsert relies on.
+Owns all SQL behind a small store. `Upsert` implements save/rename-by-name in one statement; `List` returns newest first; `Delete` is scoped by `userID` so a user can never delete another user's row.
+
+#### Subtask 1.1 — Create the `saved_searches` table · manual
+
+Run this migration before deploying the backend. It creates the table and the unique index the upsert relies on.
 
 ```sql
 CREATE TABLE saved_searches (
@@ -88,10 +84,8 @@ CREATE UNIQUE INDEX saved_searches_user_name_idx
     ON saved_searches (user_id, name);
 ```
 
-### Step 2 — Store layer
+#### Subtask 1.2 — Store layer
 [internal/savedsearch/store.go](internal/savedsearch/store.go) · create
-
-Owns all SQL. `Upsert` implements save/rename-by-name in one statement; `List` returns newest first; `Delete` is scoped by `userID` so a user can never delete another user's row.
 
 ```go
 package savedsearch
@@ -164,10 +158,12 @@ func (s *Store) Delete(ctx context.Context, userID, id int64) error {
 }
 ```
 
-### Step 3 — HTTP handler
-[internal/httpapi/saved_searches.go](internal/httpapi/saved_searches.go) · create
+### Task 2 — HTTP API   (depends on: Task 1 · exposes: `/api/saved-searches`)
 
-Validates input, scopes every call to the authenticated user, and maps store rows to camelCase JSON. Depends on the store via an interface so it's unit-testable. Empty/whitespace names are rejected with 400.
+Validates input, scopes every call to the authenticated user, maps store rows to camelCase JSON. Depends on the store via the frozen `savedSearchStore` interface so it's unit-testable. Empty/whitespace names are rejected with 400 before any DB call.
+
+#### Subtask 2.1 — HTTP handler
+[internal/httpapi/saved_searches.go](internal/httpapi/saved_searches.go) · create
 
 ```go
 package httpapi
@@ -247,10 +243,10 @@ func (h *SavedSearchHandler) Delete(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-### Step 4 — Register routes
+#### Subtask 2.2 — Register routes
 [internal/httpapi/router.go](internal/httpapi/router.go) · edit
 
-Wire the handler into the existing authenticated router group. Add the three routes next to the other authenticated resource routes.
+Wire the handler into the existing authenticated router group, next to the other authenticated resource routes.
 
 ```go
 	savedSearches := NewSavedSearchHandler(savedsearch.NewStore(db))
@@ -259,10 +255,12 @@ Wire the handler into the existing authenticated router group. Add the three rou
 	mux.HandleFunc("DELETE /api/saved-searches/{id}", requireAuth(savedSearches.Delete))
 ```
 
-### Step 5 — Frontend API module
-[web/src/api/savedSearches.ts](web/src/api/savedSearches.ts) · create
+### Task 3 — Frontend   (depends on: Task 2 · exposes: nothing)
 
-Typed wrappers over the endpoints. The component imports these and never calls `fetch` itself.
+Typed fetch wrappers plus the list UI. The API module is the only place that calls `fetch`; the component runs a search on click and deletes on demand, loading via the API module on mount.
+
+#### Subtask 3.1 — Frontend API module
+[web/src/api/savedSearches.ts](web/src/api/savedSearches.ts) · create
 
 ```ts
 export interface SavedSearch {
@@ -303,10 +301,10 @@ export async function deleteSavedSearch(id: number): Promise<void> {
 }
 ```
 
-### Step 6 — Saved-search list component
+#### Subtask 3.2 — Saved-search list component
 [web/src/components/SavedSearchList.tsx](web/src/components/SavedSearchList.tsx) · create
 
-Renders the user's saved searches, runs one on click, and supports delete. Loads via the API module on mount.
+Renders the user's saved searches, runs one on click, supports delete. Loads via the API module on mount.
 
 ```tsx
 import { useEffect, useState } from "react";

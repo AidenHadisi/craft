@@ -15,7 +15,7 @@ Read the plan doc, the spec, and any existing code the plan integrates with (to 
 - Race conditions, resource leaks, missing cleanup, error swallowing.
 - Security: injection, missing validation at boundaries, secret handling, authz gaps.
 - Integration: signatures, imports, and types that won't match the existing code.
-- Completeness: any step that is not actually reproducible verbatim (sketchy, has TODOs, or leaves decisions to the coder).
+- Completeness: any subtask that is not actually reproducible verbatim (sketchy, has TODOs, or leaves decisions to the coder).
 
 ## Axis 2 — Modernization & cleanliness
 - Hand-rolled utilities that a popular, maintained library does better — name it.
@@ -47,8 +47,8 @@ Reviewers reliably catch code that's too crude and miss code that's too clever. 
 **Blocking issues (Critical/High):** <count>
 
 ### Findings
-- **[Critical] Step N · `path`** — <problem>. Fix: <specific change>.
-- **[High] Step N** — ...
+- **[Critical] Subtask N.K · `path`** — <problem>. Fix: <specific change>.
+- **[High] Subtask N.K** — ...
 - **[Medium] ...**
 - **[Low] ...**
 
@@ -57,6 +57,6 @@ Reviewers reliably catch code that's too crude and miss code that's too clever. 
 ```
 
 Rules:
-- Tie every finding to a step and, where relevant, quote the offending line.
+- Tie every finding to a subtask and, where relevant, quote the offending line.
 - The orchestrator loops until no Critical/High remain, so be precise about which findings block.
 - Where two approaches are equally valid, say so and let the author decide — don't manufacture blocking findings out of preference.

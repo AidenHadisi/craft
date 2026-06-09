@@ -23,8 +23,8 @@ Two reference files guide the orchestrator's design work:
 
 | Reference | Used in | Covers |
 |---|---|---|
-| `references/architecture-principles.md` | Phase 7 (decompose) | Boundaries, decomposition, dependency rules, complexity budget, plan template, self-critique |
-| `references/design-principles.md` | Phase 9 (per-Task design) | "Less code is better," the don't-list, code principles, Task body template, self-critique |
+| `references/architecture-principles.md` | Phase 7 (decompose) | Where to cut boundaries, dependency rules, choosing an architectural style, complexity budget, plan template, self-critique |
+| `references/design-principles.md` | Phase 9 (per-Task design) | "Less code is better" + the don't-list, function shape, naming, errors, state, when patterns are justified, Task body template, self-critique |
 
 ## The workflow
 

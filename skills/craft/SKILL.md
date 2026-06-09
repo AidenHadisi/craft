@@ -41,7 +41,7 @@ Track your progress using this checklist:
 - [ ] Phase 6: User approves spec
 - [ ] Phase 7: Decompose the feature — write architecture + Task skeleton
 - [ ] Phase 8: User approves the architecture
-- [ ] Phase 9: Per-Task design — write Task bodies, user approves each
+- [ ] Phase 9: Per-Task design — write one Task, user approves, then the next
 - [ ] Phase 10: Code review (craft-code-reviewer) — full plan
 - [ ] Phase 11: User approves plan
 - [ ] Phase 12: Implement by Task in parallel (craft-coder), verify
@@ -85,17 +85,17 @@ Read `references/architecture-principles.md`. Create `docs/plans/<feature>.md` a
 
 Include three sections (no signatures, types, files, or schemas yet):
 1. `## Architecture & design` (overview, Tasks table, data flow diagram, decisions)
-2. `## Tasks` (skeleton with headers and dependencies)
+2. `## Tasks` (skeleton with headers and dependencies, ordered so each Task compiles on top of the ones before it)
 3. `## Verification` (what "done" means)
 
 ### Phase 8: User Approves Architecture
 Present the decomposition and data flow. Apply any requested changes to the boundaries. Boundaries freeze after this gate.
 
 ### Phase 9: Per-Task Design & Approval
-Read `references/design-principles.md`. Process Tasks in **dependency order**:
+Read `references/design-principles.md`. Work through Tasks **one at a time**, in dependency order. For each Task K:
 
-1. **Design & Write:** Add Task K's body (design note + ordered subtasks with complete literal code or manual actions) to the plan. Build upon frozen upstream contracts.
-2. **User Approves:** Present the design and exposed contract. Refine until approved. If refining alters boundaries, return to Phase 8.
+1. **Design & write** Task K's body (design note + ordered subtasks with complete literal code or manual actions) into the plan. Build upon frozen upstream contracts.
+2. **Stop and present** the design to the user. Do **not** start the next Task until the user approves this one. Refine until approved. If refining alters boundaries, return to Phase 8.
 
 ### Phase 10: Code Review
 Once all Tasks are designed, dispatch `craft-code-reviewer` over the **full plan**:

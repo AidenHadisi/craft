@@ -15,7 +15,7 @@ A thin vertical slice across three components — persistence, HTTP, frontend �
 | 3 | Frontend | Fetch wrappers + list UI (run, delete) | `web/src/` (saved-search api + list component) | Task 2 | — (leaf) |
 
 ### Boundaries & data flow
-Dependency direction is one-way: `httpapi → savedsearch → db`, and on the client `component → api module → fetch`. The `savedsearch` package never imports HTTP types; the handler talks to a local interface that `*savedsearch.Store` satisfies. The component never calls `fetch` directly — only the API module does.
+Dependency direction is one-way: `httpapi → savedsearch → db`, and on the client `component → api module → fetch`. The `savedsearch` package never imports HTTP types; the handler talks to a local interface that `*savedsearch.Store` satisfies.
 
 ```mermaid
 flowchart LR
@@ -25,41 +25,10 @@ flowchart LR
   S --> DB[(saved_searches)]
 ```
 
-### Seams
-**Storage seam** (Task 1 → Task 2, one-way: HTTP depends on storage, never the reverse). The HTTP layer relies on a storage capability that:
-
-- lists a user's searches, **newest first**;
-- saves a search, **upserting by `(user, name)`** so a duplicate name replaces rather than duplicates — exactly one record per pair;
-- deletes a search **scoped to its owner**, so a user can never touch another's row (deleting a non-owned row is a no-op, not an error).
-
-The concrete method signatures and row type are fixed in Task 1's design and read from there by Task 2.
-
-**REST seam** (Task 2 → Task 3). The frontend relies on endpoints to list (newest first), save (rejecting an empty name), and delete a user's searches, over HTTP with camelCase JSON. The concrete routes, status codes, and payloads are fixed in Task 2's design.
-
-### Data model
-A **saved-search** entity, **owned by the Storage component**, scoped to a user. Invariant: **at most one saved search per `(user, name)`** — relied on by the save/upsert capability. The saved query is opaque payload owned by the frontend's search model; storage treats it as a blob. Columns, types, and DDL are fixed in Task 1's design.
-
-### Libraries
-- `pgx/v5` for Postgres — already the repo's driver; no new dependency. Standard-library `net/http` and `encoding/json` cover routing and serialization, so no framework is added.
-
-### Cross-cutting concerns
-- **Authz:** `userID` comes from request context; every store call is scoped by it, and `Delete` filters on `user_id` so cross-user deletes affect zero rows.
-- **Validation:** names are trimmed and required at the HTTP boundary — empty/whitespace returns 400 before any DB call.
-- **Errors:** the store returns raw errors; the handler maps them to a status code plus a safe message and never leaks SQL detail.
-
-### Complexity budget
-The simplest design that satisfies the spec. Rejected as premature: a service/use-case layer between handler and store (the logic is thin — validate, scope, persist — so a third layer is a shallow pass-through); a Strategy/registry for filter types (the query is one opaque `jsonb` blob); a generic `Repository[T]` (one concrete store with three methods is clearer). Three Tasks is the natural split — one per architectural boundary, not more.
-
 ### Design decisions
-- **Upsert on `(user_id, name)`** over read-then-write: one statement, race-free, satisfies "duplicate name updates existing" in the database. Rejected app-level check-then-insert (TOCTOU race).
-- **`jsonb` query blob** over normalized filter columns: query shape can evolve without migrations. Trade-off accepted: individual filters aren't indexable, which the spec's scale (tens per user) doesn't need.
-- **Store interface defined in `httpapi`**, not exported from `savedsearch`: the consumer owns the abstraction it needs, keeping `savedsearch` free of HTTP-driven shapes.
-
-### Refactoring notes
-None — greenfield (all files are new), so there is no existing code to refactor first.
-
-### Test seams
-Each component is verified through its public surface — the handler against a fake storage, the store against a test database, the UI against the fetch layer. The concrete cases live in each Task's design.
+- **Upsert on `(user_id, name)`** over read-then-write: one statement, race-free. Rejected app-level check-then-insert (TOCTOU race).
+- **`jsonb` query blob** over normalized filter columns: query shape can evolve without migrations; the spec's scale (tens per user) doesn't need per-filter indexes.
+- **Store interface defined in `httpapi`**, not exported from `savedsearch`: the consumer owns the abstraction it needs.
 
 ## Tasks
 

@@ -51,6 +51,8 @@ Document notable choices: decision, reasoning, and rejected alternatives.
 
 ## Tasks
 
+Order Tasks so each one compiles on top of the ones before it. If Task 2 uses types or functions from Task 1, Task 1 comes first.
+
 ### Task 1 — <component>   (depends on: none · exposes: <capability>)
 
 ### Task 2 — <component>   (depends on: Task 1 · exposes: <capability>)

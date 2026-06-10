@@ -33,16 +33,17 @@ Reviewers reliably catch code that's too crude and miss code that's too clever. 
 - A design pattern with no real payoff vs. a plain function.
 - Design-rationale gaps: the plan's `## Architecture & design` claims (Complexity budget, Design decisions) don't hold up — e.g. structure the stated reasoning doesn't justify.
 
-## Axis 4 — Tests
-Judge the plan's test subtasks in both directions:
-- **Missing:** important logic or a spec-named failure mode with no test; a Task with no tests and no stated "No tests: <reason>"; a `Covers:` bullet with no matching test case (or vice versa).
-- **Over-testing:** tests for trivial code, duplicate coverage of the same branch, mock-verification tests that only confirm the code calls what it obviously calls.
-- **Idiom:** tests that fight the repo's framework, shape (e.g. non-table-driven Go where the repo is table-driven), naming, or established mocking approach; mocks wrapped around pure logic.
+## Axis 4 — Tests (the plan's `## Tests` section)
+Check both failure directions here too:
+- **Missing:** important logic or a spec-named failure mode with no test case — High. Test code that doesn't match its plain-language `Covers:` list.
+- **Over-testing:** tests on trivial code, duplicate coverage of the same branch, mock-verification-only tests that just confirm the code calls what it calls — Medium.
+- **Idiom:** tests that fight the repo's framework, shape (e.g. table-driven in Go), or established mocking conventions; a second mocking style introduced next to an existing one.
+- **Respect reasoned skips:** a `### Not tested` entry with a sound reason is a correct outcome, not a finding. Only flag a skip whose reasoning doesn't hold (e.g. the "trivial" code actually branches).
 
 ## Severity (calibrate honestly — don't inflate)
 - **Critical** — will break at runtime or is a security hole.
-- **High** — likely to cause problems under normal use, or code that can't be reproduced as written. A missing test for a spec-named failure mode lives here.
-- **Medium** — should fix for maintainability/correctness. Gratuitous complexity that hurts readability lives here or higher — over-engineering is a real finding, not just under-engineering. Over-testing and non-idiomatic tests live here.
+- **High** — likely to cause problems under normal use, or code that can't be reproduced as written.
+- **Medium** — should fix for maintainability/correctness. Gratuitous complexity that hurts readability lives here or higher — over-engineering is a real finding, not just under-engineering.
 - **Low** — style or minor improvement.
 
 ## Output

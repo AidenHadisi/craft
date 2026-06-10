@@ -1,62 +1,65 @@
 # Testing Principles
 
-How to design a Task's tests (Phase 9, alongside the design principles). The goal: every important behavior is verified, nothing trivial is, and the tests read like the repo wrote them. Tests are subtasks in the plan — complete literal code, approved at the same gate as the implementation.
+How to design the plan's `## Tests` section (Phase 10). The bar: every important behavior is covered, nothing trivial is, and the tests read like the repo wrote them. Work through the sections in order, then run the self-critique before presenting.
 
-## 1. Test what matters
+## 1. Test what matters, skip the rest
 
-Tests earn their place the same way code does. Cover:
+Cover business logic, contracts between Tasks, and the edge cases / failure modes named in the spec.
 
-- **Business logic** — decisions, calculations, transformations. The reason the feature exists.
-- **Contracts between Tasks** — the public surface downstream Tasks build on.
-- **Edge cases and failure modes named in the spec** — each key scenario in the spec maps to at least one test.
+**Not everything needs a test.** Code that is simple and reliable enough to be obviously correct at a glance earns no test: trivial getters, framework glue, generated code, pass-through wiring, straight-line mapping. The default for such code is *skip*, not "cover it just in case."
 
-Skip: trivial getters/setters, framework glue, generated code, pass-through wiring, configuration. If a Task has no logic worth testing (pure wiring, manual actions), say so explicitly in its design note — "No tests: <reason>." Silence is not a decision.
+Every skip is an explicit decision: list it under `### Not tested` with a reason. Silence is not a decision.
 
 ## 2. Follow the repo's testing idioms
 
-The explorer reports how this repo tests: framework, file layout, naming, fixture style, assertion library. Match all of it — a test that fights the house style is a defect even when it passes.
+Use the explorer's Phase 1 findings: framework, file location and naming, test shape, fixture style. Go gets table-driven tests with `t.Run`; other languages get their idiomatic equivalent. Never introduce a new test framework or pattern when the repo already has one.
 
-- Go gets table-driven tests with `t.Run` per case; other languages get their idiomatic equivalent (parameterized tests, `describe`/`it` blocks, pytest fixtures).
-- Put test files where the repo puts them, named how the repo names them.
-- Never introduce a new test framework, assertion library, or pattern when the repo already has one.
-- Greenfield repo with no tests yet? Use the language's standard idiom and the most boring, mainstream tooling.
+## 3. Mock at real boundaries only
 
-## 3. Mock at real boundaries — and only there
-
-- Mock external dependencies: database, HTTP services, queues, clocks, filesystem, randomness. These make tests slow, flaky, or environment-dependent.
-- **Reuse the project's existing mocking approach exactly** — generated mocks (mockery, GoMock), MSW handlers, testify mocks, hand-rolled fakes, whatever the explorer found. Never hand-roll a second mocking style next to an established one.
-- Pure logic is tested directly with real values and no mocks. If a test needs heavy mocking to reach plain logic, that is a design smell — revisit the seam, don't pile on mocks.
+- Mock external dependencies — DB, HTTP, queues, clocks, filesystems — and nothing else.
+- Reuse the project's existing mocking approach exactly (mockery, testify mocks, MSW, hand-rolled fakes — whatever the explorer found). Never hand-roll a second mocking style next to an established one.
+- Pure logic is tested directly, with no mocks.
 
 ## 4. Plain-language case list
 
-Every test subtask starts with a bullet list — one line per test case, in plain language, describing the behavior it verifies:
-
-```markdown
-Covers:
-- saves a search and returns it with a generated id
-- rejects a blank name without creating an entry
-- saving a duplicate name replaces the existing entry instead of adding one
-```
-
-The case names in code mirror these lines (table-test `name` fields, `it("...")` strings). A reader should understand what the Task guarantees by reading the list alone.
+Each test file's subsection starts with a `Covers:` bullet list — one line per case, in plain language, describing the behavior it verifies ("rejects a blank name without creating an entry"). Test case names in the code mirror these lines, so anyone can map prose to test and back.
 
 ## 5. Don't over-test
 
-One test per behavior, not per line. Never write:
+- One test per behavior, not per line.
+- No tests that re-assert the type system.
+- No mock-verification-only tests that just confirm the code calls what it calls.
+- No duplicate coverage of the same branch.
+- A test that could only fail if the compiler or framework broke is a test to delete.
 
-- Tests that re-assert the type system or the framework (a struct holds what you put in it).
-- Mock-verification tests that only confirm the code calls what it obviously calls.
-- Duplicate coverage of the same branch through slightly different inputs.
-- Tests of private internals that a public-surface test already exercises.
+## Tests Section Template
 
-A small, sharp suite that fails loudly on real regressions beats a large one that drowns them in noise.
+Add this section to `docs/plans/<feature>.md`, between `## Tasks` and `## Verification`. One subsection per test file, with complete literal code a coder can reproduce verbatim.
+
+```markdown
+## Tests
+
+### Test 1 — <area under test>   (covers: Task N)
+[path/to/foo_test.go](path/to/foo_test.go) · create
+
+Covers:
+- <plain-language behavior this case verifies>
+- <...>
+
+```go
+<complete literal test code>
+```
+
+### Not tested
+- <area> — <reason it doesn't earn a test>
+```
 
 ## Self-Critique
 
-Before presenting a Task's tests:
+Argue against your test design before presenting it:
 
-- **Important paths covered?** Every spec-named scenario and failure mode for this Task has a test.
-- **Anything trivial tested?** Cut tests that can't fail for a real reason.
-- **Mocks only at boundaries?** No mocks around pure logic; no second mocking style.
-- **Idiomatic?** Shape, naming, and placement match the explorer's findings.
-- **Case list honest?** Every bullet maps to a real test case, and vice versa.
+- **Important logic covered?** Every spec-named behavior and failure mode has a case.
+- **Trivial code left alone?** No tests on glue, wiring, or obviously-correct code.
+- **Mocks only at boundaries?** Nothing mocked that isn't an external dependency; the repo's mock style reused exactly.
+- **Cases readable?** The `Covers:` list explains each test in plain language, and code names mirror it.
+- **Zero decisions left?** A coder could implement every test file verbatim.

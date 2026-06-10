@@ -31,7 +31,7 @@ The bar at every step is the **best** solution — sound design and established 
 Derive a short kebab-case `<feature>` slug (e.g., `oauth-login`). Create and author these files yourself:
 
 - **`docs/specs/<feature>.md`** — the spec: idea and requirements. No code, no file paths.
-- **`docs/plans/<feature>.md`** — the plan: architecture, decomposition, and ordered Tasks with literal code or manual actions.
+- **`docs/plans/<feature>.md`** — the plan: architecture, decomposition, ordered Tasks with literal code or manual actions, and a Tests section with plain-language cases and literal test code.
 
 ## Workflow Checklist
 
@@ -48,9 +48,10 @@ Track your progress with this checklist:
 - [ ] Phase 7: Decompose the feature — write architecture + Task skeleton
 - [ ] Phase 8: User approves the architecture
 - [ ] Phase 9: Per-Task design — write one Task, user approves, then the next
-- [ ] Phase 10: Code review (craft-code-reviewer) — full plan
-- [ ] Phase 11: User approves plan
-- [ ] Phase 12: Implement by Task in parallel (craft-coder), verify
+- [ ] Phase 10: Design tests — write the Tests section, user approves
+- [ ] Phase 11: Code review (craft-code-reviewer) — full plan
+- [ ] Phase 12: User approves plan
+- [ ] Phase 13: Implement by Task in parallel (craft-coder), then tests, verify
 ```
 
 ### Phase 0: Restate the Task
@@ -66,7 +67,7 @@ Slice: <focused area to investigate>
 Starting points: <files/dirs/symbols if known, else "locate them yourself">
 ```
 
-Synthesize their reports into a short **context briefing** for yourself: how the relevant code works, the repo's conventions, the test and mocking patterns, the target runtime version, and any smells in code the feature will touch. Do not dump raw reports on the user.
+Synthesize their reports into a short **context briefing** for yourself: how the relevant code works, the repo's conventions, the target runtime version, the test and mocking patterns in use, and any smells in code the feature will touch. Do not dump raw reports on the user.
 
 ### Phase 2: Interview the User
 
@@ -112,14 +113,20 @@ Present the decomposition and data flow. Apply requested changes to the boundari
 
 ### Phase 9: Per-Task Design & Approval
 
-Read [references/design-principles.md](references/design-principles.md) and [references/testing-principles.md](references/testing-principles.md) and apply them. Work through Tasks **one at a time**, in dependency order. For each Task K:
+Read [references/design-principles.md](references/design-principles.md) and apply it. Work through Tasks **one at a time**, in dependency order. For each Task K:
 
-1. **Design & write** Task K's body into the plan (design note + ordered subtasks with complete literal code or manual actions + test subtasks with plain-language case lists and literal test code), building on frozen upstream contracts. Run both references' self-critiques.
-2. **Stop and present** the design — implementation and tests are approved together. Do **not** start the next Task until the user approves this one. Refine until approved. If refining would alter boundaries, return to Phase 8.
+1. **Design & write** Task K's body into the plan (design note + ordered subtasks with complete literal code or manual actions), building on frozen upstream contracts. Run the reference's self-critique.
+2. **Stop and present** the design. Do **not** start the next Task until the user approves this one. Refine until approved. If refining would alter boundaries, return to Phase 8.
 
-### Phase 10: Code Review
+### Phase 10: Design Tests
 
-Once all Tasks are designed, dispatch `craft-code-reviewer` over the **full plan**:
+Read [references/testing-principles.md](references/testing-principles.md) and apply it. Write the `## Tests` section at the bottom of the plan (between `## Tasks` and `## Verification`), using its template and your Phase 1 findings on the repo's test and mocking conventions: one subsection per test file with a plain-language `Covers:` list and complete literal test code, plus a `### Not tested` list with a reason for every skip. Run the reference's self-critique.
+
+**Stop and present** the Tests section. Refine until the user approves — same gate discipline as Tasks.
+
+### Phase 11: Code Review
+
+Once all Tasks and the Tests section are designed, dispatch `craft-code-reviewer` over the **full plan**:
 
 ```text
 Plan: docs/plans/<feature>.md
@@ -128,11 +135,11 @@ Spec: docs/specs/<feature>.md
 
 Fix Critical/High findings directly in the plan and re-dispatch until none remain. Use your judgment on Medium/Low findings — fix or consciously decline.
 
-### Phase 11: User Approves Plan
+### Phase 12: User Approves Plan
 
 Present the finished plan for final holistic sign-off. Apply any last edits and wait for explicit approval.
 
-### Phase 12: Implement & Verify
+### Phase 13: Implement & Verify
 
 Dispatch one `craft-coder` per Task. You decide the parallelism: disjoint Tasks run concurrently in one message; dependent Tasks run in waves after their dependencies land.
 
@@ -141,4 +148,6 @@ Plan: docs/plans/<feature>.md
 Your task: Task <N> (subtasks <N>.1..<N>.k) — implement these and no others.
 ```
 
-For **manual subtasks**, pause and ask the user to execute them before dispatching dependent work. Once all Tasks land, run full verification (build/typecheck/lint/tests from the plan's `## Verification`) and report the results, including any deviations the coders flagged.
+Implement the `## Tests` section **after** all Task waves land — dispatch a coder for it (or several, split by test file, e.g. `Your task: Tests 1–2 — implement these and no others.`).
+
+For **manual subtasks**, pause and ask the user to execute them before dispatching dependent work. Once all Tasks and tests land, run full verification (build/typecheck/lint/tests from the plan's `## Verification`) and report the results, including any deviations the coders flagged.

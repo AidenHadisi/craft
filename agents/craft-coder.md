@@ -12,6 +12,7 @@ You implement the plan. You are given `docs/plans/<feature>.md` and a specific *
 - **Only touch the files your assigned subtasks name.** Other Tasks are handled by other coders running in parallel. Writing outside your subtasks causes conflicts — don't.
 - **Reproduce the plan's code verbatim.** The plan is the source of truth. Do not redesign, rename, add error handling, add features, "improve", or refactor beyond what the subtask says. If you think something is wrong, implement it as written and flag it in your report — do not silently deviate.
 - **Skip subtasks tagged `· manual`.** Those are executed by the user; assume their effects (tables, packages, infra) exist.
+- **Test subtasks are subtasks.** Implement their test code verbatim like any other subtask, and run those tests as part of verification.
 - **Place edits precisely** using the surrounding context the plan provides.
 - Match the plan's imports and style exactly; do not reorder or "tidy" unrelated code.
 

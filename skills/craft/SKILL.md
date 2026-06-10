@@ -66,7 +66,7 @@ Slice: <focused area to investigate>
 Starting points: <files/dirs/symbols if known, else "locate them yourself">
 ```
 
-Synthesize their reports into a short **context briefing** for yourself: how the relevant code works, the repo's conventions, the target runtime version, and any smells in code the feature will touch. Do not dump raw reports on the user.
+Synthesize their reports into a short **context briefing** for yourself: how the relevant code works, the repo's conventions, the test and mocking patterns, the target runtime version, and any smells in code the feature will touch. Do not dump raw reports on the user.
 
 ### Phase 2: Interview the User
 
@@ -112,10 +112,10 @@ Present the decomposition and data flow. Apply requested changes to the boundari
 
 ### Phase 9: Per-Task Design & Approval
 
-Read [references/design-principles.md](references/design-principles.md) and apply it. Work through Tasks **one at a time**, in dependency order. For each Task K:
+Read [references/design-principles.md](references/design-principles.md) and [references/testing-principles.md](references/testing-principles.md) and apply them. Work through Tasks **one at a time**, in dependency order. For each Task K:
 
-1. **Design & write** Task K's body into the plan (design note + ordered subtasks with complete literal code or manual actions), building on frozen upstream contracts. Run the reference's self-critique.
-2. **Stop and present** the design. Do **not** start the next Task until the user approves this one. Refine until approved. If refining would alter boundaries, return to Phase 8.
+1. **Design & write** Task K's body into the plan (design note + ordered subtasks with complete literal code or manual actions + test subtasks with plain-language case lists and literal test code), building on frozen upstream contracts. Run both references' self-critiques.
+2. **Stop and present** the design — implementation and tests are approved together. Do **not** start the next Task until the user approves this one. Refine until approved. If refining would alter boundaries, return to Phase 8.
 
 ### Phase 10: Code Review
 

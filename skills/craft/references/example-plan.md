@@ -34,7 +34,7 @@ flowchart LR
 
 ### Task 1 — Storage   (depends on: none · exposes: list / upsert / delete a user's saved searches)
 
-Owns all SQL behind a small store. `Upsert` implements save/rename-by-name in one statement; `List` returns newest first; `Delete` is scoped by `userID` so a user can never delete another user's row.
+Owns all SQL behind a small store. `Upsert` implements save/rename-by-name in one statement; `List` returns newest first; `Delete` is scoped by `userID` so a user can never delete another user's row. No tests: thin SQL mapping with no branching, and the repo has no DB test harness — behavior is covered through the handler tests in Task 2.
 
 #### Subtask 1.1 — Create the `saved_searches` table · manual
 
@@ -225,9 +225,107 @@ Wire the handler into the existing authenticated router group, next to the other
 	mux.HandleFunc("DELETE /api/saved-searches/{id}", requireAuth(savedSearches.Delete))
 ```
 
+#### Subtask 2.3 — Handler tests
+[internal/httpapi/saved_searches_test.go](internal/httpapi/saved_searches_test.go) · create
+
+Covers:
+- saving a valid search returns 201 with the stored entry
+- a blank or whitespace-only name is rejected with 400 before the store is called
+- an invalid JSON body is rejected with 400
+- a store failure surfaces as 500, not a silent success
+- deleting with a non-numeric id is rejected with 400
+
+Table-driven per the repo's convention; the fake store implements the frozen `savedSearchStore` interface, so no DB is needed.
+
+```go
+package httpapi
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+
+	"example.com/app/internal/savedsearch"
+)
+
+type fakeSavedSearchStore struct {
+	upsertCalled bool
+	upsertErr    error
+}
+
+func (f *fakeSavedSearchStore) List(context.Context, int64) ([]savedsearch.SavedSearch, error) {
+	return nil, nil
+}
+
+func (f *fakeSavedSearchStore) Upsert(_ context.Context, userID int64, name string, query json.RawMessage) (savedsearch.SavedSearch, error) {
+	f.upsertCalled = true
+	if f.upsertErr != nil {
+		return savedsearch.SavedSearch{}, f.upsertErr
+	}
+	return savedsearch.SavedSearch{ID: 1, UserID: userID, Name: name, Query: query}, nil
+}
+
+func (f *fakeSavedSearchStore) Delete(context.Context, int64, int64) error { return nil }
+
+func TestSavedSearchHandler_Save(t *testing.T) {
+	cases := []struct {
+		name       string
+		body       string
+		upsertErr  error
+		wantStatus int
+		wantUpsert bool
+	}{
+		{name: "valid search returns 201", body: `{"name":"open tickets","query":{}}`, wantStatus: http.StatusCreated, wantUpsert: true},
+		{name: "blank name rejected before store", body: `{"name":"   ","query":{}}`, wantStatus: http.StatusBadRequest, wantUpsert: false},
+		{name: "invalid JSON body rejected", body: `{not json`, wantStatus: http.StatusBadRequest, wantUpsert: false},
+		{name: "store failure surfaces as 500", body: `{"name":"x","query":{}}`, upsertErr: errors.New("db down"), wantStatus: http.StatusInternalServerError, wantUpsert: true},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			store := &fakeSavedSearchStore{upsertErr: tc.upsertErr}
+			h := NewSavedSearchHandler(store)
+
+			req := httptest.NewRequest(http.MethodPost, "/api/saved-searches", strings.NewReader(tc.body))
+			req = req.WithContext(withUserID(req.Context(), 42))
+			rec := httptest.NewRecorder()
+
+			h.Save(rec, req)
+
+			if rec.Code != tc.wantStatus {
+				t.Fatalf("status = %d, want %d", rec.Code, tc.wantStatus)
+			}
+			if store.upsertCalled != tc.wantUpsert {
+				t.Fatalf("upsert called = %v, want %v", store.upsertCalled, tc.wantUpsert)
+			}
+		})
+	}
+}
+
+func TestSavedSearchHandler_Delete(t *testing.T) {
+	t.Run("non-numeric id rejected with 400", func(t *testing.T) {
+		h := NewSavedSearchHandler(&fakeSavedSearchStore{})
+
+		req := httptest.NewRequest(http.MethodDelete, "/api/saved-searches/abc", nil)
+		req.SetPathValue("id", "abc")
+		req = req.WithContext(withUserID(req.Context(), 42))
+		rec := httptest.NewRecorder()
+
+		h.Delete(rec, req)
+
+		if rec.Code != http.StatusBadRequest {
+			t.Fatalf("status = %d, want %d", rec.Code, http.StatusBadRequest)
+		}
+	})
+}
+```
+
 ### Task 3 — Frontend   (depends on: Task 2 · exposes: nothing)
 
-Typed fetch wrappers plus the list UI. The API module is the only place that calls `fetch`; the component runs a search on click and deletes on demand, loading via the API module on mount.
+Typed fetch wrappers plus the list UI. The API module is the only place that calls `fetch`; the component runs a search on click and deletes on demand, loading via the API module on mount. No tests: thin fetch wrappers and presentational rendering with no branching logic, and the repo has no frontend unit-test runner.
 
 #### Subtask 3.1 — Frontend API module
 [web/src/api/savedSearches.ts](web/src/api/savedSearches.ts) · create

@@ -73,13 +73,14 @@ Comments explain *why* — trade-offs, invariants, non-obvious contracts. A comm
 
 Add this content under the existing `### Task K — <component>` header in the plan:
 
-1. **Design note:** 2–4 sentences covering the units (files/functions) added, the **concrete public contract exposed**, the key pattern chosen, and the rejected alternative.
+1. **Design note:** 2–4 sentences covering the units (files/functions) added, the **concrete public contract exposed**, the key pattern chosen, and the rejected alternative. If the Task has no logic worth testing, state "No tests: <reason>" here.
 2. **Subtasks:** ordered `#### Subtask K.1`, `K.2`, … Each must include:
    - The target **file path** and action (`· create` or `· edit`).
    - A fenced block of **complete literal code**, OR
    - A **manual action** (DDL, migration, install) tagged `· manual` so coders skip it.
 
    Each subtask must compile on top of the previous ones.
+3. **Tests:** the Task's final subtask(s), same `#### Subtask K.n` numbering. Each test subtask includes the target test-file path, a plain-language `Covers:` list (one line per case describing the behavior it verifies), then complete literal test code whose case names mirror that list. Design them per `references/testing-principles.md`.
 
 > The public contract you expose is the foundation for downstream Tasks. Make it explicit and keep it stable.
 
@@ -92,4 +93,5 @@ Argue against your design before presenting it:
 - **Boundaries honored?** Does the code respect the architecture's seams and frozen upstream contracts exactly?
 - **Names carry meaning?** Would a reader know what each call does without the body?
 - **Contract stable?** Is the exposed API explicit enough for downstream Tasks to build on?
+- **Tested where it counts?** Important logic covered, trivial code left alone, mocks only at real boundaries?
 - **Zero decisions left?** Could a coder implement this verbatim without inventing anything?

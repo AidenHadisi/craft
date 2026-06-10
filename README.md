@@ -16,12 +16,13 @@ The bar throughout is the **best** solution — sound design and established bes
 | `craft-code-reviewer` | subagent (readonly) | Reviews the planned code before it ships |
 | `craft-coder` | subagent | Implements the plan verbatim, in parallel |
 
-Two reference files guide the orchestrator's design work:
+Three reference files guide the orchestrator's design work:
 
 | Reference | Used in | Covers |
 |---|---|---|
 | `references/architecture-principles.md` | Phase 7 (decompose) | Where to cut boundaries, dependency rules, choosing an architectural style, complexity budget, plan template, self-critique |
 | `references/design-principles.md` | Phase 9 (per-Task design) | "Less code is better" + the don't-list, function shape, naming, errors, state, when patterns are justified, Task body template, self-critique |
+| `references/testing-principles.md` | Phase 9 (per-Task design) | What to test (and what not to), repo testing idioms, mocking only at real boundaries, plain-language case lists, over-testing, self-critique |
 
 ## The workflow
 
@@ -54,7 +55,7 @@ flowchart TD
 ### Artifacts it produces (in the target repo)
 
 - `docs/specs/<feature>.md` — the spec: idea and requirements, readable by engineers and product managers alike. No code.
-- `docs/plans/<feature>.md` — the implementation plan. The orchestrator writes it start to finish: the architecture (components, conceptual boundaries, seams between Tasks), then each Task's body (the concrete contract plus complete literal code or a manual action). The orchestrator decides at dispatch time which Tasks can be coded in parallel.
+- `docs/plans/<feature>.md` — the implementation plan. The orchestrator writes it start to finish: the architecture (components, conceptual boundaries, seams between Tasks), then each Task's body (the concrete contract plus complete literal code or a manual action, and the Task's tests — with a plain-language list of what each case verifies). The orchestrator decides at dispatch time which Tasks can be coded in parallel.
 
 ## Install
 

@@ -41,7 +41,8 @@ The real flow, step by step. Entry points, data flow, key branches, side effects
 - Naming (files, functions, types).
 - Error handling style.
 - Module/package boundaries and how layers talk.
-- Test style and location (frameworks, fixtures, naming).
+- Test style: framework, file location/naming, shape (table-driven, `describe`/`it`, parameterized), fixture style.
+- Mocking approach for external dependencies (library, generated mocks, hand-rolled fakes) with one example test file path.
 - Libraries already used for common needs (HTTP, validation, dates, logging).
 - Target runtime version.
 

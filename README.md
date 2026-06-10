@@ -8,12 +8,9 @@ The bar throughout is the **best** solution — sound design and established bes
 
 ## What's inside
 
-Two orchestrator skills. `craft` looks forward — it writes the spec and the plan, dispatches reviewers and coders, and gates every step. `craft-rearchitect` looks backward — it audits code that already exists and reports how to improve its architecture, reusing the explorer for parallel discovery.
-
 | Component | Type | Role |
 |---|---|---|
 | `craft` | skill (`/craft`) | Orchestrates the build pipeline; writes the spec and plan, gates every step |
-| `craft-rearchitect` | skill (`/craft-rearchitect`) | Audits existing code; reports findings + a refactoring roadmap (no docs, no code changes) |
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions, in parallel |
 | `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness |
 | `craft-code-reviewer` | subagent (readonly) | Reviews the planned code before it ships |
@@ -75,7 +72,7 @@ If you keep your working copy elsewhere, put the real repo under `~/.cursor/plug
 ln -s ~/.cursor/plugins/local/craft ~/your/workspace/craft
 ```
 
-Then open the Command Palette → "Reload Window". Confirm `/craft` and `/craft-rearchitect` appear in Settings → Rules and that the `craft-*` subagents are available.
+Then open the Command Palette → "Reload Window". Confirm `/craft` appears in Settings → Rules and that the `craft-*` subagents are available.
 
 ### Marketplace / git
 
@@ -90,16 +87,6 @@ In any project, start a feature with:
 ```
 
 Then follow the phases — answer the interview, pick a design, approve the spec, approve the architecture, then approve each Task as it's designed. The agent handles the rest, including dispatching the coders in parallel.
-
-### Auditing existing code
-
-When the code already exists and you want to know how to improve its design, use the backward-looking skill instead:
-
-```
-/craft-rearchitect the order checkout flow
-```
-
-It explores the target with parallel `craft-explorer` subagents, evaluates the current design against the same principles `craft` builds with (deep modules, cohesion/coupling, the complexity budget in both directions, modern/idiomatic usage), and delivers a comprehensive report right in the chat: a verdict, an architecture map, severity-ranked findings, a target design, and an ordered refactoring roadmap. It is analysis-only — it writes no `docs/` artifacts and changes no code. When you want to act on a roadmap item, hand it to `/craft`.
 
 ## Design notes
 

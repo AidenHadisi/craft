@@ -17,14 +17,16 @@ The bar at every step is the **best** solution — sound design and established 
 
 ## Subagents
 
-| Subagent | Role | Writes |
-|---|---|---|
-| `craft-explorer` | Gather context: logic + conventions/patterns | nothing (readonly) |
-| `craft-spec-reviewer` | Gate the spec for clarity & completeness | nothing (readonly) |
-| `craft-code-reviewer` | Review the plan's code before it ships | nothing (readonly) |
-| `craft-coder` | Implement assigned Tasks exactly | repo source |
+| Subagent | Role | Writes | Model |
+|---|---|---|---|
+| `craft-explorer` | Gather context: logic + conventions/patterns | nothing (readonly) | `gemini-3.5-flash` |
+| `craft-spec-reviewer` | Gate the spec for clarity & completeness | nothing (readonly) | `gemini-3.5-flash` |
+| `craft-code-reviewer` | Review the plan's code before it ships | nothing (readonly) | inherit |
+| `craft-coder` | Implement assigned Tasks exactly | repo source | inherit |
 
 > When dispatching a subagent, pass *only* the inputs it cannot see. Its role, method, and output format are already in its prompt.
+>
+> **Always set the dispatch `model` explicitly per the Model column above.** The `model` field in an agent's definition file is *not* honored when the agent is launched via Task dispatch — it silently inherits the orchestrator's (expensive) model. Pass `model: gemini-3.5-flash` when dispatching `craft-explorer` and `craft-spec-reviewer`; omit it (inherit) for `craft-code-reviewer` and `craft-coder`.
 
 ## Artifacts
 
@@ -60,7 +62,7 @@ In 2–4 sentences, state your understanding of the task and what "done" looks l
 
 ### Phase 1: Explore
 
-Split discovery into independent slices (e.g., "data layer", "conventions in module Y"). Dispatch one `craft-explorer` per slice **in parallel** (multiple Task calls in one message):
+Split discovery into independent slices (e.g., "data layer", "conventions in module Y"). Dispatch one `craft-explorer` per slice **in parallel** (multiple Task calls in one message), each with `model: gemini-3.5-flash`:
 
 ```text
 Slice: <focused area to investigate>
@@ -83,7 +85,7 @@ Write `docs/specs/<feature>.md` based on the chosen design. Mirror the structure
 
 ### Phase 5: Spec Review Loop
 
-Dispatch `craft-spec-reviewer`:
+Dispatch `craft-spec-reviewer` with `model: gemini-3.5-flash`:
 
 ```text
 Spec: docs/specs/<feature>.md

@@ -22,11 +22,11 @@ The bar at every step is the **best** solution — sound design and established 
 | `craft-explorer` | Gather context: logic + conventions/patterns | nothing (readonly) | `gemini-3.5-flash` |
 | `craft-spec-reviewer` | Gate the spec for clarity & completeness | nothing (readonly) | `gemini-3.5-flash` |
 | `craft-code-reviewer` | Review the plan's code before it ships | nothing (readonly) | inherit |
-| `craft-coder` | Implement assigned Tasks exactly | repo source | inherit |
+| `craft-coder` | Implement assigned Tasks exactly | repo source | `gemini-3.5-flash` |
 
 > When dispatching a subagent, pass *only* the inputs it cannot see. Its role, method, and output format are already in its prompt.
 >
-> **Always set the dispatch `model` explicitly per the Model column above.** The `model` field in an agent's definition file is *not* honored when the agent is launched via Task dispatch — it silently inherits the orchestrator's (expensive) model. Pass `model: gemini-3.5-flash` when dispatching `craft-explorer` and `craft-spec-reviewer`; omit it (inherit) for `craft-code-reviewer` and `craft-coder`.
+> **Always set the dispatch `model` explicitly per the Model column above.** The `model` field in an agent's definition file is *not* honored when the agent is launched via Task dispatch — it silently inherits the orchestrator's (expensive) model. Pass `model: gemini-3.5-flash` when dispatching `craft-explorer`, `craft-spec-reviewer`, and `craft-coder`; omit it (inherit) for `craft-code-reviewer`.
 
 ## Artifacts
 

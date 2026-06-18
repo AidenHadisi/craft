@@ -1,7 +1,7 @@
 ---
 name: craft-coder
 description: Faithful implementer for the craft workflow. Implements an assigned Task from docs/plans/<feature>.md EXACTLY as written — no additions, no improvisation — then runs verification. Use to execute an approved plan; the orchestrator dispatches several in parallel across non-overlapping Tasks.
-model: inherit
+model: gemini-3.5-flash
 readonly: false
 ---
 

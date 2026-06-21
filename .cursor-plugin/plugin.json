@@ -4,5 +4,7 @@
   "version": "0.1.0",
   "author": { "name": "Aiden Hadisi", "email": "so.hadisi@gmail.com" },
   "license": "MIT",
+  "homepage": "https://github.com/AidenHadisi/craft",
+  "repository": "https://github.com/AidenHadisi/craft",
   "keywords": ["workflow", "planning", "architecture", "code-quality", "subagents"]
 }

@@ -62,25 +62,37 @@ flowchart TD
 
 ## Install
 
+### Marketplace (recommended)
+
+Open the Marketplace panel in Cursor, search for **craft**, and install — choosing project or user scope. Nothing else to set up.
+
+> Not yet published. Until it's live on the [Cursor Marketplace](https://cursor.com/marketplace), use the local install below.
+
 ### Local (development)
 
-The plugin must live as a **real directory** inside Cursor's local plugin folder. Recent Cursor builds reject a symlink whose target points outside `~/.cursor/plugins/local/` (`loadUserLocalPlugin ... rejected: symlink target ... is outside`), so clone or move the repo directly into place:
+A plugin loads when it lives under `~/.cursor/plugins/local/` with its `.cursor-plugin/plugin.json` at the root. Clone it straight into place:
 
 ```bash
 git clone git@github.com:AidenHadisi/craft.git ~/.cursor/plugins/local/craft
 ```
 
-If you keep your working copy elsewhere, put the real repo under `~/.cursor/plugins/local/craft` and symlink *back* to your preferred location (a symlink that points into the plugins dir is fine; one that points out of it is not):
+Or, if you keep your working copy elsewhere, symlink the repo **into** the plugins folder (this is the supported direction — link your repo *in*, not the other way around):
 
 ```bash
-ln -s ~/.cursor/plugins/local/craft ~/your/workspace/craft
+ln -s /path/to/your/craft ~/.cursor/plugins/local/craft
 ```
 
-Then open the Command Palette → "Reload Window". Confirm `/craft` appears in Settings → Rules and that the `craft-*` subagents are available.
+Then run **Developer: Reload Window** from the Command Palette. Confirm `/craft` appears in Settings → Rules and that the `craft-*` subagents are available.
 
-### Marketplace / git
+## Publishing
 
-Point Cursor at the repository once it's published, or add it via your plugin marketplace configuration.
+Cursor plugins are distributed as public Git repositories reviewed by the Cursor team — there's no publish CLI. To release a new version:
+
+1. Bump `version` in `.cursor-plugin/plugin.json` (semver).
+2. Commit a logo to `assets/` and add `"logo": "assets/<file>.svg"` to the manifest (relative paths resolve against the repo on GitHub).
+3. Push to the public repo, then submit the repo URL at [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish).
+
+Components are auto-discovered from their default folders (`skills/`, `agents/`, `rules/`, `commands/`, `hooks/`), so the manifest only needs metadata — no path wiring required.
 
 ## Usage
 

@@ -53,7 +53,8 @@ Track your progress with this checklist:
 - [ ] Phase 10: Design tests — write the Tests section, user approves
 - [ ] Phase 11: Code review (craft-code-reviewer) — full plan
 - [ ] Phase 12: User approves plan
-- [ ] Phase 13: Implement by Task in parallel (craft-coder), then tests, verify
+- [ ] Phase 13: Implement by Task in parallel (craft-coder), then tests
+- [ ] Phase 14: Validate (craft-validation)
 ```
 
 ### Phase 0: Restate the Task
@@ -141,7 +142,7 @@ Fix Critical/High findings directly in the plan and re-dispatch until none remai
 
 Present the finished plan for final holistic sign-off. Apply any last edits and wait for explicit approval.
 
-### Phase 13: Implement & Verify
+### Phase 13: Implement
 
 Dispatch one `craft-coder` per Task. You decide the parallelism: disjoint Tasks run concurrently in one message; dependent Tasks run in waves after their dependencies land.
 
@@ -152,4 +153,8 @@ Your task: Task <N> (subtasks <N>.1..<N>.k) — implement these and no others.
 
 Implement the `## Tests` section **after** all Task waves land — dispatch a coder for it (or several, split by test file, e.g. `Your task: Tests 1–2 — implement these and no others.`).
 
-For **manual subtasks**, pause and ask the user to execute them before dispatching dependent work. Once all Tasks and tests land, run full verification (build/typecheck/lint/tests from the plan's `## Verification`) and report the results, including any deviations the coders flagged.
+For **manual subtasks**, pause and ask the user to execute them before dispatching dependent work.
+
+### Phase 14: Validate
+
+Once all Tasks and tests land, invoke the `craft-validation` skill to verify the implementation works and report results.

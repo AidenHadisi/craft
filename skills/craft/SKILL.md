@@ -1,19 +1,19 @@
 ---
 name: craft
-description: Disciplined end-to-end workflow for building a non-trivial feature. It explores, aligns, chooses a design, specs, decomposes, designs code, reviews, and implements in parallel. Use when the user wants to plan AND build a feature, says "craft this", or asks for a high-quality implementation.
+description: Disciplined end-to-end workflow for building a non-trivial feature. It explores, aligns, specs, designs, reviews, and implements in parallel. Use when the user wants to plan AND build a feature, says "craft this", or asks for a high-quality implementation.
 ---
 
 # Craft Workflow
 
-A pipeline that produces clean, modular, idiomatic code by separating thinking from typing. You, the **orchestrator**, drive the workflow, write the spec and plan, and dispatch subagents for exploration, review, and implementation.
+A pipeline that produces clean, modular, idiomatic code by separating thinking from typing. You, the **orchestrator**, drive the workflow, write the spec, and dispatch subagents for exploration, planning, review, and implementation.
 
 The bar at every step is the **best** solution — sound design and established practice, not the first thing that works. Problems get caught on paper, where they are cheap to fix.
 
 **Operating rules:**
 
-- **Do not skip phases.** If the user invokes `/craft` with context already in hand, you may compress Phases 0–2. Never skip the design options, the spec, or the review gates.
-- **Scale the plan, not the discipline.** A small feature may decompose into a single Task — that's fine. Keep every approval gate regardless.
-- **Wait for explicit approval at every user gate.** Silence is not approval.
+- **Do not skip phases.** If the user invokes `/craft` with context already in hand, you may compress Phases 0–2. Never skip the design options, the spec, the review loops, or the user gates.
+- **Scale the plan, not the discipline.** A small feature may decompose into a single Task — that's fine. Keep every user gate regardless.
+- **Wait for explicit approval at every user gate (design choice, spec, plan).** Silence is not approval.
 
 ## Subagents
 
@@ -21,19 +21,20 @@ The bar at every step is the **best** solution — sound design and established 
 |---|---|---|---|
 | `craft-explorer` | Gather context: logic + conventions/patterns | nothing (readonly) | `gemini-3.5-flash` |
 | `craft-spec-reviewer` | Gate the spec for clarity & completeness | nothing (readonly) | `gemini-3.5-flash` |
+| `craft-planner` | Design and write the full implementation plan | `docs/plans/<feature>.md` | inherit |
 | `craft-code-reviewer` | Review the plan's code before it ships | nothing (readonly) | inherit |
 | `craft-coder` | Implement assigned Tasks exactly | repo source | `gemini-3.5-flash` |
 
 > When dispatching a subagent, pass *only* the inputs it cannot see. Its role, method, and output format are already in its prompt.
 >
-> **Always set the dispatch `model` explicitly per the Model column above.** The `model` field in an agent's definition file is *not* honored when the agent is launched via Task dispatch — it silently inherits the orchestrator's (expensive) model. Pass `model: gemini-3.5-flash` when dispatching `craft-explorer`, `craft-spec-reviewer`, and `craft-coder`; omit it (inherit) for `craft-code-reviewer`.
+> **Always set the dispatch `model` explicitly per the Model column above.** The `model` field in an agent's definition file is *not* honored when the agent is launched via Task dispatch — it silently inherits the orchestrator's (expensive) model. Pass `model: gemini-3.5-flash` when dispatching `craft-explorer`, `craft-spec-reviewer`, and `craft-coder`; omit it (inherit) for `craft-planner` and `craft-code-reviewer`.
 
 ## Artifacts
 
-Derive a short kebab-case `<feature>` slug (e.g., `oauth-login`). Create and author these files yourself:
+Derive a short kebab-case `<feature>` slug (e.g., `oauth-login`). Two artifacts are produced:
 
-- **`docs/specs/<feature>.md`** — the spec: idea and requirements. No code, no file paths.
-- **`docs/plans/<feature>.md`** — the plan: architecture, decomposition, ordered Tasks with literal code or manual actions, and a Tests section with plain-language cases and literal test code.
+- **`docs/specs/<feature>.md`** — the spec: idea and requirements. No code, no file paths. Written by you (the orchestrator).
+- **`docs/plans/<feature>.md`** — the plan: architecture, decomposition, ordered Tasks with literal code or manual actions, and a Tests section with plain-language cases and literal test code. Written by `craft-planner`.
 
 ## Workflow Checklist
 
@@ -47,14 +48,11 @@ Track your progress with this checklist:
 - [ ] Phase 4: Write the spec
 - [ ] Phase 5: Spec review loop (craft-spec-reviewer)
 - [ ] Phase 6: User approves spec
-- [ ] Phase 7: Decompose the feature — write architecture + Task skeleton
-- [ ] Phase 8: User approves the architecture
-- [ ] Phase 9: Per-Task design — write one Task, user approves, then the next
-- [ ] Phase 10: Design tests — write the Tests section, user approves
-- [ ] Phase 11: Code review (craft-code-reviewer) — full plan
-- [ ] Phase 12: User approves plan
-- [ ] Phase 13: Implement by Task in parallel (craft-coder), then tests
-- [ ] Phase 14: Validate (craft-validation)
+- [ ] Phase 7: Dispatch craft-planner (architecture + tasks + tests)
+- [ ] Phase 8: Code review loop (craft-code-reviewer)
+- [ ] Phase 9: User approves plan
+- [ ] Phase 10: Implement (parallel craft-coder)
+- [ ] Phase 11: Validate (craft-validation)
 ```
 
 ### Phase 0: Restate the Task
@@ -98,51 +96,40 @@ If it returns `Needs changes`, apply the feedback and re-dispatch. Loop until it
 
 Present the spec. Incorporate user edits until approved. If the edits are significant, re-run Phase 5. Do not proceed without explicit approval.
 
-### Phase 7: Decompose the Feature
+### Phase 7: Write the Full Plan
 
-Read [references/architecture-principles.md](references/architecture-principles.md) and apply it. Create `docs/plans/<feature>.md` using its plan template and your Phase 1 context briefing.
+Dispatch `craft-planner` (inherit model — do not set `model`). Pass the spec, your context briefing from Phase 1, and the paths to the three reference files:
 
-Draft three sections (no signatures, types, files, or schemas yet):
+```text
+Spec: docs/specs/<feature>.md
 
-1. `## Architecture & design` — overview, Tasks table, data-flow diagram, design decisions
-2. `## Tasks` — skeleton with headers and dependencies, ordered so each Task compiles on top of the ones before it
-3. `## Verification` — what "done" means
+Context briefing:
+<paste the synthesized context briefing from Phase 1>
 
-Run the reference's self-critique before presenting.
+Reference files:
+- <path>/references/architecture-principles.md
+- <path>/references/design-principles.md
+- <path>/references/testing-principles.md
+```
 
-### Phase 8: User Approves Architecture
+The planner reads the references, designs the architecture, writes all Tasks with literal code, writes tests, runs self-critique, and produces `docs/plans/<feature>.md`. Do **not** write the plan yourself — the planner handles all code-heavy work so your context stays light for later phases.
 
-Present the decomposition and data flow. Apply requested changes to the boundaries. **Boundaries freeze after this gate.**
+### Phase 8: Code Review Loop
 
-### Phase 9: Per-Task Design & Approval
-
-Read [references/design-principles.md](references/design-principles.md) and apply it. Work through Tasks **one at a time**, in dependency order. For each Task K:
-
-1. **Design & write** Task K's body into the plan (design note + ordered subtasks with complete literal code or manual actions), building on frozen upstream contracts. Run the reference's self-critique.
-2. **Stop and present** the design. Do **not** start the next Task until the user approves this one. Refine until approved. If refining would alter boundaries, return to Phase 8.
-
-### Phase 10: Design Tests
-
-Read [references/testing-principles.md](references/testing-principles.md) and apply it. Write the `## Tests` section at the bottom of the plan (between `## Tasks` and `## Verification`), using its template and your Phase 1 findings on the repo's test and mocking conventions: one subsection per test file with a plain-language `Covers:` list and complete literal test code, plus a `### Not tested` list with a reason for every skip. Run the reference's self-critique.
-
-**Stop and present** the Tests section. Refine until the user approves — same gate discipline as Tasks.
-
-### Phase 11: Code Review
-
-Once all Tasks and the Tests section are designed, dispatch `craft-code-reviewer` over the **full plan**:
+Dispatch `craft-code-reviewer` over the **full plan**:
 
 ```text
 Plan: docs/plans/<feature>.md
 Spec: docs/specs/<feature>.md
 ```
 
-Fix Critical/High findings directly in the plan and re-dispatch until none remain. Use your judgment on Medium/Low findings — fix or consciously decline.
+Apply surgical fixes for Critical/High findings directly in the plan (targeted line-level edits, not rewriting sections) and re-dispatch until none remain. Use your judgment on Medium/Low findings — fix or consciously decline.
 
-### Phase 12: User Approves Plan
+### Phase 9: User Approves Plan
 
-Present the finished plan for final holistic sign-off. Apply any last edits and wait for explicit approval.
+Present the finished, pre-reviewed plan for holistic sign-off. Apply any last edits and wait for explicit approval.
 
-### Phase 13: Implement
+### Phase 10: Implement
 
 Dispatch one `craft-coder` per Task. You decide the parallelism: disjoint Tasks run concurrently in one message; dependent Tasks run in waves after their dependencies land.
 
@@ -155,6 +142,6 @@ Implement the `## Tests` section **after** all Task waves land — dispatch a co
 
 For **manual subtasks**, pause and ask the user to execute them before dispatching dependent work.
 
-### Phase 14: Validate
+### Phase 11: Validate
 
 Once all Tasks and tests land, invoke the `craft-validation` skill to verify the implementation works and report results.

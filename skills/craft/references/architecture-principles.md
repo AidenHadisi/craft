@@ -44,7 +44,7 @@ When the feature touches existing code, weigh the smells the explorers reported 
 
 ## Plan Template
 
-Use this structure for `docs/plans/<feature>.md`. Keep the architecture at the component level — **no signatures, types, file lists, or schemas yet** (those come in Phase 9).
+Use this structure for `docs/plans/<feature>.md`. The planner fills in all sections — architecture, tasks with complete literal code, tests, and verification — in a single pass.
 
 ```markdown
 ## Architecture & design

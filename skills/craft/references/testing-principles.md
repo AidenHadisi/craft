@@ -1,6 +1,6 @@
 # Testing Principles
 
-How to design the plan's `## Tests` section (Phase 10). The bar: every important behavior is covered, nothing trivial is, and the tests read like the repo wrote them. Work through the sections in order, then run the self-critique before presenting.
+How to design the plan's `## Tests` section (Phase 7). The bar: every important behavior is covered, nothing trivial is, and the tests read like the repo wrote them. Work through the sections in order, then run the self-critique before presenting.
 
 ## 1. Test what matters, skip the rest
 

@@ -1,6 +1,6 @@
 # Design Principles
 
-How to design a Task's implementation (Phase 9). The bar: code a strong senior engineer would merge without comment. Work through the sections in order — they cover how much code to write, how to shape it, name it, fail it, and when a pattern is justified. Run the self-critique before presenting.
+How to design a Task's implementation (Phase 7). The bar: code a strong senior engineer would merge without comment. Work through the sections in order — they cover how much code to write, how to shape it, name it, fail it, and when a pattern is justified. Run the self-critique before presenting.
 
 ## 1. Less code is better code
 

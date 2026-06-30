@@ -12,22 +12,26 @@ The bar at every step is the **best** solution — sound design and established 
 **Operating rules:**
 
 - **Do not skip phases.** If the user invokes `/craft` with context already in hand, you may compress Phases 0–2. Never skip the design options, the spec, the review loops, or the user gates.
-- **Scale the plan, not the discipline.** A small feature may decompose into a single Task — that's fine. Keep every user gate regardless.
+- **Scale the plan, not the discipline.** A small feature may decompose into a single Task — that's fine. The workflow still applies.
 - **Wait for explicit approval at every user gate (design choice, spec, plan).** Silence is not approval.
 
 ## Subagents
 
-| Subagent | Role | Writes | Model |
-|---|---|---|---|
-| `craft-explorer` | Gather context: logic + conventions/patterns | nothing (readonly) | `gemini-3.5-flash` |
-| `craft-spec-reviewer` | Gate the spec for clarity & completeness | nothing (readonly) | `gemini-3.5-flash` |
-| `craft-planner` | Design and write the full implementation plan | `docs/plans/<feature>.md` | inherit |
-| `craft-code-reviewer` | Review the plan's code before it ships | nothing (readonly) | inherit |
-| `craft-coder` | Implement assigned Tasks exactly | repo source | `gemini-3.5-flash` |
+
+| Subagent              | Role                                          | Writes                    | Model              |
+| --------------------- | --------------------------------------------- | ------------------------- | ------------------ |
+| `craft-explorer`      | Gather context: logic + conventions/patterns  | nothing (readonly)        | `gemini-3.5-flash` |
+| `craft-spec-reviewer` | Gate the spec for clarity & completeness      | nothing (readonly)        | `gemini-3.5-flash` |
+| `craft-planner`       | Design and write the full implementation plan | `docs/plans/<feature>.md` | inherit            |
+| `craft-code-reviewer` | Review the plan's code before it ships        | nothing (readonly)        | inherit            |
+| `craft-coder`         | Implement assigned Tasks exactly              | repo source               | `gemini-3.5-flash` |
+
 
 > When dispatching a subagent, pass *only* the inputs it cannot see. Its role, method, and output format are already in its prompt.
 >
 > **Always set the dispatch `model` explicitly per the Model column above.** The `model` field in an agent's definition file is *not* honored when the agent is launched via Task dispatch — it silently inherits the orchestrator's (expensive) model. Pass `model: gemini-3.5-flash` when dispatching `craft-explorer`, `craft-spec-reviewer`, and `craft-coder`; omit it (inherit) for `craft-planner` and `craft-code-reviewer`.
+>
+> **Always resume, never re-dispatch.** When you need more work from a subagent that has already completed (e.g., asking the planner to fix review findings, or asking the reviewer to re-check after fixes), **resume** it by passing its agent ID via `resume`. Do not dispatch a new agent for the same role — the resumed agent already has its prior context and can act on a short follow-up message.
 
 ## Artifacts
 

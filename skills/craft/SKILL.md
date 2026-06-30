@@ -123,7 +123,11 @@ Plan: docs/plans/<feature>.md
 Spec: docs/specs/<feature>.md
 ```
 
-Apply surgical fixes for Critical/High findings directly in the plan (targeted line-level edits, not rewriting sections) and re-dispatch until none remain. Use your judgment on Medium/Low findings — fix or consciously decline.
+If it returns Critical/High findings, **resume the planner agent** (pass its agent ID via `resume`) with the reviewer's findings and ask it to fix them — do not fix the plan yourself. The planner already has the full plan in context and can apply targeted fixes without re-reading everything.
+
+Once the planner confirms fixes are applied, **resume the same reviewer agent** (pass its agent ID via `resume`) listing the changes — do not dispatch a new reviewer. The resumed reviewer already has the plan in context and only needs to verify the fixes.
+
+Loop until no Critical/High findings remain. Use your judgment on Medium/Low findings — forward to the planner or consciously decline.
 
 ### Phase 9: User Approves Plan
 

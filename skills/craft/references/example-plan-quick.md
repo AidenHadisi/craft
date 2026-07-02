@@ -1,6 +1,8 @@
 # Example Quick Plan
 
-A complete worked example of a quick-mode plan (`docs/plans/<feature>.md`). The level: since there is no spec file, the `## Goal` section carries the problem and requirements — a short paragraph plus requirement bullets, lighter than a spec but enough that the plan stands alone. The `## Conventions` section captures the repo's idioms from exploration and is pasted verbatim into every coder dispatch. The rest of the plan says WHERE and WHAT precisely, includes a contract or snippet only where precision matters (exact signatures, tricky logic, schemas), and leaves HOW to the coder.
+A complete worked example of a quick-mode plan (`docs/plans/<feature>.md`). The level: since there is no spec file, the `## Goal` section carries the problem and requirements — a short paragraph plus requirement bullets, lighter than a spec but enough that the plan stands alone. The `## Conventions` section captures the repo's idioms from exploration and is pasted verbatim into every coder dispatch.
+
+The plan reads top-down: each Task opens with one sentence on what it delivers, and each subtask is a single sentence saying WHERE and WHAT. Detail bullets appear under a subtask only where the coder would otherwise guess wrong — a signature, an endpoint, a tricky rule. Most subtasks have none. HOW is the coder's job.
 
 ---
 
@@ -32,30 +34,30 @@ A thin vertical slice: a store for saved-search rows, REST endpoints scoped to t
 
 ### Task 1 — Storage   (depends on: none)
 
-1.1. Create `saved_searches` table (id, user_id, name, query jsonb, timestamps) with a unique index on (user_id, name) · manual
+A table and a store that owns all saved-search persistence.
 
-1.2. [internal/savedsearch/store.go](internal/savedsearch/store.go) · create
-     - `Store` over pgxpool with three methods; List returns newest first, Delete is scoped by userID.
+1.1. Create the `saved_searches` table (id, user_id, name, query jsonb, timestamps) with a unique index on (user_id, name) · manual
+
+1.2. [internal/savedsearch/store.go](internal/savedsearch/store.go) · create — a `Store` over pgxpool with List (newest first), Upsert, and Delete (scoped by userID).
      - Contract: `List(ctx, userID) ([]SavedSearch, error)`, `Upsert(ctx, userID, name string, query json.RawMessage) (SavedSearch, error)`, `Delete(ctx, userID, id int64) error`
      - Upsert in one statement: `INSERT ... ON CONFLICT (user_id, name) DO UPDATE`
 
 ### Task 2 — HTTP API   (depends on: Task 1)
 
-2.1. [internal/httpapi/saved_searches.go](internal/httpapi/saved_searches.go) · create
-     - Handler with List/Save/Delete; declare the store interface it needs locally (consumer owns the abstraction).
-     - Reject blank/whitespace names with 400 before any store call; trim names.
-     - camelCase JSON fields on all payloads.
+Authenticated REST endpoints exposing the store.
 
-2.2. [internal/httpapi/router.go](internal/httpapi/router.go) · edit
-     - Register GET/POST `/api/saved-searches` and DELETE `/api/saved-searches/{id}` inside the existing requireAuth group.
+2.1. [internal/httpapi/saved_searches.go](internal/httpapi/saved_searches.go) · create — a handler with List/Save/Delete that declares the store interface it needs locally.
+     - Reject blank/whitespace names with 400 before any store call; trim names.
+
+2.2. [internal/httpapi/router.go](internal/httpapi/router.go) · edit — register GET/POST `/api/saved-searches` and DELETE `/api/saved-searches/{id}` inside the existing requireAuth group.
 
 ### Task 3 — Frontend   (depends on: Task 2)
 
-3.1. [web/src/api/savedSearches.ts](web/src/api/savedSearches.ts) · create
-     - Typed fetch wrappers: list/save/delete. Only place that calls fetch.
+The saved-searches list in the search page, backed by a typed API module.
 
-3.2. [web/src/components/SavedSearchList.tsx](web/src/components/SavedSearchList.tsx) · create
-     - Loads on mount, runs a search on click via `onRun` prop, deletes inline.
+3.1. [web/src/api/savedSearches.ts](web/src/api/savedSearches.ts) · create — typed list/save/delete fetch wrappers; the only place that calls fetch.
+
+3.2. [web/src/components/SavedSearchList.tsx](web/src/components/SavedSearchList.tsx) · create — loads on mount, runs a search on click via an `onRun` prop, deletes inline.
 
 ## Tests
 

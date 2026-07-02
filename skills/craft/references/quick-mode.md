@@ -38,7 +38,9 @@ From the reports, write down the repo's conventions — naming, error handling, 
 
 Read [design-principles.md](design-principles.md) and [testing-principles.md](testing-principles.md), then write `docs/plans/<feature>.md`, mirroring the structure and level of [example-plan-quick.md](example-plan-quick.md).
 
-Write directives, not code: say **where** and **what** precisely; leave **how** to the coder. Include a contract or snippet only where precision matters — signatures, types, endpoints, schemas, tricky logic.
+The plan must read top-down at a glance. Every Task opens with one sentence on what it delivers; every subtask is a single sentence — **where** and **what**. Add indented detail bullets under a subtask only where the coder would otherwise guess wrong — an exact signature, endpoint, schema, or tricky rule. Most subtasks need none. Leave **how** to the coder, and never write code beyond a short contract.
+
+If any section reads like a wall of text, cut it down: someone should understand the whole plan from the sentences alone; the bullets are footnotes.
 
 ### 4. Get Plan Approval (gate)
 

@@ -1,7 +1,7 @@
 ---
 name: craft-explorer
 description: Read-only codebase explorer for the craft workflow. Investigates ONE focused slice and reports both how the logic works AND the repo's conventions and patterns, in a fixed format. Use when the craft orchestrator needs context for a feature; dispatch several in parallel across independent slices.
-model: fast
+model: composer-2.5-fast
 readonly: true
 ---
 
@@ -53,4 +53,4 @@ If the feature will modify code in this slice, note smells the architect should 
 Surprises, coupling, footguns, or anything that would trip up an implementer.
 ```
 
-Be precise and skip filler. Your report is fuel for the spec, the architect, and the coders.
+Be precise and skip filler. Your report is fuel for the spec, the plan, and the coders.

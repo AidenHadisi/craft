@@ -1,6 +1,6 @@
 {
   "name": "craft",
-  "description": "Disciplined plan-design-spec-architect-implement workflow that produces clean, modular, idiomatic code. Use when building a non-trivial feature end to end.",
+  "description": "Autonomous senior-developer workflow for building features. Quick mode plans and builds with one approval gate; detailed mode adds design options, a spec, and a reviewed literal-code plan. Both delegate to fast parallel subagents and live-test the result.",
   "version": "0.1.0",
   "author": { "name": "Aiden Hadisi", "email": "so.hadisi@gmail.com" },
   "license": "MIT",

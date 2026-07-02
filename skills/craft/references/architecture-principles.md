@@ -1,6 +1,6 @@
 # Architecture Principles
 
-How to decompose a feature into Tasks (Phase 7). Work through the sections in order — they mirror the decisions you actually make: where to cut, which way dependencies point, what style to use, what change to absorb, and what complexity to refuse. Never name a principle without a concrete claim about *this* design: state the riskiest coupling and how your decomposition handles it.
+How to decompose a feature into Tasks when writing the plan. Work through the sections in order — they mirror the decisions you actually make: where to cut, which way dependencies point, what style to use, what change to absorb, and what complexity to refuse. Never name a principle without a concrete claim about *this* design: state the riskiest coupling and how your decomposition handles it.
 
 ## 1. Cut at concept boundaries
 

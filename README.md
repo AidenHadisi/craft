@@ -2,63 +2,70 @@
 
 A Cursor plugin for building features the right way.
 
-AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by separating thinking from typing: it gathers context, aligns with you, weighs multiple approaches and picks the strongest, writes a non-technical spec, decomposes the system into components, designs each one down to the code up front, reviews it — and only then implements, in parallel, exactly as planned.
+AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it plans, directs, and judges, while fast parallel subagents do the labor — exploring, coding, reviewing. Every wave of coder output is reviewed as diffs against a strict quality lens, and the finished feature is proven by running it locally, not just reading it.
 
-The bar throughout is the **best** solution — sound design and established best practices, not the first thing that works. Quality levers: a design-options step, a two-altitude design pass (system-level architecture fixes boundaries → per-component design fills in contracts and code), reference files carrying proven principles, and user-approval gates at the spec, the architecture, every component, and the tests — so problems get caught on paper where they're cheap to fix.
+One skill, two modes:
+
+- **Quick (default)** — explore, write a directive-level plan, get one approval, implement with parallel coders under heavy review, then verify and live-test.
+- **Detailed (on explicit request)** — adds a user interview, a design-options gate, a reviewed spec, and a literal-code plan written by a dedicated planner and audited by a code reviewer before a single line ships. Three approval gates: design choice, spec, plan.
 
 ## What's inside
 
 | Component | Type | Role |
 |---|---|---|
-| `craft` | skill (`/craft`) | Orchestrates the build pipeline; writes the spec and plan, gates every step |
-| `craft-explorer` | subagent (readonly) | Gathers logic + conventions, in parallel |
-| `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness |
-| `craft-code-reviewer` | subagent (readonly) | Reviews the planned code before it ships |
-| `craft-coder` | subagent | Implements the plan verbatim, in parallel |
+| `craft` | skill (`/craft`) | Orchestrates both modes; directs subagents, reviews every wave, live-tests the result |
+| `craft-explorer` | subagent (readonly) | Gathers logic + conventions for one slice, in parallel |
+| `craft-planner` | subagent | Writes the detailed-mode plan: architecture, Tasks with literal code, tests |
+| `craft-coder` | subagent | Implements one Task — verbatim for literal code, idiom-following for directives |
+| `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness (detailed mode) |
+| `craft-code-reviewer` | subagent (readonly) | Reviews the planned code on paper before it ships (detailed mode) |
 
-Three reference files guide the orchestrator's design work:
+Reference files carry the workflows and design knowledge:
 
-| Reference | Used in | Covers |
+| Reference | Used by | Covers |
 |---|---|---|
-| `references/architecture-principles.md` | Phase 7 (decompose) | Where to cut boundaries, dependency rules, choosing an architectural style, complexity budget, plan template, self-critique |
-| `references/design-principles.md` | Phase 9 (per-Task design) | "Less code is better" + the don't-list, function shape, naming, errors, state, when patterns are justified, Task body template, self-critique |
-| `references/testing-principles.md` | Phase 10 (design tests) | Test what matters (and skip what's trivially correct), repo idioms, mocking only at boundaries, plain-language case lists, Tests section template, self-critique |
+| `references/quick-mode.md` | orchestrator | The six quick-mode steps |
+| `references/detailed-mode.md` | orchestrator | The ten detailed-mode steps and three gates |
+| `references/architecture-principles.md` | `craft-planner` | Where to cut boundaries, dependency rules, complexity budget, plan template |
+| `references/design-principles.md` | `craft-planner`, orchestrator | "Less code is better" + the don't-list, function shape, naming, errors, patterns |
+| `references/testing-principles.md` | `craft-planner`, orchestrator | Test what matters, repo idioms, mocking only at boundaries |
+| `references/live-testing.md` | orchestrator | Running locally, credentials, stubbing side effects, browser testing, safety rules |
+| `references/example-spec.md` | orchestrator | A worked example spec (detailed mode) |
+| `references/example-plan.md` | `craft-planner` | A worked example literal-code plan (detailed mode) |
+| `references/example-plan-quick.md` | orchestrator | A worked example directive-level plan (quick mode) |
 
 ## The workflow
 
 ```mermaid
 flowchart TD
-    start["/craft"] --> understand["Restate task"]
-    understand --> explore["Explore (parallel craft-explorer)"]
-    explore --> interview["Interview the user"]
-    interview --> designs["Present 2-3 best-in-class designs, user picks"]
-    designs --> spec["Orchestrator writes spec (docs/specs)"]
-    spec --> specrev["craft-spec-reviewer"]
-    specrev -->|needs changes| spec
-    specrev -->|pass| userspec["User approves spec"]
-    userspec -->|significant edits| specrev
-    userspec --> decompose["Orchestrator writes architecture + Task skeleton (docs/plans)"]
-    decompose --> archgate["User approves architecture"]
-    archgate -->|reshape| decompose
-    archgate -->|approved, boundaries frozen| taskloop{"Per Task, in dependency order"}
-    taskloop --> design["Orchestrator writes Task body + exact code"]
-    design --> taskgate["User approves this Task"]
-    taskgate -->|refine| design
-    taskgate -->|approved| taskloop
-    taskloop -->|all Tasks done| tests["Orchestrator writes Tests section (plain-language cases + test code)"]
-    tests --> testgate["User approves tests"]
-    testgate -->|refine| tests
-    testgate --> coderev["craft-code-reviewer (full plan)"]
-    coderev -->|Critical/High| design
-    coderev -->|clean| userplan["User approves plan"]
-    userplan --> build["craft-coder per Task (parallel), then tests"]
-    build --> verify["Build + tests, report"]
+    start["/craft"] --> mode{"Mode?"}
+    mode -->|default| qexplore["Explore (parallel craft-explorer)"]
+    qexplore --> qplan["Orchestrator writes directive-level plan"]
+    qplan --> qgate["User approves plan"]
+    qgate --> qbuild["craft-coder per Task, in waves"]
+    qbuild --> qreview["Orchestrator reviews each wave's diffs"]
+    qreview -->|corrections| qbuild
+    qreview --> qverify["Verify + live test locally"]
+
+    mode -->|"user asks for detailed"| dexplore["Explore (parallel craft-explorer)"]
+    dexplore --> interview["Interview the user"]
+    interview --> designs["2-3 design options, user picks"]
+    designs --> spec["Orchestrator writes spec"]
+    spec --> specrev["craft-spec-reviewer loop"]
+    specrev --> specgate["User approves spec"]
+    specgate --> planner["craft-planner writes literal-code plan"]
+    planner --> coderev["craft-code-reviewer loop"]
+    coderev --> plangate["User approves plan"]
+    plangate --> dbuild["craft-coder per Task, in waves"]
+    dbuild --> dreview["Orchestrator reviews each wave's diffs"]
+    dreview -->|corrections| dbuild
+    dreview --> dverify["Verify + live test locally"]
 ```
 
 ### Artifacts it produces (in the target repo)
 
-- `docs/specs/<feature>.md` — the spec: idea and requirements, readable by engineers and product managers alike. No code.
-- `docs/plans/<feature>.md` — the implementation plan. The orchestrator writes it start to finish: the architecture (components, conceptual boundaries, seams between Tasks), each Task's body (the concrete contract plus complete literal code or a manual action), and a closing Tests section — plain-language descriptions of what each test case verifies plus the literal test code, with explicit reasons for anything deliberately left untested. The orchestrator decides at dispatch time which Tasks can be coded in parallel.
+- `docs/plans/<feature>.md` — the implementation plan. Quick mode: directive-level (where and what, contracts where precision matters), written by the orchestrator. Detailed mode: complete literal code per subtask plus a Tests section, written by `craft-planner`.
+- `docs/specs/<feature>.md` — detailed mode only. The spec: idea and requirements, readable by engineers and product managers alike. No code.
 
 ## Install
 
@@ -96,20 +103,27 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 
 ## Usage
 
-In any project, start a feature with:
+Quick mode is the default:
 
 ```
 /craft add OAuth login for the dashboard
 ```
 
-Then follow the phases — answer the interview, pick a design, approve the spec, approve the architecture, then approve each Task as it's designed. The agent handles the rest, including dispatching the coders in parallel.
+Ask for detailed mode explicitly when the feature deserves the full treatment:
+
+```
+/craft detailed — add OAuth login, with a full spec and design options
+```
+
+Quick mode asks for one approval (the plan). Detailed mode walks through the interview, a design choice, the spec, and the plan before any code is written. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
 
 ## Design notes
 
-- **Reference-driven design.** The orchestrator reads `references/architecture-principles.md`, `references/design-principles.md`, and `references/testing-principles.md` at the right phases, so design knowledge lives in versionable, editable files — not baked into subagent prompts.
-- **Single-writer rule.** The orchestrator authors both the spec and the plan; only `craft-coder` writes repo source. Reviewers are readonly.
-- **Readonly where it counts.** Explorers and all reviewers are readonly; they inform the orchestrator but never edit artifacts.
-- **Concise on purpose.** Each subagent doc is kept tight — verbose instructions degrade model performance.
+- **Delegation-first.** The orchestrator's context is spent on judgment, not labor. Exploration, coding, and fixes all go to `composer-2.5-fast` subagents; only the planner and code reviewer inherit the orchestrator's model, because design work needs it.
+- **Reference-driven.** Workflows and design knowledge live in versionable, editable reference files — not baked into subagent prompts. `SKILL.md` is a thin router; each mode file is loaded only when chosen.
+- **Diffs, not reports.** Coder reports are claims; the orchestrator reads the actual diffs after every wave and loops coders with specific corrections.
+- **Prove it runs.** Both modes end with static checks plus live testing — run locally with real credentials, stub side effects, never mutate prod, revert every temporary change.
+- **Readonly where it counts.** Explorers and reviewers are readonly; they inform the orchestrator but never edit artifacts.
 
 ## License
 

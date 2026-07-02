@@ -1,6 +1,6 @@
 # Example Quick Plan
 
-A complete worked example of a craft-quick plan (`docs/plans/<feature>.md`). The level: since there is no spec file, the `## Goal` section carries the problem and requirements — a short paragraph plus requirement bullets, lighter than a spec but enough that the plan stands alone. The `## Conventions` section captures the repo's idioms from exploration and is pasted verbatim into every coder dispatch. The rest of the plan says WHERE and WHAT precisely, includes a contract or snippet only where precision matters (exact signatures, tricky logic, schemas), and leaves HOW to the coder.
+A complete worked example of a quick-mode plan (`docs/plans/<feature>.md`). The level: since there is no spec file, the `## Goal` section carries the problem and requirements — a short paragraph plus requirement bullets, lighter than a spec but enough that the plan stands alone. The `## Conventions` section captures the repo's idioms from exploration and is pasted verbatim into every coder dispatch. The rest of the plan says WHERE and WHAT precisely, includes a contract or snippet only where precision matters (exact signatures, tricky logic, schemas), and leaves HOW to the coder.
 
 ---
 

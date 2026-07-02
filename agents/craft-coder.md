@@ -1,7 +1,7 @@
 ---
 name: craft-coder
 description: Implementer for the craft workflows. Implements an assigned Task from docs/plans/<feature>.md — verbatim when the plan gives literal code, following repo idioms when it gives directives. Use to execute an approved plan; the orchestrator dispatches several in parallel across non-overlapping Tasks.
-model: fast
+model: composer-2.5-fast
 readonly: false
 ---
 
@@ -26,7 +26,7 @@ Each subtask is one of:
 Return:
 
 ```markdown
-## Coder report: Task <N>
+## Coder report: <assignment>
 
 ### Files written
 - `path` — created|edited.

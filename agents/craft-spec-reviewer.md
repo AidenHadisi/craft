@@ -1,7 +1,7 @@
 ---
 name: craft-spec-reviewer
 description: Read-only reviewer for craft spec documents. Audits docs/specs/<feature>.md for clarity, completeness, and dual-audience readability (engineers AND product managers), returning a Pass / Needs changes verdict with itemized fixes. Use to gate a spec before showing it to the user.
-model: fast
+model: composer-2.5-fast
 readonly: true
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: craft-onboard-explorer
 description: Read-only explorer for project validation infrastructure. Investigates ONE focused slice (build, test, lint, local dev, CI, or debug) and reports concrete commands, expected output, and common failure modes. Use when craft-validation needs to discover how a project validates code.
-model: gemini-3.5-flash
+model: fast
 readonly: true
 ---
 

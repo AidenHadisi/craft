@@ -20,16 +20,16 @@ The bar at every step is the **best** solution — sound design and established 
 
 | Subagent              | Role                                          | Writes                    | Model              |
 | --------------------- | --------------------------------------------- | ------------------------- | ------------------ |
-| `craft-explorer`      | Gather context: logic + conventions/patterns  | nothing (readonly)        | `gemini-3.5-flash` |
-| `craft-spec-reviewer` | Gate the spec for clarity & completeness      | nothing (readonly)        | `gemini-3.5-flash` |
+| `craft-explorer`      | Gather context: logic + conventions/patterns  | nothing (readonly)        | `fast` |
+| `craft-spec-reviewer` | Gate the spec for clarity & completeness      | nothing (readonly)        | `fast` |
 | `craft-planner`       | Design and write the full implementation plan | `docs/plans/<feature>.md` | inherit            |
 | `craft-code-reviewer` | Review the plan's code before it ships        | nothing (readonly)        | inherit            |
-| `craft-coder`         | Implement assigned Tasks exactly              | repo source               | `gemini-3.5-flash` |
+| `craft-coder`         | Implement assigned Tasks exactly              | repo source               | `fast` |
 
 
 > When dispatching a subagent, pass *only* the inputs it cannot see. Its role, method, and output format are already in its prompt.
 >
-> **Always set the dispatch `model` explicitly per the Model column above.** The `model` field in an agent's definition file is *not* honored when the agent is launched via Task dispatch — it silently inherits the orchestrator's (expensive) model. Pass `model: gemini-3.5-flash` when dispatching `craft-explorer`, `craft-spec-reviewer`, and `craft-coder`; omit it (inherit) for `craft-planner` and `craft-code-reviewer`.
+> **Always set the dispatch `model` explicitly per the Model column above.** The `model` field in an agent's definition file is *not* honored when the agent is launched via Task dispatch — it silently inherits the orchestrator's (expensive) model. Pass `model: fast` when dispatching `craft-explorer`, `craft-spec-reviewer`, and `craft-coder`; omit it (inherit) for `craft-planner` and `craft-code-reviewer`.
 >
 > **Always resume, never re-dispatch.** When you need more work from a subagent that has already completed (e.g., asking the planner to fix review findings, or asking the reviewer to re-check after fixes), **resume** it by passing its agent ID via `resume`. Do not dispatch a new agent for the same role — the resumed agent already has its prior context and can act on a short follow-up message.
 
@@ -65,7 +65,7 @@ In 2–4 sentences, state your understanding of the task and what "done" looks l
 
 ### Phase 1: Explore
 
-Split discovery into independent slices (e.g., "data layer", "conventions in module Y"). Dispatch one `craft-explorer` per slice **in parallel** (multiple Task calls in one message), each with `model: gemini-3.5-flash`:
+Split discovery into independent slices (e.g., "data layer", "conventions in module Y"). Dispatch one `craft-explorer` per slice **in parallel** (multiple Task calls in one message), each with `model: fast`:
 
 ```text
 Slice: <focused area to investigate>
@@ -88,7 +88,7 @@ Write `docs/specs/<feature>.md` based on the chosen design. Mirror the structure
 
 ### Phase 5: Spec Review Loop
 
-Dispatch `craft-spec-reviewer` with `model: gemini-3.5-flash`:
+Dispatch `craft-spec-reviewer` with `model: fast`:
 
 ```text
 Spec: docs/specs/<feature>.md

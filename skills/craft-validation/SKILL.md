@@ -18,8 +18,8 @@ Verify the project builds, passes tests, responds to API calls, and renders in t
 
 | Subagent | Role | Model |
 |---|---|---|
-| `craft-onboard-explorer` | Discover one slice of validation infrastructure | `gemini-3.5-flash` |
-| `craft-coder` | Fix build/test/lint failures | `gemini-3.5-flash` |
+| `craft-onboard-explorer` | Discover one slice of validation infrastructure | `fast` |
+| `craft-coder` | Fix build/test/lint failures | `fast` |
 
 ## Workflow
 
@@ -30,7 +30,7 @@ If it exists, skip to Step 2.
 If not:
 
 1. Read [references/discovery.md](references/discovery.md) for the explorer slices.
-2. Dispatch one `craft-onboard-explorer` per slice **in parallel** with `model: gemini-3.5-flash`.
+2. Dispatch one `craft-onboard-explorer` per slice **in parallel** with `model: fast`.
 3. Synthesize into a draft following [references/example-validation.md](references/example-validation.md).
 4. Present to the user. Incorporate edits until approved, then write the file.
 

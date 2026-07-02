@@ -1,7 +1,7 @@
 ---
 name: craft-explorer
 description: Read-only codebase explorer for the craft workflow. Investigates ONE focused slice and reports both how the logic works AND the repo's conventions and patterns, in a fixed format. Use when the craft orchestrator needs context for a feature; dispatch several in parallel across independent slices.
-model: gemini-3.5-flash
+model: fast
 readonly: true
 ---
 

@@ -1,6 +1,6 @@
 # Quick Mode
 
-**One gate.** The user explicitly approves the plan before you implement.
+**Two gates.** The user explicitly approves the approach before you write the plan, and the plan before you implement.
 
 ## Artifact
 
@@ -11,10 +11,11 @@ Derive a kebab-case `<feature>` slug. You produce one artifact: **`docs/plans/<f
 ```markdown
 - [ ] 1. Restate the task
 - [ ] 2. Explore
-- [ ] 3. Write the plan
-- [ ] 4. Get plan approval (gate)
-- [ ] 5. Implement + review waves
-- [ ] 6. Verify & live test
+- [ ] 3. Interview the user
+- [ ] 4. Write the plan
+- [ ] 5. Get plan approval (gate)
+- [ ] 6. Implement + review waves
+- [ ] 7. Verify & live test
 ```
 
 ### 1. Restate the Task
@@ -34,19 +35,23 @@ Skip only when the conversation already gives you everything the plan needs.
 
 From the reports, write down the repo's conventions — naming, error handling, module boundaries, test patterns, libraries. This becomes the plan's `## Conventions` section.
 
-### 3. Write the Plan
+### 3. Interview the User
+
+Before writing anything, surface the decisions the plan would otherwise assume: scope boundaries, behavior on edge cases, UX choices, what to do with existing data or callers. Ask **one question at a time**, each with a recommended answer. If a question can be answered by reading the code, dispatch a subagent to answer it instead of asking. Skip only when exploration left no real decisions open.
+
+### 4. Write the Plan
 
 Read [design-principles.md](design-principles.md) and [testing-principles.md](testing-principles.md), then write `docs/plans/<feature>.md`, mirroring the structure and level of [example-plan-quick.md](example-plan-quick.md).
 
-The plan must read top-down at a glance. Every Task opens with one sentence on what it delivers; every subtask is a single sentence — **where** and **what**. Add indented detail bullets under a subtask only where the coder would otherwise guess wrong — an exact signature, endpoint, schema, or tricky rule. Most subtasks need none. Leave **how** to the coder, and never write code beyond a short contract.
+The plan must read top-down at a glance. Every Task opens with one sentence on what it delivers; every subtask is a bolded one-sentence headline saying **what**, with the file path and action on a quiet line below. Add detail bullets under a subtask only where the coder would otherwise guess wrong — an exact signature, endpoint, schema, or tricky rule. Most subtasks need none. Leave **how** to the coder, and never write code beyond a short contract.
 
 If any section reads like a wall of text, cut it down: someone should understand the whole plan from the sentences alone; the bullets are footnotes.
 
-### 4. Get Plan Approval (gate)
+### 5. Get Plan Approval (gate)
 
 Present the plan. Incorporate edits until the user explicitly approves.
 
-### 5. Implement + Review Waves
+### 6. Implement + Review Waves
 
 Dispatch one `craft-coder` per Task. Disjoint Tasks go out concurrently; dependent Tasks run in waves.
 
@@ -71,7 +76,7 @@ For `· manual` subtasks, pause and ask the user to execute them first.
 
 On failure, resume that coder with specific corrections — file, problem, required fix. Re-review. Next wave only when the current one passes.
 
-### 6. Verify & Live Test
+### 7. Verify & Live Test
 
 **Static.** Run the plan's `## Verification` commands: build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
 

@@ -6,7 +6,7 @@ AI agents are great at producing code that *works* and bad at producing code tha
 
 One skill, two modes:
 
-- **Quick (default)** — explore, write a directive-level plan, get one approval, implement with parallel coders under heavy review, then verify and live-test.
+- **Quick (default)** — explore, interview the user on open decisions, write a directive-level plan, get one approval, implement with parallel coders under heavy review, then verify and live-test.
 - **Detailed (on explicit request)** — adds a user interview, a design-options gate, a reviewed spec, and a literal-code plan written by a dedicated planner and audited by a code reviewer before a single line ships. Three approval gates: design choice, spec, plan.
 
 ## What's inside
@@ -24,7 +24,7 @@ Reference files carry the workflows and design knowledge:
 
 | Reference | Used by | Covers |
 |---|---|---|
-| `references/quick-mode.md` | orchestrator | The six quick-mode steps |
+| `references/quick-mode.md` | orchestrator | The seven quick-mode steps |
 | `references/detailed-mode.md` | orchestrator | The ten detailed-mode steps and three gates |
 | `references/architecture-principles.md` | `craft-planner` | Where to cut boundaries, dependency rules, complexity budget, plan template |
 | `references/design-principles.md` | `craft-planner`, orchestrator | "Less code is better" + the don't-list, function shape, naming, errors, patterns |
@@ -40,7 +40,8 @@ Reference files carry the workflows and design knowledge:
 flowchart TD
     start["/craft"] --> mode{"Mode?"}
     mode -->|default| qexplore["Explore (parallel craft-explorer)"]
-    qexplore --> qplan["Orchestrator writes directive-level plan"]
+    qexplore --> qinterview["Interview the user"]
+    qinterview --> qplan["Orchestrator writes directive-level plan"]
     qplan --> qgate["User approves plan"]
     qgate --> qbuild["craft-coder per Task, in waves"]
     qbuild --> qreview["Orchestrator reviews each wave's diffs"]

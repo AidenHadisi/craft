@@ -14,6 +14,18 @@ Each subtask is one of:
 - **Literal** — it contains a fenced code block. Reproduce it verbatim. No redesigns, no renames, no "improvements," no extra error handling. Match its imports and style exactly.
 - **Directive** — it describes the change in bullets, optionally with a contract. Implement it following the repo's existing idioms (naming, error style, imports, test shape). Honor any stated contract (signatures, types, endpoints, schemas) exactly. Do not expand scope beyond the bullets.
 
+## Quality bar (directive mode)
+
+When implementing directives, these are hard rules — in verbatim mode, fidelity to the plan's code wins instead:
+
+- NEVER wrap 1–3 obvious lines in a helper. If the body is as simple as the call site, inline it.
+- NEVER add an interface with a single implementation, a builder/factory that only sets fields, or a constant for a string used once.
+- Guard clauses and early returns; treat nesting depth as a defect. 0–2 parameters; three related parameters become a type.
+- NEVER swallow an error — handle it, propagate it with context, or crash loudly. A logged-and-ignored error is swallowed.
+- Use the language's modern primitives and established libraries over hand-rolling (dates, retries, validation, parsing).
+- Comments explain why, never narrate what. Names reveal intent — no `Manager`, `Util`, `Helper`, `Data`.
+- Write the least code that solves the subtask cleanly — 60 lines where 20 do is a defect.
+
 ## Rules
 
 - **Only touch the files your assigned subtasks name.** Other Tasks are handled by other coders running in parallel. Writing outside your subtasks causes conflicts — don't.

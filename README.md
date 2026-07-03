@@ -6,8 +6,8 @@ AI agents are great at producing code that *works* and bad at producing code tha
 
 One skill, two modes:
 
-- **Quick (default)** — explore, interview the user on open decisions, write a directive-level plan, get one approval, implement with parallel coders under heavy review, then verify and live-test.
-- **Detailed (on explicit request)** — adds a user interview, a design-options gate, a reviewed spec, and a literal-code plan written by a dedicated planner and audited by a code reviewer before a single line ships. Three approval gates: design choice, spec, plan.
+- **Quick (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, get approval, implement with parallel coders under heavy review, polish, then live-test. Two approval gates: design choice, plan.
+- **Detailed (on explicit request)** — adds a reviewed spec and a literal-code plan written by a dedicated planner and audited by a code reviewer before a single line ships. Three approval gates: design choice, spec, plan.
 
 ## What's inside
 
@@ -17,6 +17,7 @@ One skill, two modes:
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions for one slice, in parallel |
 | `craft-planner` | subagent | Writes the detailed-mode plan: architecture, Tasks with literal code, tests |
 | `craft-coder` | subagent | Implements one Task — verbatim for literal code, idiom-following for directives |
+| `craft-polisher` | subagent | Behavior-preserving simplification pass over the working diff (quick mode) |
 | `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness (detailed mode) |
 | `craft-code-reviewer` | subagent (readonly) | Reviews the planned code on paper before it ships (detailed mode) |
 
@@ -24,7 +25,7 @@ Reference files carry the workflows and design knowledge:
 
 | Reference | Used by | Covers |
 |---|---|---|
-| `references/quick-mode.md` | orchestrator | The seven quick-mode steps |
+| `references/quick-mode.md` | orchestrator | The nine quick-mode steps and two gates |
 | `references/detailed-mode.md` | orchestrator | The ten detailed-mode steps and three gates |
 | `references/architecture-principles.md` | `craft-planner` | Where to cut boundaries, dependency rules, complexity budget, plan template |
 | `references/design-principles.md` | `craft-planner`, orchestrator | "Less code is better" + the don't-list, function shape, naming, errors, patterns |
@@ -41,12 +42,14 @@ flowchart TD
     start["/craft"] --> mode{"Mode?"}
     mode -->|default| qexplore["Explore (parallel craft-explorer)"]
     qexplore --> qinterview["Interview the user"]
-    qinterview --> qplan["Orchestrator writes directive-level plan"]
+    qinterview --> qdesigns["Design options, user picks"]
+    qdesigns --> qplan["Orchestrator writes directive-level plan"]
     qplan --> qgate["User approves plan"]
     qgate --> qbuild["craft-coder per Task, in waves"]
     qbuild --> qreview["Orchestrator reviews each wave's diffs"]
     qreview -->|corrections| qbuild
-    qreview --> qverify["Verify + live test locally"]
+    qreview --> qpolish["craft-polisher simplifies the working diff"]
+    qpolish --> qverify["Live test locally"]
 
     mode -->|"user asks for detailed"| dexplore["Explore (parallel craft-explorer)"]
     dexplore --> interview["Interview the user"]
@@ -116,7 +119,7 @@ Ask for detailed mode explicitly when the feature deserves the full treatment:
 /craft detailed — add OAuth login, with a full spec and design options
 ```
 
-Quick mode asks for one approval (the plan). Detailed mode walks through the interview, a design choice, the spec, and the plan before any code is written. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
+Quick mode asks for two approvals (the design choice and the plan). Detailed mode adds a reviewed spec between them. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
 
 ## Design notes
 

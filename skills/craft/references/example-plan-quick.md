@@ -1,11 +1,3 @@
-# Example Quick Plan
-
-A complete worked example of a quick-mode plan (`docs/plans/<feature>.md`). The level: since there is no spec file, the `## Goal` section carries the problem and requirements — a short paragraph plus requirement bullets, lighter than a spec but enough that the plan stands alone. The `## Conventions` section captures the repo's idioms from exploration and is pasted verbatim into every coder dispatch.
-
-The plan reads top-down: each Task opens with one sentence on what it delivers, and each subtask is a bolded one-sentence headline saying WHAT, with the file and action on a quiet line below. Detail bullets appear under a subtask only where the coder would otherwise guess wrong — a signature, an endpoint, a tricky rule. Most subtasks have none. HOW is the coder's job.
-
----
-
 # Plan: Saved searches
 
 ## Goal
@@ -17,6 +9,11 @@ Requirements:
 - Names are required and trimmed; saving an existing name replaces that entry.
 - A user only ever sees and modifies their own saved searches.
 - Persists across sessions and devices.
+
+## Out of scope
+
+- Sharing saved searches between users — no requirement today.
+- Renaming a saved search — save under the new name and delete the old one.
 
 ## Approach
 
@@ -30,11 +27,18 @@ A thin vertical slice: a store for saved-search rows, REST endpoints scoped to t
 - Tests: table-driven with `t.Run`; hand-rolled fakes, no mock library.
 - Frontend: fetch wrappers live in `web/src/api/`, one module per resource.
 
+## Contracts
+
+- Store (Task 1, consumed by Task 2): `List(ctx, userID) ([]SavedSearch, error)` newest first · `Upsert(ctx, userID, name string, query json.RawMessage) (SavedSearch, error)` · `Delete(ctx, userID, id int64) error` scoped by userID.
+- Routes (Task 2, consumed by Task 3): GET/POST `/api/saved-searches`, DELETE `/api/saved-searches/{id}` — camelCase JSON.
+
 ## Changes
 
 ### Task 1 — Storage   (depends on: none)
 
 A table and a store that owns all saved-search persistence.
+
+**Done when:** the store round-trips a row per the contract, and re-upserting a name replaces its query.
 
 **1.1 — Create the `saved_searches` table.**
 · manual
@@ -44,12 +48,13 @@ A table and a store that owns all saved-search persistence.
 **1.2 — Build the store with List, Upsert, and Delete.**
 `internal/savedsearch/store.go` · create
 
-- Contract: `List(ctx, userID) ([]SavedSearch, error)` newest first, `Upsert(ctx, userID, name string, query json.RawMessage) (SavedSearch, error)`, `Delete(ctx, userID, id int64) error` scoped by userID.
 - Upsert in one statement: `INSERT ... ON CONFLICT (user_id, name) DO UPDATE`.
 
 ### Task 2 — HTTP API   (depends on: Task 1)
 
 Authenticated REST endpoints exposing the store.
+
+**Done when:** `GET /api/saved-searches` returns only the caller's rows, newest first; a blank name gets 400 without touching the store.
 
 **2.1 — Add the saved-searches handler with List/Save/Delete.**
 `internal/httpapi/saved_searches.go` · create
@@ -60,11 +65,13 @@ Authenticated REST endpoints exposing the store.
 **2.2 — Register the routes in the authenticated group.**
 `internal/httpapi/router.go` · edit
 
-- GET/POST `/api/saved-searches` and DELETE `/api/saved-searches/{id}`, inside requireAuth.
+- Inside the existing requireAuth group.
 
 ### Task 3 — Frontend   (depends on: Task 2)
 
 The saved-searches list in the search page, backed by a typed API module.
+
+**Done when:** the list loads on mount, clicking an entry runs its search, and delete removes it inline.
 
 **3.1 — Add typed list/save/delete fetch wrappers.**
 `web/src/api/savedSearches.ts` · create

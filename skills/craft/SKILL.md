@@ -1,6 +1,6 @@
 ---
 name: craft
-description: End-to-end workflow for planning and building a feature. Quick mode (default) explores, interviews the user, writes a directive-level plan, gets one approval, and implements with parallel coders. Detailed mode — only when the user explicitly asks for it — adds design options, a spec, and a reviewed literal-code plan. Use when the user wants to plan AND build a feature, says "craft this", or asks for a high-quality implementation.
+description: End-to-end workflow for planning and building a feature. Quick mode (default) explores, interviews the user, presents design options, writes a directive-level plan, gets approval, implements with parallel coders, polishes, and live-tests. Detailed mode — only when the user explicitly asks for it — adds a reviewed spec and a reviewed literal-code plan. Use when the user wants to plan AND build a feature, says "craft this", or asks for a high-quality implementation.
 ---
 
 # Craft

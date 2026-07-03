@@ -121,10 +121,4 @@ On failure, resume that coder with specific corrections. Re-review. Next wave on
 
 **Static.** Run the plan's `## Verification` commands: build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
 
-**Live.** Read [live-testing.md](live-testing.md) and follow it:
-
-1. Run the app locally — discover the dev setup (`package.json`, `Makefile`, `docker-compose.yml`, README).
-2. Get credentials from wherever the project keeps them — `.env`, AWS Secrets Manager, config files.
-3. Exercise the feature end to end with real requests.
-4. Frontend: test the pages with the Cursor browser. If blocked by a login, ask the user to log in, then continue.
-5. Revert all temporary changes (stubs, auth bypasses) and report what was tested and how.
+**Live.** Read [live-testing.md](live-testing.md) and follow it end to end — run locally, instrument, exercise the feature, revert, report.

@@ -106,10 +106,4 @@ Review the polisher's diff with the same wave lens, then re-run the static check
 
 ### 9. Verify & Live Test
 
-Read [live-testing.md](live-testing.md) and follow it:
-
-1. Run the app locally — discover the dev setup (`package.json`, `Makefile`, `docker-compose.yml`, README).
-2. Get credentials from wherever the project keeps them — `.env`, AWS Secrets Manager, config files.
-3. Exercise the feature end to end with real requests.
-4. Frontend: test the pages with the Cursor browser. If blocked by a login, ask the user to log in, then continue.
-5. Revert all temporary changes (stubs, auth bypasses) and report what was tested and how.
+Read [live-testing.md](live-testing.md) and follow it end to end — run locally, instrument, exercise the feature, revert, report.

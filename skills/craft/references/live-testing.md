@@ -12,6 +12,13 @@ How to prove a feature works by running it locally. The goal is a real end-to-en
 - Find credentials where the project keeps them: `.env` / `.env.local`, AWS Secrets Manager (`aws secretsmanager get-secret-value`), SSM parameters, config files, docker-compose `environment` blocks.
 - If auth can't be satisfied with available credentials, **temporarily bypass it** — e.g. comment out the auth middleware on the route under test. Tag every such edit with a `TODO(live-test)` comment so nothing is forgotten, and revert it before finishing.
 
+## Debug logging
+
+- **Instrument before you test, not after it fails.** Before the first request, add temporary debug logs at the feature's key points — entry/exit of the new code path, values of the inputs it branches on, results of external calls. When something misbehaves, the first run already tells you where; you're not re-running blind.
+- Log values, not moments: `saved search id=42 user=7 name="foo"` beats `got here`.
+- Tag every one with the same `TODO(live-test)` marker as other temporary edits, and add them to the revert checklist the moment you write them.
+- When a failure needs more visibility, add logging deeper along the path — don't guess from the outside.
+
 ## Neutralizing side effects
 
 - Before exercising a flow with real side effects — email, SMS, webhooks, billing, queue jobs — **temporarily stub the call**: e.g. replace `sendEmail(...)` with a log statement. Test, then revert.
@@ -32,5 +39,6 @@ How to prove a feature works by running it locally. The goal is a real end-to-en
 ## Hard rules
 
 - Never point tests at production hosts, databases, or queues.
-- Every temporary change (stubs, auth bypasses) is reverted before reporting done.
+- Every temporary change (stubs, auth bypasses, debug logs) is reverted before reporting done — `git diff` and a search for `TODO(live-test)` must both come back clean of them.
 - If live testing is impossible — no local setup, or missing credentials only the user can provide — say so explicitly rather than skipping silently.
+- Finish with a short report: what was tested, how, and what was observed.

@@ -4,7 +4,7 @@
 
 ## Artifact
 
-Derive a kebab-case `<feature>` slug. You produce one artifact: **`docs/plans/<feature>.md`** — a directive-level plan, written by you.
+Derive a kebab-case `<feature>` slug. You produce one artifact: `docs/plans/<feature>.md` — a directive-level plan, written by you.
 
 ## Steps
 
@@ -17,7 +17,7 @@ Derive a kebab-case `<feature>` slug. You produce one artifact: **`docs/plans/<f
 - [ ] 6. Get plan approval (gate)
 - [ ] 7. Implement + review waves
 - [ ] 8. Polish
-- [ ] 9. Verify & live test
+- [ ] 9. Live test
 ```
 
 ### 1. Restate the Task
@@ -41,7 +41,7 @@ From the reports, write down the repo's conventions — naming, error handling, 
 
 Before writing anything, surface the decisions the plan would otherwise assume: scope boundaries, behavior on edge cases, UX choices, what to do with existing data or callers. Ask **one question at a time**, each with a recommended answer. If a question can be answered by reading the code, dispatch a subagent to answer it instead of asking. Skip only when exploration left no real decisions open.
 
-### 4. Design Options (gate)
+### 4. Design Options
 
 Present the recommended approach first — one line on what it is and why it wins — then 2–3 genuinely different viable alternatives with one-line trade-offs. Fewer if none are genuinely viable; never invent fake alternatives. For truly mechanical tasks with one sensible shape, state the approach and ask to proceed. The user picks or composes a hybrid.
 
@@ -60,6 +60,8 @@ If any section reads like a wall of text, cut it down: someone should understand
 - Edge cases and failure modes surfaced in the interview appear in a Task or in `## Out of scope`.
 - Nothing violates the design principles' don't-list.
 
+
+
 ### 6. Get Plan Approval (gate)
 
 Present the plan. Incorporate edits until the user explicitly approves.
@@ -77,7 +79,7 @@ Conventions:
 
 Escalate the model for hard Tasks: when a Task carries tricky logic — concurrency, parsing, algorithms, subtle state — dispatch that coder without `model` so it inherits yours. Everything else stays on `composer-2.5-fast`.
 
-For `· manual` subtasks, pause and ask the user to execute them first.
+For `manual` subtasks, pause and ask the user to execute them first.
 
 **Review each wave before dispatching the next.** Read the diffs yourself and judge:
 
@@ -93,7 +95,7 @@ On failure, resume that coder with specific corrections — file, problem, requi
 
 ### 8. Polish
 
-Run the plan's `## Verification` static commands first — build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
+Run the plan's `## Verification` commands first — build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
 
 Once static checks pass, dispatch `craft-polisher` (inherit model — do not set `model`):
 
@@ -104,6 +106,6 @@ Files changed: <list of files, or "diff against <base>">
 
 Review the polisher's diff with the same wave lens, then re-run the static checks. Skip this step only when the diff is trivially small.
 
-### 9. Verify & Live Test
+### 9. Live Test
 
-Read [live-testing.md](live-testing.md) and follow it end to end — run locally, instrument, exercise the feature, revert, report.
+Invoke the **craft-test** skill ([../../craft-test/SKILL.md](../../craft-test/SKILL.md)) and follow it end to end — run locally, instrument, exercise the feature, revert, report.

@@ -14,6 +14,7 @@ One skill, two modes:
 | Component | Type | Role |
 |---|---|---|
 | `craft` | skill (`/craft`) | Orchestrates both modes; directs subagents, reviews every wave, live-tests the result |
+| `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions for one slice, in parallel |
 | `craft-planner` | subagent | Writes the detailed-mode plan: architecture, Tasks with literal code, tests |
 | `craft-coder` | subagent | Implements one Task — verbatim for literal code, idiom-following for directives |
@@ -30,7 +31,6 @@ Reference files carry the workflows and design knowledge:
 | `references/architecture-principles.md` | `craft-planner` | Where to cut boundaries, dependency rules, complexity budget, plan template |
 | `references/design-principles.md` | `craft-planner`, orchestrator | "Less code is better" + the don't-list, function shape, naming, errors, patterns |
 | `references/testing-principles.md` | `craft-planner`, orchestrator | Test what matters, repo idioms, mocking only at boundaries |
-| `references/live-testing.md` | orchestrator | Running locally, credentials, stubbing side effects, browser testing, safety rules |
 | `references/example-spec.md` | orchestrator | A worked example spec (detailed mode) |
 | `references/example-plan.md` | `craft-planner` | A worked example literal-code plan (detailed mode) |
 | `references/example-plan-quick.md` | orchestrator | A worked example directive-level plan (quick mode) |

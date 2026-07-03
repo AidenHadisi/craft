@@ -90,6 +90,3 @@ The saved-searches list in the search page, backed by a typed API module.
 - `go build ./... && go vet ./...`
 - `go test ./internal/...`
 - `cd web && npm run typecheck && npm run lint`
-- Live: `make dev` then `curl -s localhost:8080/api/saved-searches -H "Authorization: Bearer $(grep API_TOKEN .env | cut -d= -f2)"` — expect 200 and camelCase JSON
-- Live: save, re-save the same name, delete via curl; verify the list reflects each step
-- Live (browser): open /search, save a search, see it in the list, run it, delete it

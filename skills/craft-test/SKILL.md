@@ -1,44 +1,63 @@
-# Live Testing
+---
+name: craft-test
+description: Prove a feature works by running it live — real process, real requests, real rendering — without ever touching production. Use when the user asks to test or verify a feature, after an implementation lands, or standalone anytime something needs to be proven working.
+---
 
-How to prove a feature works by running it locally. The goal is a real end-to-end exercise of the feature — real process, real requests, real rendering — without ever touching production.
+# Craft Test
 
-## Running locally
+Prove the feature works by running it, not by reading it. The goal is a real end-to-end exercise — real process, real requests, real rendering — without ever touching production.
+
+## Steps
+
+### 1. Scope
+
+Establish what you're testing and what "works" means: the endpoints, pages, or flows involved, and the observable result that counts as success. Pull this from the conversation or the feature's plan; if it's genuinely unclear, ask.
+
+If the project has build/test/lint commands, run them first — no point live-testing code that doesn't compile.
+
+### 2. Run locally
 
 - Discover the run command from the project itself: `package.json` scripts, `Makefile`, `docker-compose.yml`, `Procfile`, README, or existing dev docs. Prefer the project's established dev setup over inventing one.
 - Start the process and confirm it is healthy before testing — watch the logs or hit a health endpoint. Don't fire requests at a server that hasn't finished booting.
 
-## Credentials & auth
+### 3. Credentials & auth
 
 - Find credentials where the project keeps them: `.env` / `.env.local`, AWS Secrets Manager (`aws secretsmanager get-secret-value`), SSM parameters, config files, docker-compose `environment` blocks.
 - If auth can't be satisfied with available credentials, **temporarily bypass it** — e.g. comment out the auth middleware on the route under test. Tag every such edit with a `TODO(live-test)` comment so nothing is forgotten, and revert it before finishing.
 
-## Debug logging
+### 4. Instrument
 
-- **Instrument before you test, not after it fails.** Before the first request, add temporary debug logs at the feature's key points — entry/exit of the new code path, values of the inputs it branches on, results of external calls. When something misbehaves, the first run already tells you where; you're not re-running blind.
+- **Add debug logs before the first request, not after it fails.** Instrument the feature's key points — entry/exit of the code path under test, values of the inputs it branches on, results of external calls. When something misbehaves, the first run already tells you where; you're not re-running blind.
 - Log values, not moments: `saved search id=42 user=7 name="foo"` beats `got here`.
-- Tag every one with the same `TODO(live-test)` marker as other temporary edits, and add them to the revert checklist the moment you write them.
+- Tag every one with `TODO(live-test)` and add it to the revert checklist the moment you write it.
 - When a failure needs more visibility, add logging deeper along the path — don't guess from the outside.
 
-## Neutralizing side effects
+### 5. Neutralize side effects
 
 - Before exercising a flow with real side effects — email, SMS, webhooks, billing, queue jobs — **temporarily stub the call**: e.g. replace `sendEmail(...)` with a log statement. Test, then revert.
 - Track every temporary edit in a checklist as you make it, and revert them all at the end. A final `git diff` must show only the feature's intended changes.
 
-## Backend testing
+### 6. Exercise the feature
+
+**Backend**
 
 - curl the new/changed endpoints with real request bodies; verify status codes and response shapes.
 - Read-only operations are always fair game. Mutating operations are fine against local/dev databases — never against anything shared or production.
 
-## Frontend testing
+**Frontend**
 
 - Use the Cursor browser tools to open the pages the feature touches.
 - Verify: the page renders (no blank screen), the feature's UI elements appear and respond, and there are no console errors.
 - If a login wall blocks progress, ask the user to log in manually, then continue.
 - Never click destructive buttons, submit payments, or follow external OAuth redirects.
 
+### 7. Revert & report
+
+- Revert every temporary change — stubs, auth bypasses, debug logs. `git diff` and a search for `TODO(live-test)` must both come back clean of them.
+- Finish with a short report: what was tested, how, and what was observed.
+
 ## Hard rules
 
 - Never point tests at production hosts, databases, or queues.
-- Every temporary change (stubs, auth bypasses, debug logs) is reverted before reporting done — `git diff` and a search for `TODO(live-test)` must both come back clean of them.
+- Every temporary change is reverted before reporting done.
 - If live testing is impossible — no local setup, or missing credentials only the user can provide — say so explicitly rather than skipping silently.
-- Finish with a short report: what was tested, how, and what was observed.

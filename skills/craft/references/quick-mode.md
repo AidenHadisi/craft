@@ -26,7 +26,7 @@ State in 1–2 sentences what you're building and what "done" looks like. Derive
 
 ### 2. Explore
 
-Dispatch one `craft-explorer` per slice of the codebase, in parallel:
+Dispatch one `craft-explorer` per slice of the codebase, in parallel. Pick the exploration model from the [Model Selection](../SKILL.md#model-selection) table based on each slice's complexity.
 
 ```text
 Slice: <focused area to investigate>
@@ -68,7 +68,7 @@ Present the plan. Incorporate edits until the user explicitly approves.
 
 ### 7. Implement + Review Waves
 
-Dispatch one `craft-coder` per Task. Disjoint Tasks go out concurrently; dependent Tasks run in waves.
+Dispatch one `craft-coder` per Task. Disjoint Tasks go out concurrently; dependent Tasks run in waves. Pick the coding model from the [Model Selection](../SKILL.md#model-selection) table for each Task's complexity.
 
 ```text
 Plan: docs/plans/<feature>.md
@@ -76,8 +76,6 @@ Your task: Task <N> (subtasks <N>.1..<N>.k) — implement these and no others.
 Conventions:
 <paste the plan's ## Conventions section>
 ```
-
-Escalate the model for hard Tasks: when a Task carries tricky logic — concurrency, parsing, algorithms, subtle state — dispatch that coder without `model` so it inherits yours. Everything else stays on `composer-2.5-fast`.
 
 For `manual` subtasks, pause and ask the user to execute them first.
 
@@ -97,7 +95,7 @@ On failure, resume that coder with specific corrections — file, problem, requi
 
 Run the plan's `## Verification` commands first — build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
 
-Once static checks pass, dispatch `craft-polisher` (inherit model — do not set `model`):
+Once static checks pass, dispatch `craft-polisher` with the polish model from the [Model Selection](../SKILL.md#model-selection) table (simple vs complex):
 
 ```text
 Plan: docs/plans/<feature>.md

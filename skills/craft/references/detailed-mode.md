@@ -2,7 +2,7 @@
 
 **Three gates.** The user explicitly approves the design choice, the spec, and the plan. A small feature scales the plan down, not the discipline.
 
-**Model exception.** Dispatch `craft-planner` and `craft-code-reviewer` without setting `model` — they inherit yours; design work needs it. Everything else stays on `composer-2.5-fast`.
+**Model selection.** Pick the model for each dispatch from the [Model Selection](../SKILL.md#model-selection) table in SKILL.md.
 
 ## Artifacts
 
@@ -32,7 +32,7 @@ State in 2–4 sentences what you're building and what "done" looks like. Derive
 
 ### 2. Explore
 
-Dispatch one `craft-explorer` per slice of the codebase, in parallel:
+Dispatch one `craft-explorer` per slice of the codebase, in parallel. Pick the exploration model from the [Model Selection](../SKILL.md#model-selection) table based on each slice's complexity.
 
 ```text
 Slice: <focused area to investigate>
@@ -55,7 +55,7 @@ Propose **2–3 genuinely different** approaches — different shapes, not varia
 
 Write `docs/specs/<feature>.md` based on the chosen design, mirroring [example-spec.md](example-spec.md). Focus on *what* and *why*, never *how* — both an engineer and a product manager must be able to read it.
 
-Then dispatch `craft-spec-reviewer`:
+Then dispatch `craft-spec-reviewer` with the reviewing model from the [Model Selection](../SKILL.md#model-selection) table:
 
 ```text
 Spec: docs/specs/<feature>.md
@@ -69,7 +69,7 @@ Present the spec. Incorporate edits until the user explicitly approves. If the e
 
 ### 7. Plan + Code Review Loop
 
-Dispatch `craft-planner` (inherit model — do not set `model`):
+Dispatch `craft-planner` with the coding/hard model from the [Model Selection](../SKILL.md#model-selection) table:
 
 ```text
 Spec: docs/specs/<feature>.md
@@ -85,7 +85,7 @@ Reference files:
 
 The planner designs the architecture and writes the full plan with literal code and tests. Do **not** write the plan yourself.
 
-Then dispatch `craft-code-reviewer` (inherit model) over the full plan:
+Then dispatch `craft-code-reviewer` with the reviewing model from the [Model Selection](../SKILL.md#model-selection) table over the full plan:
 
 ```text
 Plan: docs/plans/<feature>.md
@@ -100,7 +100,7 @@ Present the pre-reviewed plan for holistic sign-off. Incorporate edits until the
 
 ### 9. Implement + Review Waves
 
-Dispatch one `craft-coder` per Task. Disjoint Tasks go out concurrently; dependent Tasks run in waves. Dispatch the `## Tests` section as its own coder(s) after all Task waves land.
+Dispatch one `craft-coder` per Task. Disjoint Tasks go out concurrently; dependent Tasks run in waves. Pick the coding model from the [Model Selection](../SKILL.md#model-selection) table for each Task's complexity. Dispatch the `## Tests` section as its own coder(s) after all Task waves land.
 
 ```text
 Plan: docs/plans/<feature>.md

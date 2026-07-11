@@ -100,6 +100,8 @@ Once static checks pass, dispatch `craft-polisher` with the polish model from th
 ```text
 Plan: docs/plans/<feature>.md
 Files changed: <list of files, or "diff against <base>">
+Conventions:
+<paste the plan's ## Conventions section>
 ```
 
 Review the polisher's diff with the same wave lens, then re-run the static checks. Skip this step only when the diff is trivially small.

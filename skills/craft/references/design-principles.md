@@ -13,11 +13,12 @@ Never:
 - Extract single-use "validate"/"build"/"prepare" helpers. Keep the logic inline where it runs.
 - Define constants for strings used once.
 - Add layers the architecture didn't define (no service-wrapping-repository-wrapping-query).
-- Extract a function because it is "long." Extract only to name a real concept, kill duplication across 3+ sites, or isolate a genuine responsibility.
+- Extract a function because it is "long." Length alone is not a smell — mixed concerns and unclear flow are. Use local variables to name steps and early returns to flatten before reaching for extraction. Extract only to name a real concept, kill duplication across 3+ sites, or isolate a genuine responsibility.
 
 ## 2. Shape of a function
 
 - **Linear flow.** Guard clauses and early returns; treat nesting depth as a defect.
+- **Fewer, substantial functions.** Related logic that changes together stays together. A file full of 5-line helpers forces the reader to jump around — inline them into the 2–3 functions that do real work. Use local variables to name intermediate steps instead of extracting functions.
 - **0–2 parameters.** Three related parameters want to be a type. A boolean flag hiding two behaviors wants to be two functions.
 - **Command–query separation.** A function either does something or answers something, not both.
 - **One level of abstraction per body.** Don't mix wire parsing with business policy in the same function.

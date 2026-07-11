@@ -26,7 +26,8 @@ Read the plan doc, the spec, and any existing code the plan integrates with (to 
 
 ## Axis 3 — Over-engineering (the opposite failure)
 Reviewers reliably catch code that's too crude and miss code that's too clever. **Flag both with equal weight.** Over-engineering is the more common AI failure — look hard for it.
-- **Unnecessary helpers:** functions that wrap 1–3 obvious lines and add indirection for zero value. If the body is as simple as the call site, it should be inlined. This is the single most common defect — actively hunt for it.
+- **Unnecessary helpers:** functions that wrap 1–5 obvious lines and add indirection for zero value. If the body is as simple as the call site, it should be inlined. This is the single most common defect — actively hunt for it.
+- **Too many functions:** a file with numerous small helpers that could be inlined into 2–3 substantial functions. The reader should not have to jump between a dozen definitions to follow a single flow. Prefer local variables to name steps over extracted functions.
 - **Unnecessary abstractions:** interfaces with a single implementation, builder/factory functions that just set struct fields, "validate" helpers called from one place, constants for strings used once.
 - Speculative generality: type parameters, extension points, or config hooks built for futures nobody asked for.
 - Extra layers beyond what the architecture defined (a "service" wrapping a "repository" wrapping a query — when the architecture said one package).

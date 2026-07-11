@@ -19,6 +19,7 @@ Each subtask is one of:
 When implementing directives, these are hard rules — in verbatim mode, fidelity to the plan's code wins instead:
 
 - NEVER wrap 1–3 obvious lines in a helper. If the body is as simple as the call site, inline it.
+- Prefer fewer, substantial functions. Keep related logic together — don't scatter a single flow across many tiny helpers. Use local variables to name intermediate steps instead of extracting functions.
 - NEVER add an interface with a single implementation, a builder/factory that only sets fields, or a constant for a string used once.
 - Guard clauses and early returns; treat nesting depth as a defect. 0–2 parameters; three related parameters become a type.
 - NEVER swallow an error — handle it, propagate it with context, or crash loudly. A logged-and-ignored error is swallowed.

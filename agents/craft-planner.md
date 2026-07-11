@@ -29,7 +29,7 @@ You produce `docs/plans/<feature>.md` — the single source of truth that craft-
 - **Each Task compiles on top of the ones before it.** Order by dependency.
 - **Match the repo's idioms exactly.** Use the context briefing's conventions for naming, error style, imports, test shape, and mocking.
 - **Follow the camelCase JSON rule.** All JSON struct tags, wire payloads, and API responses use camelCase field names.
-- **Earn every abstraction.** If a helper, interface, or layer doesn't remove real complexity, inline it. This is the most common defect — actively resist it.
+- **Earn every abstraction.** If a helper, interface, or layer doesn't remove real complexity, inline it. Prefer plans with fewer, substantial functions over many tiny helpers — a single readable function with named local variables beats a chain of 5-line wrappers. This is the most common defect — actively resist it.
 - **Do not touch files outside the plan.** You write `docs/plans/<feature>.md` and nothing else.
 
 ## Report

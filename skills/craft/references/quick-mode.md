@@ -14,10 +14,11 @@ Derive a kebab-case `<feature>` slug. You produce one artifact: `docs/plans/<fea
 - [ ] 3. Interview the user
 - [ ] 4. Design options — user picks (gate)
 - [ ] 5. Write the plan
-- [ ] 6. Get plan approval (gate)
-- [ ] 7. Implement + review waves
-- [ ] 8. Polish
-- [ ] 9. Live test
+- [ ] 6. Plan review loop
+- [ ] 7. Get plan approval (gate)
+- [ ] 8. Implement + review waves
+- [ ] 9. Polish
+- [ ] 10. Live test
 ```
 
 ### 1. Restate the Task
@@ -26,7 +27,7 @@ State in 1–2 sentences what you're building and what "done" looks like. Derive
 
 ### 2. Explore
 
-Dispatch one `craft-explorer` per slice of the codebase, in parallel. Pick the exploration model from the [Model Selection](../SKILL.md#model-selection) table based on each slice's complexity.
+Dispatch one `craft-explorer` per slice of the codebase, in parallel.
 
 ```text
 Slice: <focused area to investigate>
@@ -60,15 +61,28 @@ If any section reads like a wall of text, cut it down: someone should understand
 - Edge cases and failure modes surfaced in the interview appear in a Task or in `## Out of scope`.
 - Nothing violates the design principles' don't-list.
 
+### 6. Plan Review Loop
 
+Dispatch `craft-plan-reviewer`:
 
-### 6. Get Plan Approval (gate)
+```text
+Plan: docs/plans/<feature>.md
 
-Present the plan. Incorporate edits until the user explicitly approves.
+Reference files:
+- <path>/references/design-principles.md
+- <path>/references/architecture-principles.md
+- <path>/references/testing-principles.md
+```
 
-### 7. Implement + Review Waves
+If it returns `Needs changes`, apply the Must-fix feedback and resume it to re-check. Loop until it passes. Do not show the plan to the user yet.
 
-Dispatch one `craft-coder` per Task. Disjoint Tasks go out concurrently; dependent Tasks run in waves. Pick the coding model from the [Model Selection](../SKILL.md#model-selection) table for each Task's complexity.
+### 7. Get Plan Approval (gate)
+
+Present the pre-reviewed plan. Incorporate edits until the user explicitly approves. If the edits are significant, re-run the review loop.
+
+### 8. Implement + Review Waves
+
+Dispatch one `craft-coder` per Task. Disjoint Tasks go out concurrently; dependent Tasks run in waves.
 
 ```text
 Plan: docs/plans/<feature>.md
@@ -91,11 +105,11 @@ For `manual` subtasks, pause and ask the user to execute them first.
 
 On failure, resume that coder with specific corrections — file, problem, required fix. Re-review. Next wave only when the current one passes.
 
-### 8. Polish
+### 9. Polish
 
 Run the plan's `## Verification` commands first — build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
 
-Once static checks pass, dispatch `craft-polisher` with the polish model from the [Model Selection](../SKILL.md#model-selection) table (simple vs complex):
+Once static checks pass, dispatch `craft-polisher`:
 
 ```text
 Plan: docs/plans/<feature>.md
@@ -106,6 +120,6 @@ Conventions:
 
 Review the polisher's diff with the same wave lens, then re-run the static checks. Skip this step only when the diff is trivially small.
 
-### 9. Live Test
+### 10. Live Test
 
 Invoke the **craft-test** skill ([../../craft-test/SKILL.md](../../craft-test/SKILL.md)) and follow it end to end — run locally, instrument, exercise the feature, revert, report.

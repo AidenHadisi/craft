@@ -6,7 +6,7 @@ AI agents are great at producing code that *works* and bad at producing code tha
 
 One skill, two modes:
 
-- **Quick (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, get approval, implement with parallel coders under heavy review, polish, then live-test. Two approval gates: design choice, plan.
+- **Quick (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, review it, get approval, implement with parallel coders under heavy review, polish, then live-test. Two approval gates: design choice, plan.
 - **Detailed (on explicit request)** — adds a reviewed spec and a literal-code plan written by a dedicated planner and audited by a code reviewer before a single line ships. Three approval gates: design choice, spec, plan.
 
 ## What's inside
@@ -19,6 +19,7 @@ One skill, two modes:
 | `craft-planner` | subagent | Writes the detailed-mode plan: architecture, Tasks with literal code, tests |
 | `craft-coder` | subagent | Implements one Task — verbatim for literal code, idiom-following for directives |
 | `craft-polisher` | subagent | Behavior-preserving simplification pass over the working diff (quick mode) |
+| `craft-plan-reviewer` | subagent (readonly) | Gates the quick plan for spec completeness & design soundness (quick mode) |
 | `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness (detailed mode) |
 | `craft-code-reviewer` | subagent (readonly) | Reviews the planned code on paper before it ships (detailed mode) |
 
@@ -26,7 +27,7 @@ Reference files carry the workflows and design knowledge:
 
 | Reference | Used by | Covers |
 |---|---|---|
-| `references/quick-mode.md` | orchestrator | The nine quick-mode steps and two gates |
+| `references/quick-mode.md` | orchestrator | The ten quick-mode steps and two gates |
 | `references/detailed-mode.md` | orchestrator | The ten detailed-mode steps and three gates |
 | `references/architecture-principles.md` | `craft-planner` | Where to cut boundaries, dependency rules, complexity budget, plan template |
 | `references/design-principles.md` | `craft-planner`, orchestrator | "Less code is better" + the don't-list, function shape, naming, errors, patterns |
@@ -44,7 +45,8 @@ flowchart TD
     qexplore --> qinterview["Interview the user"]
     qinterview --> qdesigns["Design options, user picks"]
     qdesigns --> qplan["Orchestrator writes directive-level plan"]
-    qplan --> qgate["User approves plan"]
+    qplan --> qplanrev["craft-plan-reviewer loop"]
+    qplanrev --> qgate["User approves plan"]
     qgate --> qbuild["craft-coder per Task, in waves"]
     qbuild --> qreview["Orchestrator reviews each wave's diffs"]
     qreview -->|corrections| qbuild
@@ -119,11 +121,11 @@ Ask for detailed mode explicitly when the feature deserves the full treatment:
 /craft detailed — add OAuth login, with a full spec and design options
 ```
 
-Quick mode asks for two approvals (the design choice and the plan). Detailed mode adds a reviewed spec between them. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
+Quick mode asks for two approvals (the design choice and the plan); the plan is reviewed by `craft-plan-reviewer` before that gate. Detailed mode adds a reviewed spec between them. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
 
 ## Design notes
 
-- **Delegation-first.** The orchestrator's context is spent on judgment, not labor. Exploration, coding, and fixes all go to `composer-2.5-fast` subagents; only the planner and code reviewer inherit the orchestrator's model, because design work needs it.
+- **Delegation-first.** The orchestrator's context is spent on judgment, not labor. Craft subagents inherit the orchestrator's model; model choice for generic dispatches follows the workspace's subagent model-selection rule.
 - **Reference-driven.** Workflows and design knowledge live in versionable, editable reference files — not baked into subagent prompts. `SKILL.md` is a thin router; each mode file is loaded only when chosen.
 - **Diffs, not reports.** Coder reports are claims; the orchestrator reads the actual diffs after every wave and loops coders with specific corrections.
 - **Prove it runs.** Both modes end with static checks plus live testing — run locally with real credentials, stub side effects, never mutate prod, revert every temporary change.

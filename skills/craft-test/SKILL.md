@@ -26,26 +26,6 @@ Your context is for judgment — what to test, whether it passed, what to instru
 - Browser testing — login walls, manual steps, UI verification
 - Revert verification and final report
 
-Pick the model for each dispatch from the table below. Always set `model` explicitly.
-
-## Model Selection
-
-| Role | Normal | Complex |
-|------|--------|---------|
-| **Discovery** | composer-2.5-fast | claude-opus-4-8-thinking-xhigh |
-| **Execution** | composer-2.5-fast | composer-2.5-fast |
-| **Investigation** | composer-2.5-fast | claude-opus-4-8-thinking-xhigh |
-| **Instrumentation** | claude-sonnet-5-thinking-high | claude-opus-4-8-thinking-xhigh |
-
-**Default:** when unclear, use Normal.
-
-**Normal vs complex:**
-
-- **Discovery** — normal: one obvious dev command / `.env`; complex: multi-service setup, non-obvious auth or config chain
-- **Execution** — build, boot, curl; always normal unless the setup itself is unusual
-- **Investigation** — normal: read logs, obvious error; complex: cross-service trace, timing/race, unclear failure
-- **Instrumentation** — normal: a few targeted logs; complex: threading through several files (prefer keeping central)
-
 ## Steps
 
 ### 1. Scope

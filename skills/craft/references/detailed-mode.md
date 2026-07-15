@@ -88,6 +88,9 @@ Then dispatch `craft-code-reviewer` over the full plan:
 ```text
 Plan: docs/plans/<feature>.md
 Spec: docs/specs/<feature>.md
+Standards:
+- <path>/references/architecture-principles.md
+- <path>/references/design-principles.md
 ```
 
 On Critical/High findings: resume the **planner** with the findings to fix the plan, then resume the **reviewer** to verify the fixes. Loop until no Critical/High remain. Use judgment on Medium/Low — forward to the planner or consciously decline.

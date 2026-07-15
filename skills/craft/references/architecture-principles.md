@@ -1,6 +1,8 @@
 # Architecture Principles
 
-How to decompose a feature into Tasks when writing the plan. Work through the sections in order — they mirror the decisions you actually make: where to cut, which way dependencies point, what style to use, what change to absorb, and what complexity to refuse. Never name a principle without a concrete claim about *this* design: state the riskiest coupling and how your decomposition handles it.
+The **structural standard for the whole workflow** — followed when decomposing the plan, judging a design review, and restructuring a working diff. Work through the sections in order — they mirror the decisions you actually make: where to cut, which way dependencies point, what style to use, what change to absorb, and what complexity to refuse. Never name a principle without a concrete claim about *this* design: state the riskiest coupling and how your decomposition handles it.
+
+**Repo fit first.** In an established codebase, reuse its package layout, layering, naming, and dependency direction. Do not introduce a new architectural style, folder scheme, or seam pattern unless the existing one is the proven source of pain — and say so explicitly. A clean design that fights the house is wrong. Before inventing structure, mirror a nearby sibling feature in the same area.
 
 ## 1. Cut at concept boundaries
 
@@ -19,7 +21,7 @@ A boundary is right when the things inside change together and the things across
 
 ## 3. Pick the simplest style that fits
 
-The style is a means to clean boundaries, not an end. Match the repo's existing style unless it is the proven source of pain.
+The style is a means to clean boundaries, not an end. **Fit the repo first** — the table below is a fallback when the area has no established pattern, not a license to replace one that works.
 
 | Shape of the problem | Reach for |
 |---|---|
@@ -38,44 +40,16 @@ The style is a means to clean boundaries, not an end. Match the repo's existing 
 - **Earn every seam.** Add a component, layer, or interface only if you can name what it buys *today*. If you can't, cut it.
 - **Don't over-decompose.** A small feature can be a single Task. Never force splits to look thorough.
 
-## 6. Refactor lens (existing code only)
+## 6. Refactor lens
 
-When the feature touches existing code, weigh the smells the explorers reported (god object, leaky abstraction, duplicated logic, shotgun surgery). Decide explicitly: refactor first as an early Task, or leave it with a stated reason. Scope any refactor strictly to the feature's footprint.
+Weigh structural smells in code the feature touches or produces (god object, leaky abstraction, duplicated logic, shotgun surgery, wrong home for a concept). When planning: decide explicitly whether to refactor first as an early Task, or leave it with a stated reason. When polishing or reviewing: apply the moves below. Scope any refactor strictly to the feature's footprint.
 
-## Plan Template
-
-Use this structure for `docs/plans/<feature>.md`. The planner fills in all sections — architecture, tasks with complete literal code, tests, and verification — in a single pass.
-
-```markdown
-## Architecture & design
-
-### Overview
-2–4 sentences: the shape of the solution, the architectural style, and why it fits this problem and this repo.
-
-### Tasks (units)
-One row per Task:
-
-| Task | Component | Responsibility | Owns (area) | Depends on | Exposes (capability) |
-|---|---|---|---|---|---|
-| 1 | <name> | One-line summary | `target/package` | — or Task N | Capability offered |
-
-### Boundaries & data flow
-Dependency direction (one-way) and data paths, with a Mermaid diagram. **No signatures.**
-
-### Design decisions
-Each notable choice: the decision, the reasoning, and the rejected alternative.
-
-## Tasks
-
-Order Tasks so each compiles on top of the ones before it. If Task 2 uses anything from Task 1, Task 1 comes first.
-
-### Task 1 — <component>   (depends on: none · exposes: <capability>)
-
-### Task 2 — <component>   (depends on: Task 1 · exposes: <capability>)
-
-## Verification
-What "done" means: build/typecheck/lint/tests/manual checks.
-```
+| Smell | Move |
+|---|---|
+| Function/type living away from its data | Move it to where the data lives |
+| Layer that hides nothing (interface as complex as what it wraps) | Collapse the layer |
+| Two modules importing each other | Extract the shared concept, or merge them |
+| Module serving two masters ("and" in its responsibility) | Split at the concept boundary |
 
 ## Self-Critique
 

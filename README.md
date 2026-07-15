@@ -18,7 +18,7 @@ One skill, two modes:
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions for one slice, in parallel |
 | `craft-planner` | subagent | Writes the detailed-mode plan: architecture, Tasks with literal code, tests |
 | `craft-coder` | subagent | Implements one Task — verbatim for literal code, idiom-following for directives |
-| `craft-polisher` | subagent | Behavior-preserving simplification pass over the working diff (quick mode) |
+| `craft-polisher` | subagent | Architect pass over the working diff — restructures and polishes to the shared standards (quick mode) |
 | `craft-plan-reviewer` | subagent (readonly) | Gates the quick plan for spec completeness & design soundness (quick mode) |
 | `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness (detailed mode) |
 | `craft-code-reviewer` | subagent (readonly) | Reviews the planned code on paper before it ships (detailed mode) |
@@ -29,8 +29,8 @@ Reference files carry the workflows and design knowledge:
 |---|---|---|
 | `references/quick-mode.md` | orchestrator | The ten quick-mode steps and two gates |
 | `references/detailed-mode.md` | orchestrator | The ten detailed-mode steps and three gates |
-| `references/architecture-principles.md` | `craft-planner` | Where to cut boundaries, dependency rules, complexity budget, plan template |
-| `references/design-principles.md` | `craft-planner`, orchestrator | "Less code is better" + the don't-list, function shape, naming, errors, patterns |
+| `references/architecture-principles.md` | planner, orchestrator, code reviewer, polisher | Where to cut boundaries, dependency rules, complexity budget, structural refactor moves |
+| `references/design-principles.md` | planner, orchestrator, code reviewer, polisher | "Less code is better" + the don't-list, function shape, naming, errors, patterns, refactoring moves |
 | `references/testing-principles.md` | `craft-planner`, orchestrator | Test what matters, repo idioms, mocking only at boundaries |
 | `references/example-spec.md` | orchestrator | A worked example spec (detailed mode) |
 | `references/example-plan.md` | `craft-planner` | A worked example literal-code plan (detailed mode) |

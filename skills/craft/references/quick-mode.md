@@ -109,16 +109,19 @@ On failure, resume that coder with specific corrections — file, problem, requi
 
 Run the plan's `## Verification` commands first — build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
 
-Once static checks pass, dispatch `craft-polisher`:
+Once static checks pass, dispatch `craft-polisher` (inherit model — do not set `model`):
 
 ```text
 Plan: docs/plans/<feature>.md
 Files changed: <list of files, or "diff against <base>">
 Conventions:
 <paste the plan's ## Conventions section>
+Standards:
+- <path>/references/architecture-principles.md
+- <path>/references/design-principles.md
 ```
 
-Review the polisher's diff with the same wave lens, then re-run the static checks. Skip this step only when the diff is trivially small.
+The polisher may restructure within the feature's footprint. Review its diff with the same wave lens, then re-run the full `## Verification` commands. Skip this step only when the diff is trivially small.
 
 ### 10. Live Test
 

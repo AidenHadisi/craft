@@ -1,6 +1,6 @@
 # Design Principles
 
-How to design a Task's implementation. The bar: code a strong senior engineer would merge without comment. Work through the sections in order — they cover how much code to write, how to shape it, name it, fail it, and when a pattern is justified. Run the self-critique before finishing.
+The **code standard for the whole workflow** — followed when writing the plan, reviewing the plan, and polishing the implementation. The bar: code a strong senior engineer would merge without comment. Work through the sections in order — they cover how much code to write, how to shape it, name it, fail it, and when a pattern is justified.
 
 ## 1. Less code is better code
 
@@ -59,8 +59,8 @@ While designing, also watch for the classic smells: duplicated logic, feature en
 ## 7. Modern and idiomatic
 
 - Check the target version (`go.mod`, `tsconfig`, `pyproject.toml`, …) and use the modern primitives it provides before writing custom ones.
-- Prefer well-maintained libraries over hand-rolled utilities — never reinvent dates, retries, validation, parsing, or serialization.
-- Follow the repo's idioms — error style, import grouping, test layout, naming — even where you'd personally choose differently.
+- Prefer well-maintained libraries over hand-rolled utilities — never reinvent dates, retries, validation, parsing, or serialization. Prefer libraries the repo already depends on over new ones.
+- Follow the repo's idioms — error style, import grouping, test layout, naming — even where you'd personally choose differently. Idiomatic-for-the-language that fights the house is still wrong.
 
 ## 8. Testable by design
 
@@ -70,27 +70,34 @@ Make the architecture's boundaries real seams in code: inject dependencies exact
 
 Comments explain *why* — trade-offs, invariants, non-obvious contracts. A comment narrating the next line is noise; delete it.
 
-## Task Body Template
+## 10. Refactoring moves
 
-Add this content under the existing `### Task K — <component>` header in the plan:
+Smell → move. One line each — use these names when fixing or polishing.
 
-1. **Design note:** 2–4 sentences covering the units (files/functions) added, the **concrete public contract exposed**, the key pattern chosen, and the rejected alternative.
-2. **Subtasks:** ordered `#### Subtask K.1`, `K.2`, … Each must include:
-   - The target **file path** and action (`· create` or `· edit`).
-   - A fenced block of **complete literal code**, OR
-   - A **manual action** (DDL, migration, install) tagged `· manual` so coders skip it.
-
-   Each subtask must compile on top of the previous ones.
-
-> The public contract you expose is the foundation for downstream Tasks. Make it explicit and keep it stable.
+| Smell | Move |
+|---|---|
+| Helper wrapping 1–5 obvious lines | Inline Function — the single most common defect; hunt actively |
+| Too many small functions for one flow | Inline into the 2–3 functions that do real work; local variables name steps |
+| Long function with unclear flow | Local variables + early returns first; Extract Function only for a real concept or 3+ duplication |
+| Nested conditionals | Guard Clauses / early return |
+| Unreadable boolean | Extract Variable — name the condition |
+| Long parameter list / data clump | Introduce Parameter Object |
+| Flag argument forking behavior | Remove Flag Argument — two named functions |
+| Function envying another module's data | Move Function to where the data lives |
+| Magic literal | Named constant (2+ uses) or inline with a comment |
+| Temp reused for different purposes | Split Variable |
+| Loop doing several jobs | Split Loop; Replace Loop with Pipeline |
+| Primitive obsession | Introduce a type — enum, value object, or wrapper |
+| Repeated switches on the same discriminant | Polymorphism or one shared lookup map |
+| Duplicated logic (3+ sites) | Extract Function — one definition, right home |
+| Speculative generality, dead code | Delete it |
 
 ## Self-Critique
 
-Argue against your design before presenting it:
+Argue against the design before finishing:
 
 - **Over-built?** Tiny helpers, single-implementation interfaces, patterns without payoff? Cut and inline.
 - **Under-built?** Missed edge cases, unhandled failures, swallowed errors? Fix them.
-- **Boundaries honored?** Does the code respect the architecture's seams and frozen upstream contracts exactly?
+- **Boundaries honored?** Does the code respect the architecture's seams?
 - **Names carry meaning?** Would a reader know what each call does without the body?
-- **Contract stable?** Is the exposed API explicit enough for downstream Tasks to build on?
-- **Zero decisions left?** Could a coder implement this verbatim without inventing anything?
+- **Readable and concise?** Least code that stays clear — no nesting pyramids, no 60 lines where 20 do.

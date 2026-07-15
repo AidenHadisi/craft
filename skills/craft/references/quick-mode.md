@@ -23,7 +23,7 @@ Derive a kebab-case `<feature>` slug. You produce one artifact: `docs/plans/<fea
 
 ### 1. Restate the Task
 
-State in 1–2 sentences what you're building and what "done" looks like. Derive the `<feature>` slug.
+State in a few sentences what you're building and what "done" looks like. Derive the `<feature>` slug.
 
 ### 2. Explore
 
@@ -42,17 +42,17 @@ From the reports, write down the repo's conventions — naming, error handling, 
 
 Before writing anything, surface the decisions the plan would otherwise assume: scope boundaries, behavior on edge cases, UX choices, what to do with existing data or callers. Ask **one question at a time**, each with a recommended answer. If a question can be answered by reading the code, dispatch a subagent to answer it instead of asking. Skip only when exploration left no real decisions open.
 
+If the work would benefit from a third-party package or tool the repo doesn't already use — and a robust, modern, popular option exists — ask which to use as one of these questions, with your recommendation and why (maturity, adoption, maintenance, fit with the existing stack). Don't ask when the repo already has an established choice for the need; use that instead.
+
 ### 4. Design Options
 
 Present the recommended approach first — one line on what it is and why it wins — then 2–3 genuinely different viable alternatives with one-line trade-offs. Fewer if none are genuinely viable; never invent fake alternatives. For truly mechanical tasks with one sensible shape, state the approach and ask to proceed. The user picks or composes a hybrid.
 
 ### 5. Write the Plan
 
-Read [design-principles.md](design-principles.md) and [testing-principles.md](testing-principles.md) — plus [architecture-principles.md](architecture-principles.md) when the plan will have 2+ Tasks — then write `docs/plans/<feature>.md`, mirroring the structure and level of [example-plan-quick.md](example-plan-quick.md).
+Read [design-principles.md](design-principles.md) and[testing-principles.md](testing-principles.md) — plus [architecture-principles.md](architecture-principles.md) when the plan will have 2+ Tasks — then write `docs/plans/<feature>.md`, mirroring the structure and level of [example-plan-quick.md](example-plan-quick.md).
 
 The plan must read top-down at a glance. `## Goal` carries the problem and requirements — there is no spec, so it must stand alone. Every Task opens with one sentence on what it delivers and a **Done when:** acceptance line; every subtask is a bolded one-sentence headline saying **what**, with the file path and action on a quiet line below. Add detail bullets under a subtask only where the coder would otherwise guess wrong — an exact signature, endpoint, schema, or tricky rule. Most subtasks need none. Deliberate exclusions go in `## Out of scope`; shapes shared by 2+ Tasks go in `## Contracts` (signatures, types, endpoints, wire shapes only — never bodies or prose). Leave **how** to the coder, and never write code beyond a short contract.
-
-If any section reads like a wall of text, cut it down: someone should understand the whole plan from the sentences alone; the bullets are footnotes.
 
 **Self-review before presenting.** Check and fix inline:
 
@@ -60,6 +60,8 @@ If any section reads like a wall of text, cut it down: someone should understand
 - Contracts referenced by later Tasks match where they're defined.
 - Edge cases and failure modes surfaced in the interview appear in a Task or in `## Out of scope`.
 - Nothing violates the design principles' don't-list.
+
+
 
 ### 6. Plan Review Loop
 
@@ -116,12 +118,9 @@ Plan: docs/plans/<feature>.md
 Files changed: <list of files, or "diff against <base>">
 Conventions:
 <paste the plan's ## Conventions section>
-Standards:
-- <path>/references/architecture-principles.md
-- <path>/references/design-principles.md
 ```
 
-The polisher may restructure within the feature's footprint. Review its diff with the same wave lens, then re-run the full `## Verification` commands. Skip this step only when the diff is trivially small.
+The polisher reads the architecture and design standards itself. It may restructure within the feature's footprint. Review its diff with the same wave lens, then re-run the full `## Verification` commands. Skip this step only when the diff is trivially small.
 
 ### 10. Live Test
 

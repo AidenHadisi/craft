@@ -54,10 +54,10 @@ Propose **2–3 genuinely different** approaches — different shapes, not varia
 
 Write `docs/specs/<feature>.md` based on the chosen design, mirroring [example-spec.md](example-spec.md). Focus on *what* and *why*, never *how* — both an engineer and a product manager must be able to read it.
 
-Then dispatch `craft-spec-reviewer`:
+Then dispatch `craft-reviewer`:
 
 ```text
-Spec: docs/specs/<feature>.md
+Artifact: docs/specs/<feature>.md — a spec.
 ```
 
 If it returns `Needs changes`, apply the feedback and resume it to re-check. Loop until it passes. Do not show the spec to the user yet.
@@ -80,21 +80,24 @@ Reference files:
 - <path>/references/architecture-principles.md
 - <path>/references/design-principles.md
 - <path>/references/testing-principles.md
+- <path>/references/example-plan.md
 ```
 
 The planner designs the architecture and writes the full plan with literal code and tests. Do **not** write the plan yourself.
 
-Then dispatch `craft-code-reviewer` over the full plan:
+Then dispatch `craft-reviewer` over the full plan:
 
 ```text
-Plan: docs/plans/<feature>.md
+Artifact: docs/plans/<feature>.md — a plan carrying literal code.
 Spec: docs/specs/<feature>.md
-Standards:
+
+Reference files:
 - <path>/references/architecture-principles.md
 - <path>/references/design-principles.md
+- <path>/references/testing-principles.md
 ```
 
-On Critical/High findings: resume the **planner** with the findings to fix the plan, then resume the **reviewer** to verify the fixes. Loop until no Critical/High remain. Use judgment on Medium/Low — forward to the planner or consciously decline.
+If it returns `Needs changes`, resume the **planner** with the Must-fix items, then resume the **reviewer** to verify. Loop until it passes. Use judgment on Should-fix items — forward them to the planner or consciously decline.
 
 ### 8. Get Plan Approval (gate)
 

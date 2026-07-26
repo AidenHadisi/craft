@@ -66,10 +66,10 @@ The plan must read top-down at a glance. `## Goal` carries the problem and requi
 
 ### 6. Plan Review Loop
 
-Dispatch `craft-plan-reviewer`:
+Dispatch `craft-reviewer`:
 
 ```text
-Plan: docs/plans/<feature>.md
+Artifact: docs/plans/<feature>.md — a directive plan, no literal code.
 
 Reference files:
 - <path>/references/design-principles.md

@@ -21,9 +21,7 @@ One skill, two modes:
 | `craft-planner` | subagent | Writes the detailed-mode plan: architecture, Tasks with literal code, tests |
 | `craft-coder` | subagent | Implements one Task — verbatim for literal code, idiom-following for directives |
 | `craft-polisher` | subagent | Architect pass over the working diff — restructures and polishes to the shared standards (quick mode) |
-| `craft-plan-reviewer` | subagent (readonly) | Gates the quick plan for spec completeness & design soundness (quick mode) |
-| `craft-spec-reviewer` | subagent (readonly) | Gates the spec for clarity & completeness (detailed mode) |
-| `craft-code-reviewer` | subagent (readonly) | Reviews the planned code on paper before it ships (detailed mode) |
+| `craft-reviewer` | subagent (readonly) | Gates a spec, a directive plan, or a plan's literal code — verdict plus itemized fixes |
 
 Reference files carry the workflows and design knowledge:
 
@@ -31,9 +29,9 @@ Reference files carry the workflows and design knowledge:
 |---|---|---|
 | `references/quick-mode.md` | orchestrator | The ten quick-mode steps and two gates |
 | `references/detailed-mode.md` | orchestrator | The ten detailed-mode steps and three gates |
-| `references/architecture-principles.md` | planner, orchestrator, code reviewer, polisher | Where to cut boundaries, dependency rules, complexity budget, structural refactor moves |
-| `references/design-principles.md` | planner, orchestrator, code reviewer, polisher | "Less code is better" + the don't-list, function shape, naming, errors, patterns, refactoring moves |
-| `references/testing-principles.md` | `craft-planner`, orchestrator | Test what matters, repo idioms, mocking only at boundaries |
+| `references/architecture-principles.md` | planner, orchestrator, reviewer, polisher | Where to cut boundaries, dependency rules, complexity budget, structural refactor moves |
+| `references/design-principles.md` | planner, orchestrator, reviewer, polisher | "Less code is better" + the don't-list, function shape, naming, errors, patterns, refactoring moves |
+| `references/testing-principles.md` | planner, orchestrator, reviewer | Test what matters, repo idioms, mocking only at boundaries |
 | `references/example-spec.md` | orchestrator | A worked example spec (detailed mode) |
 | `references/example-plan.md` | `craft-planner` | A worked example literal-code plan (detailed mode) |
 | `references/example-plan-quick.md` | orchestrator | A worked example directive-level plan (quick mode) |
@@ -47,7 +45,7 @@ flowchart TD
     qexplore --> qinterview["Interview the user"]
     qinterview --> qdesigns["Design options, user picks"]
     qdesigns --> qplan["Orchestrator writes directive-level plan"]
-    qplan --> qplanrev["craft-plan-reviewer loop"]
+    qplan --> qplanrev["craft-reviewer loop"]
     qplanrev --> qgate["User approves plan"]
     qgate --> qbuild["craft-coder per Task, in waves"]
     qbuild --> qreview["Orchestrator reviews each wave's diffs"]
@@ -60,10 +58,10 @@ flowchart TD
     dexplore --> interview["Interview the user"]
     interview --> designs["2-3 design options, user picks"]
     designs --> spec["Orchestrator writes spec"]
-    spec --> specrev["craft-spec-reviewer loop"]
+    spec --> specrev["craft-reviewer loop (spec)"]
     specrev --> specgate["User approves spec"]
     specgate --> planner["craft-planner writes literal-code plan"]
-    planner --> coderev["craft-code-reviewer loop"]
+    planner --> coderev["craft-reviewer loop (code)"]
     coderev --> plangate["User approves plan"]
     plangate --> dbuild["craft-coder per Task, in waves"]
     dbuild --> dreview["Orchestrator reviews each wave's diffs"]
@@ -126,7 +124,7 @@ Ask for detailed mode explicitly when the feature deserves the full treatment:
 /craft detailed — add OAuth login, with a full spec and design options
 ```
 
-Quick mode asks for two approvals (the design choice and the plan); the plan is reviewed by `craft-plan-reviewer` before that gate. Detailed mode adds a reviewed spec between them. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
+Quick mode asks for two approvals (the design choice and the plan); the plan is reviewed by `craft-reviewer` before that gate. Detailed mode adds a reviewed spec between them. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
 
 Once it ships, set up a watch — from craft's closing offer, or later against anything already in production:
 

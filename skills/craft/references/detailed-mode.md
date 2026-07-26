@@ -22,7 +22,6 @@ Derive a kebab-case `<feature>` slug. Two artifacts are produced:
 - [ ] 8. Get plan approval (gate)
 - [ ] 9. Implement + review waves
 - [ ] 10. Verify & live test
-- [ ] 11. Offer a watch
 ```
 
 ### 1. Restate the Task
@@ -127,9 +126,3 @@ On failure, resume that coder with specific corrections. Re-review. Next wave on
 **Static.** Run the plan's `## Verification` commands: build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
 
 **Live.** Invoke the **craft-test** skill ([../../craft-test/SKILL.md](../../craft-test/SKILL.md)) and follow it end to end — run locally, instrument, exercise the feature, revert, report.
-
-### 11. Offer a Watch
-
-For a feature that will need watching once deployed — anything with background work, external calls, or state that can get stuck — offer to set up a scheduled production watch. You know its invariants and failure modes better now than you ever will again.
-
-If the user accepts, invoke the **craft-watch** skill ([../../craft-watch/SKILL.md](../../craft-watch/SKILL.md)) and follow it with the spec and plan as context. Skip the offer for pure UI or refactor work, where there's nothing to observe.

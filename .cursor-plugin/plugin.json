@@ -1,6 +1,6 @@
 {
   "name": "craft",
-  "description": "Autonomous senior-developer workflow for building features. Quick mode plans and builds with one approval gate; detailed mode adds design options, a spec, and a reviewed literal-code plan. Both delegate to fast parallel subagents, live-test the result, and can set up a scheduled production watch once it ships.",
+  "description": "Autonomous senior-developer workflow for building features. Quick mode plans and builds with one approval gate; detailed mode adds design options, a spec, and a reviewed literal-code plan. Both delegate to fast parallel subagents and live-test the result. Companion skills research a topic, prove a feature works locally, and monitor one in production.",
   "version": "0.1.0",
   "author": { "name": "Aiden Hadisi", "email": "so.hadisi@gmail.com" },
   "license": "MIT",

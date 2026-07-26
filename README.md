@@ -15,7 +15,7 @@ One skill, two modes:
 |---|---|---|
 | `craft` | skill (`/craft`) | Orchestrates both modes; directs subagents, reviews every wave, live-tests the result |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
-| `craft-watch` | skill (`/craft-watch`) | Sets up a scheduled production watch on a shipped feature; reports problems and improvements worth considering |
+| `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
 | `craft-research` | skill (`/craft-research`) | Researches a topic across many sources and produces a refined doc in `Docs/` |
 | `craft-explorer` | subagent (readonly) | Gathers logic + conventions for one slice, in parallel |
 | `craft-planner` | subagent | Writes the detailed-mode plan: architecture, Tasks with literal code, tests |
@@ -52,7 +52,6 @@ flowchart TD
     qreview -->|corrections| qbuild
     qreview --> qpolish["craft-polisher simplifies the working diff"]
     qpolish --> qverify["Live test locally"]
-    qverify --> qwatch["Offer a production watch"]
 
     mode -->|"user asks for detailed"| dexplore["Explore (parallel craft-explorer)"]
     dexplore --> interview["Interview the user"]
@@ -67,14 +66,13 @@ flowchart TD
     dbuild --> dreview["Orchestrator reviews each wave's diffs"]
     dreview -->|corrections| dbuild
     dreview --> dverify["Verify + live test locally"]
-    dverify --> dwatch["Offer a production watch"]
 ```
 
 ### Artifacts it produces (in the target repo)
 
 - `docs/plans/<feature>.md` — the implementation plan. Quick mode: directive-level (where and what, contracts where precision matters), written by the orchestrator. Detailed mode: complete literal code per subtask plus a Tests section, written by `craft-planner`.
 - `docs/specs/<feature>.md` — detailed mode only. The spec: idea and requirements, readable by engineers and product managers alike. No code.
-- `docs/watch/<feature>.md` — written by `craft-watch`. How the feature works, checks as literal queries, what to report, and the running log of findings. Self-contained: a scheduled run gets this file and nothing else.
+- `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
 
 ## Install
 
@@ -126,15 +124,15 @@ Ask for detailed mode explicitly when the feature deserves the full treatment:
 
 Quick mode asks for two approvals (the design choice and the plan); the plan is reviewed by `craft-reviewer` before that gate. Detailed mode adds a reviewed spec between them. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
 
-Once it ships, set up a watch — from craft's closing offer, or later against anything already in production:
+Once it ships, check on it. Standalone — invoke it whenever you want to know how something is behaving, whether craft built it or not:
 
 ```
-/craft-watch site-evaluation
+/craft-monitor site-evaluation
 ```
 
-Three steps: learn the feature — its tables, log streams, metrics, and how to query them — then write `docs/watch/<feature>.md` with four to six checks, then put it on an automation. Invoked in the session that just built the feature, it reuses what's already in context and only researches the gaps. Either way every check is **run before it's written down**, so the recorded normal range is an observed value rather than a guessed threshold.
+The first invocation learns the feature — its tables, log streams, metrics, and the exact way to query each — and writes `docs/monitor/<feature>.md` with four to six checks. Run in the session that just built the feature, it reuses what's already in context and researches only the gaps. Either way every check is **run before it's written down**, so the recorded normal range is an observed value rather than a guessed threshold.
 
-The file is self-executing: it carries the checks, how to read them, and the log, so a Cursor Automation whose entire prompt is `Run the watch at docs/watch/<feature>.md` is the whole schedule. Each run works through the checks, then looks around for what they don't cover, and appends what's worth knowing — problems, and observations like a step eating the runtime or output that's weak for one kind of input. Anything actionable also opens a GitHub issue. Most runs report nothing, and that's the point: the bar is whether a person would want to know, not whether the agent found something to say.
+Every invocation after that follows the file: work the checks, compare each against its normal range and the log, then look around for what the checks don't cover. What comes back is problems and observations alike — a step eating the runtime or output that's weak for one kind of input is worth knowing even though nothing is broken. Most runs report nothing new, and that's the point: the bar is whether a person would want to know, not whether the agent found something to say.
 
 ## Design notes
 

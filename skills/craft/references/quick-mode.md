@@ -19,6 +19,7 @@ Derive a kebab-case `<feature>` slug. You produce one artifact: `docs/plans/<fea
 - [ ] 8. Implement + review waves
 - [ ] 9. Polish
 - [ ] 10. Live test
+- [ ] 11. Offer a watch
 ```
 
 ### 1. Restate the Task
@@ -125,3 +126,9 @@ The polisher reads the architecture and design standards itself. It may restruct
 ### 10. Live Test
 
 Invoke the **craft-test** skill ([../../craft-test/SKILL.md](../../craft-test/SKILL.md)) and follow it end to end — run locally, instrument, exercise the feature, revert, report.
+
+### 11. Offer a Watch
+
+For a feature that will need watching once deployed — anything with background work, external calls, or state that can get stuck — offer to set up a scheduled production watch. You know its invariants and failure modes better now than you ever will again.
+
+If the user accepts, invoke the **craft-watch** skill ([../../craft-watch/SKILL.md](../../craft-watch/SKILL.md)) and follow it with this plan as context. Skip the offer for pure UI or refactor work, where there's nothing to observe.

@@ -21,7 +21,7 @@ Derive a kebab-case `<feature>` slug. Two artifacts are produced:
 - [ ] 7. Plan (craft-planner) + code review loop
 - [ ] 8. Get plan approval (gate)
 - [ ] 9. Implement + review waves
-- [ ] 10. Verify & live test
+- [ ] 10. Verify, then ask the user before live testing
 ```
 
 ### 1. Restate the Task
@@ -125,4 +125,4 @@ On failure, resume that coder with specific corrections. Re-review. Next wave on
 
 **Static.** Run the plan's `## Verification` commands: build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
 
-**Live.** Invoke the **craft-test** skill ([../../craft-test/SKILL.md](../../craft-test/SKILL.md)) and follow it end to end — run locally, instrument, exercise the feature, revert, report.
+**Live.** Ask the user whether to live-test the feature (recommended). If they decline, stop here. If approved, invoke the **craft-test** skill ([../../craft-test/SKILL.md](../../craft-test/SKILL.md)) and follow it end to end — run locally, instrument, exercise the feature, revert, report.

@@ -2,6 +2,8 @@
 
 **Two gates.** The user explicitly approves the design choice before you write the plan, and the plan before you implement.
 
+**Step-by-step variant.** Same workflow, plus a gate per Task: the user approves each Task's implementation before the next starts. Only step 8 changes.
+
 ## Artifact
 
 Derive a kebab-case `<feature>` slug. You produce one artifact: `docs/plans/<feature>.md` — a directive-level plan, written by you.
@@ -16,9 +18,9 @@ Derive a kebab-case `<feature>` slug. You produce one artifact: `docs/plans/<fea
 - [ ] 5. Write the plan
 - [ ] 6. Plan review loop
 - [ ] 7. Get plan approval (gate)
-- [ ] 8. Implement + review waves
+- [ ] 8. Implement + review waves (step-by-step: one Task at a time, gate after each)
 - [ ] 9. Polish
-- [ ] 10. Live test
+- [ ] 10. Ask the user, then live test if approved
 ```
 
 ### 1. Restate the Task
@@ -107,6 +109,13 @@ For `manual` subtasks, pause and ask the user to execute them first.
 
 On failure, resume that coder with specific corrections — file, problem, required fix. Re-review. Next wave only when the current one passes.
 
+**Step-by-step mode.** The workflow above changes:
+
+- Exactly one Task in flight — no concurrent dispatches, even for disjoint Tasks.
+- After your own wave review passes, present the Task: what it delivered, files touched, notable parts of the diff.
+- Wait for explicit approval. On requested changes, resume that Task's coder, re-review, present again.
+- Steps 9 and 10 still run once, after the last Task is approved — including asking the user before live testing.
+
 ### 9. Polish
 
 Run the plan's `## Verification` commands first — build, lint (auto-fix then re-check), tests. On failure, resume the coder that owns the affected files with the error output; fix directly only if it's a one-liner.
@@ -124,4 +133,6 @@ The polisher reads the architecture and design standards itself. It may restruct
 
 ### 10. Live Test
 
-Invoke the **craft-test** skill ([../../craft-test/SKILL.md](../../craft-test/SKILL.md)) and follow it end to end — run locally, instrument, exercise the feature, revert, report.
+Ask the user whether to live-test the feature (recommended). If they decline, stop here.
+
+If approved, invoke the **craft-test** skill ([../../craft-test/SKILL.md](../../craft-test/SKILL.md)) and follow it end to end — run locally, instrument, exercise the feature, revert, report.

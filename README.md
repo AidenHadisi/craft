@@ -4,16 +4,19 @@ A Cursor plugin for building features the right way.
 
 AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it plans, directs, and judges, while fast parallel subagents do the labor — exploring, coding, reviewing. Every wave of coder output is reviewed as diffs against a strict quality lens, and the finished feature is proven by running it locally, not just reading it.
 
-One skill, two modes:
+One skill, three modes — it asks which to use unless you name one:
 
-- **Quick (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, review it, get approval, implement with parallel coders under heavy review, polish, then live-test. Two approval gates: design choice, plan.
+- **Quick (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, review it, get approval, implement with parallel coders under heavy review, polish, then offer to live-test. Two approval gates: design choice, plan.
+- **Step-by-step** — quick mode, but one Task at a time with a user approval gate after each implemented Task. Polish and the live-test offer still run once at the end.
 - **Detailed (on explicit request)** — adds a reviewed spec and a literal-code plan written by a dedicated planner and audited by a code reviewer before a single line ships. Three approval gates: design choice, spec, plan.
+
+Every mode asks before live-testing at the end; say no and it stops after the static checks.
 
 ## What's inside
 
 | Component | Type | Role |
 |---|---|---|
-| `craft` | skill (`/craft`) | Orchestrates both modes; directs subagents, reviews every wave, live-tests the result |
+| `craft` | skill (`/craft`) | Orchestrates all three modes; asks which to use unless one is named, directs subagents, reviews every wave, live-tests the result |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
 | `craft-research` | skill (`/craft-research`) | Researches a topic across many sources and produces a refined doc in `Docs/` |
@@ -27,7 +30,7 @@ Reference files carry the workflows and design knowledge:
 
 | Reference | Used by | Covers |
 |---|---|---|
-| `references/quick-mode.md` | orchestrator | The ten quick-mode steps and two gates |
+| `references/quick-mode.md` | orchestrator | The ten quick-mode steps and two gates, plus the step-by-step variant's per-Task gate |
 | `references/detailed-mode.md` | orchestrator | The ten detailed-mode steps and three gates |
 | `references/architecture-principles.md` | planner, orchestrator, reviewer, polisher | Where to cut boundaries, dependency rules, complexity budget, structural refactor moves |
 | `references/design-principles.md` | planner, orchestrator, reviewer, polisher | "Less code is better" + the don't-list, function shape, naming, errors, patterns, refactoring moves |
@@ -40,8 +43,10 @@ Reference files carry the workflows and design knowledge:
 
 ```mermaid
 flowchart TD
-    start["/craft"] --> mode{"Mode?"}
-    mode -->|default| qexplore["Explore (parallel craft-explorer)"]
+    start["/craft"] --> mode{"Mode named?"}
+    mode -->|no| ask["AskQuestion: Quick / Step-by-step / Detailed"]
+    mode -->|yes| qexplore["Explore (parallel craft-explorer)"]
+    ask --> qexplore
     qexplore --> qinterview["Interview the user"]
     qinterview --> qdesigns["Design options, user picks"]
     qdesigns --> qplan["Orchestrator writes directive-level plan"]
@@ -50,10 +55,16 @@ flowchart TD
     qgate --> qbuild["craft-coder per Task, in waves"]
     qbuild --> qreview["Orchestrator reviews each wave's diffs"]
     qreview -->|corrections| qbuild
+    qreview -->|step-by-step| sgate["User approves Task"]
+    sgate -->|next Task| qbuild
+    sgate -->|last Task| qpolish
     qreview --> qpolish["craft-polisher simplifies the working diff"]
-    qpolish --> qverify["Live test locally"]
+    qpolish --> qask{"Live test?"}
+    qask -->|yes| qverify["Live test locally"]
+    qask -->|no| qstop["Stop after static checks"]
 
-    mode -->|"user asks for detailed"| dexplore["Explore (parallel craft-explorer)"]
+    mode -->|detailed| dexplore["Explore (parallel craft-explorer)"]
+    ask -->|detailed| dexplore
     dexplore --> interview["Interview the user"]
     interview --> designs["2-3 design options, user picks"]
     designs --> spec["Orchestrator writes spec"]
@@ -65,7 +76,10 @@ flowchart TD
     plangate --> dbuild["craft-coder per Task, in waves"]
     dbuild --> dreview["Orchestrator reviews each wave's diffs"]
     dreview -->|corrections| dbuild
-    dreview --> dverify["Verify + live test locally"]
+    dreview --> dverify["Static verification"]
+    dverify --> dask{"Live test?"}
+    dask -->|yes| dlive["Live test locally"]
+    dask -->|no| dstop["Stop after static checks"]
 ```
 
 ### Artifacts it produces (in the target repo)
@@ -110,19 +124,15 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 
 ## Usage
 
-Quick mode is the default:
+When no mode is named, the skill asks which to use — Quick, Step-by-step, or Detailed. Name one to skip the question:
 
 ```
 /craft add OAuth login for the dashboard
-```
-
-Ask for detailed mode explicitly when the feature deserves the full treatment:
-
-```
+/craft step by step — add OAuth login for the dashboard
 /craft detailed — add OAuth login, with a full spec and design options
 ```
 
-Quick mode asks for two approvals (the design choice and the plan); the plan is reviewed by `craft-reviewer` before that gate. Detailed mode adds a reviewed spec between them. In both, the agent dispatches the coders in parallel, reviews every wave, and finishes by running the feature locally.
+Quick mode asks for two approvals (the design choice and the plan); the plan is reviewed by `craft-reviewer` before that gate. Step-by-step adds a per-Task approval during implementation. Detailed mode adds a reviewed spec between design and plan. In all three, the agent reviews every wave, runs the static checks, and asks before live-testing — decline and it stops there.
 
 Once it ships, check on it. Standalone — invoke it whenever you want to know how something is behaving, whether craft built it or not:
 

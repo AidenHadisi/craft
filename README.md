@@ -2,90 +2,71 @@
 
 A Cursor plugin for building features the right way.
 
-AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it plans, directs, and judges, while fast parallel subagents do the labor — exploring, coding, reviewing. Every wave of coder output is reviewed as diffs against a strict quality lens, and the finished feature is proven by running it locally, not just reading it.
+AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it plans, directs, and judges, while fast parallel subagents do the labor — exploring, coding, reviewing. Every wave of coder output is reviewed by a fresh-context code reviewer; the orchestrator owns the gate (accept findings, loop coders, advance only on Pass), and the finished feature is proven by running it locally, not just reading it.
 
-One skill, three modes — it asks which to use unless you name one:
+One skill, one workflow — it asks whether to implement all Tasks at once or one at a time unless you name the pacing:
 
-- **Quick (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, review it, get approval, implement with parallel coders under heavy review, polish, then offer to live-test. Two approval gates: design choice, plan.
-- **Step-by-step** — quick mode, but one Task at a time with a user approval gate after each implemented Task. Polish and the live-test offer still run once at the end.
-- **Detailed (on explicit request)** — adds a reviewed spec and a literal-code plan written by a dedicated planner and audited by a code reviewer before a single line ships. Three approval gates: design choice, spec, plan.
+- **All at once (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, review it, get approval, implement with parallel coders under fresh-context code review (orchestrator gates each wave), polish, then offer to live-test. Two approval gates: design choice, plan.
+- **Step by step** — same workflow, but one Task at a time with a user approval gate after each implemented Task. Polish and the live-test offer still run once at the end.
 
-Every mode asks before live-testing at the end; say no and it stops after the static checks.
+Every run asks before live-testing at the end; say no and it stops after the static checks.
 
 ## What's inside
 
 | Component | Type | Role |
 |---|---|---|
-| `craft` | skill (`/craft`) | Orchestrates all three modes; asks which to use unless one is named, directs subagents, reviews every wave, live-tests the result |
+| `craft` | skill (`/craft`) | Orchestrates the workflow; asks all-at-once vs step-by-step unless pacing is named, directs subagents, gates each code-review wave, live-tests the result |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
 | `craft-research` | skill (`/craft-research`) | Researches a topic across many sources and produces a refined doc in `Docs/` |
-| `craft-explorer` | subagent (readonly) | Gathers logic + conventions for one slice, in parallel |
-| `craft-planner` | subagent | Writes the detailed-mode plan: architecture, Tasks with literal code, tests |
-| `craft-coder` | subagent | Implements one Task — verbatim for literal code, idiom-following for directives |
-| `craft-polisher` | subagent | Architect pass over the working diff — restructures and polishes to the shared standards (quick mode) |
-| `craft-reviewer` | subagent (readonly) | Gates a spec, a directive plan, or a plan's literal code — verdict plus itemized fixes |
+| `craft-coder` | subagent | Implements one Task from a directive plan, following repo idioms |
+| `craft-code-reviewer` | subagent (readonly) | Fresh-context review of each implementation wave — Pass / Revise with line-cited findings |
+| `craft-polisher` | subagent | Architect pass over the working diff — restructures and polishes to the shared standards |
+| `craft-reviewer` | subagent (readonly) | Gates a directive plan — verdict plus itemized fixes |
 
-Reference files carry the workflows and design knowledge:
+Shared coding, design, and testing guidance lives at the plugin root under `standards/` — infrastructure used by the orchestrator and subagents, not private to the craft skill. The skill keeps its own example plan:
 
 | Reference | Used by | Covers |
 |---|---|---|
-| `references/quick-mode.md` | orchestrator | The ten quick-mode steps and two gates, plus the step-by-step variant's per-Task gate |
-| `references/detailed-mode.md` | orchestrator | The ten detailed-mode steps and three gates |
-| `references/architecture-principles.md` | planner, orchestrator, reviewer, polisher | Where to cut boundaries, dependency rules, complexity budget, structural refactor moves |
-| `references/design-principles.md` | planner, orchestrator, reviewer, polisher | "Less code is better" + the don't-list, function shape, naming, errors, patterns, refactoring moves |
-| `references/testing-principles.md` | planner, orchestrator, reviewer | Test what matters, repo idioms, mocking only at boundaries |
-| `references/example-spec.md` | orchestrator | A worked example spec (detailed mode) |
-| `references/example-plan.md` | `craft-planner` | A worked example literal-code plan (detailed mode) |
-| `references/example-plan-quick.md` | orchestrator | A worked example directive-level plan (quick mode) |
+| `standards/constitution.md` | coder, code reviewer, polisher, reviewer, orchestrator | Hard write-time constraints + anti-verbosity diff rubric |
+| `standards/principles.md` | orchestrator, reviewer, code reviewer, polisher | Architecture, code design, and refactoring judgment |
+| `standards/testing.md` | orchestrator, reviewer, coder (Tests); code reviewer when tests changed | Test what matters, repo idioms, mocking only at boundaries |
+| `skills/craft/references/example-plan.md` | orchestrator | A worked example directive-level plan |
 
 ## The workflow
 
 ```mermaid
 flowchart TD
-    start["/craft"] --> mode{"Mode named?"}
-    mode -->|no| ask["AskQuestion: Quick / Step-by-step / Detailed"]
-    mode -->|yes| qexplore["Explore (parallel craft-explorer)"]
-    ask --> qexplore
-    qexplore --> qinterview["Interview the user"]
-    qinterview --> qdesigns["Design options, user picks"]
-    qdesigns --> qplan["Orchestrator writes directive-level plan"]
-    qplan --> qplanrev["craft-reviewer loop"]
-    qplanrev --> qgate["User approves plan"]
-    qgate --> qbuild["craft-coder per Task, in waves"]
-    qbuild --> qreview["Orchestrator reviews each wave's diffs"]
-    qreview -->|corrections| qbuild
-    qreview -->|step-by-step| sgate["User approves Task"]
-    sgate -->|next Task| qbuild
-    sgate -->|last Task| qpolish
-    qreview --> qpolish["craft-polisher simplifies the working diff"]
-    qpolish --> qask{"Live test?"}
-    qask -->|yes| qverify["Live test locally"]
-    qask -->|no| qstop["Stop after static checks"]
-
-    mode -->|detailed| dexplore["Explore (parallel craft-explorer)"]
-    ask -->|detailed| dexplore
-    dexplore --> interview["Interview the user"]
-    interview --> designs["2-3 design options, user picks"]
-    designs --> spec["Orchestrator writes spec"]
-    spec --> specrev["craft-reviewer loop (spec)"]
-    specrev --> specgate["User approves spec"]
-    specgate --> planner["craft-planner writes literal-code plan"]
-    planner --> coderev["craft-reviewer loop (code)"]
-    coderev --> plangate["User approves plan"]
-    plangate --> dbuild["craft-coder per Task, in waves"]
-    dbuild --> dreview["Orchestrator reviews each wave's diffs"]
-    dreview -->|corrections| dbuild
-    dreview --> dverify["Static verification"]
-    dverify --> dask{"Live test?"}
-    dask -->|yes| dlive["Live test locally"]
-    dask -->|no| dstop["Stop after static checks"]
+    start["/craft"] --> pacing{"Pacing named?"}
+    pacing -->|no| ask["AskQuestion: All at once / Step by step"]
+    pacing -->|yes| restate["Restate the task + slug"]
+    ask --> restate
+    restate --> explore["Explore (focused generic subagents)"]
+    explore --> synthesize["Synthesize: system + unknowns"]
+    synthesize --> interview["Interview the user"]
+    interview --> designs["Design solution, user picks (gate)"]
+    designs --> plan["Orchestrator writes directive plan"]
+    plan --> planrev["craft-reviewer loop"]
+    planrev --> gate["User approves plan (gate)"]
+    gate --> build["craft-coder Task waves"]
+    build --> review["craft-code-reviewer"]
+    review -->|corrections| build
+    review -->|"Pass, more Tasks"| build
+    review -->|"Pass, Task (step-by-step)"| taskgate["User approves Task"]
+    taskgate -->|more Tasks| build
+    review -->|"Pass, Tasks done"| tests["craft-coder: Tests"]
+    taskgate -->|last Task| tests
+    tests --> testreview["craft-code-reviewer"]
+    testreview -->|corrections| tests
+    testreview -->|Pass| polish["craft-polisher"]
+    polish --> live{"Live test?"}
+    live -->|yes| test["craft-test skill"]
+    live -->|no| stop["Stop after static checks"]
 ```
 
 ### Artifacts it produces (in the target repo)
 
-- `docs/plans/<feature>.md` — the implementation plan. Quick mode: directive-level (where and what, contracts where precision matters), written by the orchestrator. Detailed mode: complete literal code per subtask plus a Tests section, written by `craft-planner`.
-- `docs/specs/<feature>.md` — detailed mode only. The spec: idea and requirements, readable by engineers and product managers alike. No code.
+- `docs/plans/<feature>.md` — the implementation plan. Directive-level (where and what, contracts where precision matters), written by the orchestrator.
 - `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
 
 ## Install
@@ -124,15 +105,14 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 
 ## Usage
 
-When no mode is named, the skill asks which to use — Quick, Step-by-step, or Detailed. Name one to skip the question:
+When no pacing is named, the skill asks whether to implement all Tasks at once or one at a time. Name one to skip the question:
 
 ```
 /craft add OAuth login for the dashboard
 /craft step by step — add OAuth login for the dashboard
-/craft detailed — add OAuth login, with a full spec and design options
 ```
 
-Quick mode asks for two approvals (the design choice and the plan); the plan is reviewed by `craft-reviewer` before that gate. Step-by-step adds a per-Task approval during implementation. Detailed mode adds a reviewed spec between design and plan. In all three, the agent reviews every wave, runs the static checks, and asks before live-testing — decline and it stops there.
+Two approvals always (the design choice and the plan); the plan is reviewed by `craft-reviewer` before that gate. Step-by-step adds a per-Task approval during implementation. Each implementation wave is reviewed by `craft-code-reviewer` (orchestrator owns the gate), then static checks run, and it asks before live-testing — decline and it stops there.
 
 Once it ships, check on it. Standalone — invoke it whenever you want to know how something is behaving, whether craft built it or not:
 
@@ -147,10 +127,10 @@ Every invocation after that follows the file: work the checks, compare each agai
 ## Design notes
 
 - **Delegation-first.** The orchestrator's context is spent on judgment, not labor. Craft subagents inherit the orchestrator's model; model choice for generic dispatches follows the workspace's subagent model-selection rule.
-- **Reference-driven.** Workflows and design knowledge live in versionable, editable reference files — not baked into subagent prompts. `SKILL.md` is a thin router; each mode file is loaded only when chosen.
-- **Diffs, not reports.** Coder reports are claims; the orchestrator reads the actual diffs after every wave and loops coders with specific corrections.
-- **Prove it runs.** Both modes end with static checks plus live testing — run locally with real credentials, stub side effects, never mutate prod, revert every temporary change.
-- **Readonly where it counts.** Explorers and reviewers are readonly; they inform the orchestrator but never edit artifacts.
+- **Self-contained skill.** The full workflow lives in `SKILL.md` and reads top to bottom. Shared standards (constitution, principles, testing) live at the plugin root; the skill's example plan stays under `skills/craft/references/`.
+- **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` reviews each wave in a fresh context, and the orchestrator owns the gate — accepts findings, loops coders, advances only on Pass.
+- **Prove it runs.** Every run ends with static checks, then offers live testing — run locally with real credentials, stub side effects, never mutate prod, revert every temporary change.
+- **Readonly where it counts.** Exploration subagents and reviewers are readonly; they inform the orchestrator but never edit artifacts.
 
 ## License
 

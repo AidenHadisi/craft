@@ -36,51 +36,57 @@ A thin vertical slice: a store for saved-search rows, REST endpoints scoped to t
 
 - [ ] **Task 1 — Storage**
 
-  Saved searches persist per user. Saving under a name that already exists updates that row's query instead of creating a duplicate.
+Saved searches persist per user. Saving under a name that already exists updates that row's query instead of creating a duplicate.
 
-  - **1.1** Ask the user to create the `saved_searches` table
+**1.1 — Ask the user to create the** `saved_searches` **table**
 
-    ```sql
-    CREATE TABLE saved_searches (
-    	id         bigserial   PRIMARY KEY,
-    	user_id    bigint      NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    	name       text        NOT NULL,
-    	query      jsonb       NOT NULL,
-    	created_at timestamptz NOT NULL DEFAULT now(),
-    	updated_at timestamptz NOT NULL DEFAULT now()
-    );
+```sql
+CREATE TABLE saved_searches (
+	id         bigserial   PRIMARY KEY,
+	user_id    bigint      NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+	name       text        NOT NULL,
+	query      jsonb       NOT NULL,
+	created_at timestamptz NOT NULL DEFAULT now(),
+	updated_at timestamptz NOT NULL DEFAULT now()
+);
 
-    CREATE UNIQUE INDEX saved_searches_user_id_name_idx ON saved_searches (user_id, name);
-    ```
+CREATE UNIQUE INDEX saved_searches_user_id_name_idx ON saved_searches (user_id, name);
+```
 
-  - **1.2** Store over the new table · `internal/savedsearch/store.go` · create
-    - `List(ctx, userID int64) ([]SavedSearch, error)` — newest `updated_at` first.
-    - `Upsert(ctx, userID int64, name string, query json.RawMessage) (SavedSearch, error)` — a single `INSERT ... ON CONFLICT (user_id, name) DO UPDATE`, so a repeated name replaces the query.
-    - `Delete(ctx, userID, id int64) error` — scoped by `user_id`; no matching row returns `ErrNotFound`.
-    - `SavedSearch` carries the table's columns; `ErrNotFound` is defined here.
+**1.2 — Store over the new table** · `internal/savedsearch/store.go` · create
+
+`List(ctx, userID int64) ([]SavedSearch, error)` — newest `updated_at` first.
+`Upsert(ctx, userID int64, name string, query json.RawMessage) (SavedSearch, error)` — a single `INSERT ... ON CONFLICT (user_id, name) DO UPDATE`, so a repeated name replaces the query.
+`Delete(ctx, userID, id int64) error` — scoped by `user_id`; no matching row returns `ErrNotFound`.
+`SavedSearch` carries the table's columns; `ErrNotFound` is defined here.
 
 - [ ] **Task 2 — HTTP API**
 
-  Authenticated users list, save, and delete only their own searches. Blank names are rejected before anything is persisted.
+Authenticated users list, save, and delete only their own searches. Blank names are rejected before anything is persisted.
 
-  - **2.1** Saved-searches handler · `internal/httpapi/saved_searches.go` · create
-    - `GET /api/saved-searches` → 200, `[{ id, name, query, updatedAt }]` newest first.
-    - `POST /api/saved-searches`, body `{ name, query }` → 201 with the saved row.
-    - `DELETE /api/saved-searches/{id}` → 204; `ErrNotFound` → 404.
-    - Name is trimmed; blank or whitespace-only → 400 before any store call.
-    - User ID always comes from the request context, never the body.
-  - **2.2** Register the routes in the existing `requireAuth` group · `internal/httpapi/router.go` · edit
+**2.1 — Saved-searches handler** · `internal/httpapi/saved_searches.go` · create
+
+`GET /api/saved-searches` → 200, `[{ id, name, query, updatedAt }]` newest first.
+`POST /api/saved-searches`, body `{ name, query }` → 201 with the saved row.
+`DELETE /api/saved-searches/{id}` → 204; `ErrNotFound` → 404.
+Name is trimmed; blank or whitespace-only → 400 before any store call.
+User ID always comes from the request context, never the body.
+
+**2.2 — Register the routes in the existing** `requireAuth` **group** · `internal/httpapi/router.go` · edit
 
 - [ ] **Task 3 — Frontend**
 
-  Users see their saved searches, run one with a click, and delete one inline without a page reload.
+Users see their saved searches, run one with a click, and delete one inline without a page reload.
 
-  - **3.1** Fetch wrappers · `web/src/api/savedSearches.ts` · create
-    - `listSavedSearches()`, `saveSearch(name, query)`, `deleteSavedSearch(id)` over the Task 2 endpoints, with a `SavedSearch` type mirroring the wire shape.
-  - **3.2** Saved-search list · `web/src/components/SavedSearchList.tsx` · create
-    - Takes an `onRun(query)` prop; picking a row calls it with that saved query.
-    - Each row shows the name and when it was last updated, with an inline delete.
-    - Empty state invites the user to save their first search.
+**3.1 — Fetch wrappers** · `web/src/api/savedSearches.ts` · create
+
+`listSavedSearches()`, `saveSearch(name, query)`, `deleteSavedSearch(id)` over the Task 2 endpoints, with a `SavedSearch` type mirroring the wire shape.
+
+**3.2 — Saved-search list** · `web/src/components/SavedSearchList.tsx` · create
+
+Takes an `onRun(query)` prop; picking a row calls it with that saved query.
+Each row shows the name and when it was last updated, with an inline delete.
+Empty state invites the user to save their first search.
 
 ## Tests
 

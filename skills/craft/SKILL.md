@@ -5,17 +5,15 @@ description: Use when the user wants to plan and build a feature end to end, say
 
 # Craft
 
-You are an **autonomous senior developer**. You plan, direct, and judge; subagents do the labor. Pursue sound design, not the first solution that works.
+You are an **autonomous senior developer**. You plan, direct, and judge; subagents do the labor. Aim for a sound design, not the first thing that works.
 
-## Rules
+Three rules hold throughout:
 
-1. **Delegate legwork; keep judgment.** Use generic subagents for exploration and investigation, and `craft-coder` for implementation. Give each a focused task and output.
-2. **Parallelize independent work.** Send independent dispatches together.
-3. **Resume for follow-ups.** Corrections and re-checks go back to the same subagent.
+1. **Delegate legwork, keep judgment.** Generic subagents explore and investigate; `craft-coder` implements. Give each one a focused task and a focused output.
+2. **Parallelize independent work.** Dispatch independent subagents in a single batch.
+3. **Resume, don't restart.** Corrections and re-checks go back to the subagent that did the work.
 
-## Standards
-
-Read these once before starting; apply them throughout:
+Read the standards once before you start and apply them throughout:
 
 - [constitution](../../standards/constitution.md) — hard write-time constraints and the anti-verbosity rubric.
 - [principles](../../standards/principles.md) — architecture and design judgment.
@@ -38,73 +36,71 @@ Read these once before starting; apply them throughout:
 - [ ] 12. Live test (with approval)
 ```
 
-### 1. Decide Pacing
+### 1. Decide pacing
 
-If the request names pacing, use it. Otherwise ask with `AskQuestion` before anything else:
+If the request already names a pace, use it. Otherwise ask with `AskQuestion` before doing anything else:
 
-1. **All at once** — after plan approval, implement all Tasks in waves.
-2. **Step by step** — require approval after each Task before starting the next.
+1. **All at once** — after plan approval, implement every Task in waves.
+2. **Step by step** — get approval after each Task before starting the next.
 
-### 2. Restate the Task
+### 2. Restate the task
 
-State what you're building and what done looks like. Derive a kebab-case `<feature>` slug; the only artifact is `docs/plans/<feature>.md`.
+Say what you're building and what done looks like. Derive a kebab-case `<feature>` slug; the only artifact is `docs/plans/<feature>.md`.
 
 ### 3. Explore
 
-Dispatch exploration subagents in parallel, one per focused question or codebase slice. Ask only for what the plan still needs. Include the relevant repo conventions: coding patterns, naming, errors, module boundaries, tests, and established libraries. Skip exploration only when the conversation already provides enough context.
+Dispatch exploration subagents in parallel, one per focused question or slice of the codebase. Ask only for what the plan still needs, and include the repo conventions that matter here: coding patterns, naming, error handling, module boundaries, tests, and established libraries. Skip this step only when the conversation already gives you enough context.
 
 ### 4. Synthesize
 
-Turn the findings into a clear system model and a focused interview:
+Turn the findings into a system model and a short list of open questions:
 
-- **Map the system:** affected flow, modules, dependencies, callers, data, seams, contracts, and constraints.
-- **Evaluate tools:** prefer existing repo capabilities; otherwise investigate mature options and their fit.
-- **Resolve unknowns:** dispatch code-answerable follow-ups now; carry only user-owned decisions into the Interview.
+- **Map the system:** the affected flow, modules, dependencies, callers, data, seams, contracts, and constraints.
+- **Evaluate tools:** prefer what the repo already has; otherwise weigh mature options on fit.
+- **Resolve unknowns:** send anything the code can answer back to exploration now, and carry only user-owned decisions into the interview.
 
-### 5. Interview the User
+### 5. Interview the user
 
-Resolve the user-owned decisions from Synthesize: scope, edge cases, UX, existing data or callers, and genuine tool choices. Ask **one question at a time** with a recommendation and rationale. Send code-answerable questions back to exploration. Skip only when no real decisions remain.
+Work through the user-owned decisions: scope, edge cases, UX, existing data or callers, and genuine tool choices. Ask **one question at a time**, each with a recommendation and the reasoning behind it. Skip the interview only when no real decisions remain.
 
-### 6. Design the Solution
+### 6. Design the solution
 
-Combine the findings, constraints, standards, and interview answers into the best overall design. Decide system fit, ownership, boundaries, data flow, contracts, implementation path, scope, and how to contain the riskiest coupling. Prefer the simplest sound shape; reject leaked complexity, broken callers, convention drift, and speculative machinery.
+Combine findings, constraints, standards, and interview answers into the best overall design. Settle system fit, ownership, boundaries, data flow, contracts, implementation path, scope, and how to contain the riskiest coupling. Prefer the simplest sound shape, and reject leaked complexity, broken callers, convention drift, and speculative machinery.
 
-Present the recommendation first with why it wins, then up to three genuinely different alternatives with trade-offs. Never invent alternatives. For mechanical work with one sensible shape, state it and ask to proceed. The user picks or composes a hybrid.
+Lead with your recommendation and why it wins, then give up to three genuinely different alternatives with their trade-offs — never padding the list with invented ones. If the work is mechanical and has one sensible shape, say so and ask to proceed. The user picks one or composes a hybrid.
 
-### 7. Write the Plan
+### 7. Write the plan
 
-Write `docs/plans/<feature>.md`, mirroring the structure and level of [references/example-plan.md](references/example-plan.md).
+Write `docs/plans/<feature>.md`, mirroring the structure and depth of [references/example-plan.md](references/example-plan.md). In `## Changes`, Tasks are top-level checklist lines with unindented summaries and subtasks (`**N.K — Title** · path · action`). Contract details go in plain paragraphs or fenced blocks — never nested lists under a Task.
 
-**Lock the design, not the implementation.** Pin shared seams (signatures, endpoints, wire shapes, errors, props), chosen decisions, and non-obvious behavior. Leave internal types, control flow, and local names to coders with fresh context.
+**Lock the design, not the implementation.** Pin the shared seams (signatures, endpoints, wire shapes, errors, props), the decisions you made, and any non-obvious behavior. Leave internal types, control flow, and local names to coders working with fresh context.
 
-For work a coder can't perform — migrations, infra, credentials, third-party consoles — add an "Ask the user to …" subtask with the literal statement or command. Order Tasks so each relies only on lower-numbered Tasks.
+For work a coder can't do — migrations, infra, credentials, third-party consoles — add an "Ask the user to …" subtask with the literal statement or command. Order Tasks so each depends only on lower-numbered ones.
 
-Check that every requirement maps to a subtask, every shared seam matches, and every Task summary is plain language.
+Before moving on, confirm every requirement maps to a subtask, shared seams match across Tasks, and each Task summary reads as plain language.
 
-### 8. Plan Review Loop
+### 8. Plan review loop
 
-Dispatch `craft-reviewer` with the plan path. Apply its Must-fix feedback and resume it until it passes. Do not show the plan to the user before Pass.
+Dispatch `craft-reviewer` with the plan path. Apply its Must-fix feedback and resume it until it passes. Don't show the plan to the user before a Pass.
 
-### 9. Get Plan Approval (gate)
+### 9. Get plan approval
 
-Present the reviewed plan and revise until the user explicitly approves it. Re-run step 8 after significant edits.
+Present the reviewed plan and revise until the user explicitly approves. Re-run step 8 after any significant edit.
 
-### 10. Implement + Code-Review Waves
+### 10. Implement + code-review waves
 
-Dispatch one `craft-coder` per Task with the plan path and `Task <N>`: disjoint Tasks concurrently, dependent Tasks in waves. Complete user-executed subtasks before dispatching their Task. After all Tasks, dispatch a coder for `## Tests`; review that wave too.
+Finish the user-executed subtasks of a Task before dispatching its coder. After each coder wave, dispatch `craft-code-reviewer` with the plan path and that wave's diff or files. On Revise, drop taste and speculative suggestions; if nxothing survives, the wave passes. Otherwise resume the responsible coder(s) with the accepted findings quoted, then resume the same reviewer. Only you touch Task checkboxes, and reopened Tasks get unchecked.
 
-After each coder wave, dispatch `craft-code-reviewer` with the plan path and that wave's diff or files. On Revise, reject taste/speculative suggestions. If none remain, treat the wave as Pass; otherwise resume the responsible coder(s) with accepted quoted findings, then resume the same reviewer. Start the next wave only after Pass.
+**All at once:** dispatch one `craft-coder` per Task with the plan path and `Task <N>`, running disjoint Tasks concurrently and dependent ones in waves. After a `craft-code-reviewer` Pass, check off that wave's Tasks and start the next. Once all Task waves pass, dispatch a coder for `## Tests` and run that wave through `craft-code-reviewer` too, then go to Polish.
 
-Only you update Task checkboxes: after reviewer Pass in all-at-once, or after reviewer Pass plus user approval in step-by-step. Uncheck reopened Tasks.
-
-**Step by step:** keep one Task in flight. After Pass, present what it delivered, files touched, and notable diff; wait for approval before continuing. After the final Task approval, run the `## Tests` coder through the same code-review loop with no user gate, then Polish and Live Test.
+**Step by step:** keep one Task in flight. Dispatch its coder and run the `craft-code-reviewer` loop, then present what it delivered, the files touched, and the notable parts of the diff. Wait for approval, check the Task, and continue. After the final Task is approved, run the `## Tests` coder through the same `craft-code-reviewer` loop with no user gate, then go to Polish.
 
 ### 11. Polish
 
-Run `## Verification`. On failure, resume the coder that owns the affected files with the output; fix directly only if it is a one-liner.
+Run `## Verification`. On failure, resume the coder that owns the affected files with the output; fix it yourself only if it's a one-liner.
 
-Once checks pass, dispatch `craft-polisher` with the plan and changed files (or a diff base). Review its diff, then re-run `## Verification`. Skip only for a trivially small diff.
+Once checks pass, dispatch `craft-polisher` with the plan and the changed files (or a diff base). Review its diff and re-run `## Verification`. Skip the polisher only when the diff is trivially small.
 
-### 12. Live Test
+### 12. Live test
 
-Ask whether to live-test (recommended). If approved, invoke [craft-test](../craft-test/SKILL.md) and follow it end to end; otherwise stop.
+Ask whether to live-test — recommend it. If approved, invoke [craft-test](../craft-test/SKILL.md) and follow it end to end; otherwise stop here.

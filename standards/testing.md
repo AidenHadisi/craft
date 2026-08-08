@@ -26,19 +26,3 @@ Every case is one plain-language bullet under its file ("rejects a blank name wi
 ## Don't over-test
 
 One test per behavior, not per line. No tests that re-assert the type system. No duplicate coverage of the same branch. A test that could only fail if the compiler or framework broke is a test to delete.
-
-## Tests Section Template
-
-Add to `docs/plans/<feature>.md`, between Tasks and `## Verification`:
-
-```markdown
-## Tests
-
-- [path/to/foo_test.go](path/to/foo_test.go) — table-driven with a hand-rolled fake store.
-  - A valid save returns 201 with the stored row.
-  - A blank name returns 400 and never reaches the store.
-  - A store failure surfaces as 500.
-
-### Not tested
-- <meaningful planned behavior> — <why omitted>
-```

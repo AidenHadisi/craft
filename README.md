@@ -4,7 +4,7 @@ A Cursor plugin for building features the right way.
 
 AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it plans, directs, and judges, while fast parallel subagents do the labor — exploring, coding, reviewing. Every wave of coder output is reviewed by a fresh-context code reviewer; the orchestrator owns the gate (accept findings, loop coders, advance only on Pass), and the finished feature is proven by running it locally, not just reading it.
 
-One skill, one workflow — it asks whether to implement all Tasks at once or one at a time unless you name the pacing:
+The main `/craft` workflow asks whether to implement all Tasks at once or one at a time unless you name the pacing:
 
 - **All at once (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, review it, get approval, implement with parallel coders under fresh-context code review (orchestrator gates each wave), polish, then offer to live-test. Two approval gates: design choice, plan.
 - **Step by step** — same workflow, but one Task at a time with a user approval gate after each implemented Task. Polish and the live-test offer still run once at the end.
@@ -16,6 +16,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | Component | Type | Role |
 |---|---|---|
 | `craft` | skill (`/craft`) | Orchestrates the workflow; asks all-at-once vs step-by-step unless pacing is named, directs subagents, gates each code-review wave, live-tests the result |
+| `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
 | `craft-research` | skill (`/craft-research`) | Researches a topic across many sources and produces a refined doc in `Docs/` |
@@ -113,6 +114,12 @@ When no pacing is named, the skill asks whether to implement all Tasks at once o
 ```
 
 Two approvals always (the design choice and the plan); the plan is reviewed by `craft-reviewer` before that gate. Step-by-step adds a per-Task approval during implementation. Each implementation wave is reviewed by `craft-code-reviewer` (orchestrator owns the gate), then static checks run, and it asks before live-testing — decline and it stops there.
+
+For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
+
+```
+/craft-design redesign the analytics dashboard
+```
 
 Once it ships, check on it. Standalone — invoke it whenever you want to know how something is behaving, whether craft built it or not:
 

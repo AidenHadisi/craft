@@ -1,6 +1,6 @@
 {
   "name": "craft",
-  "description": "Autonomous senior-developer workflow for building features. Explores, interviews, presents design options, writes a directive-level plan, reviews it, gets approval, implements with parallel subagents under fresh-context code review, polishes, and live-tests. Asks whether to implement all Tasks at once or one at a time. Companion skills research a topic, prove a feature works locally, and monitor one in production.",
+  "description": "Autonomous senior-developer workflow for building features. Explores, interviews, presents design options, writes a directive-level plan, reviews it, gets approval, implements with parallel subagents under fresh-context code review, polishes, and live-tests. Asks whether to implement all Tasks at once or one at a time. Companion skills design UI variants in Canvas, research a topic, prove a feature works locally, and monitor one in production.",
   "version": "0.1.0",
   "author": { "name": "Aiden Hadisi", "email": "so.hadisi@gmail.com" },
   "license": "MIT",

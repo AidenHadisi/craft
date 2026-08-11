@@ -21,8 +21,6 @@ To build that understanding:
 
 Read and apply [architecture](references/architecture.md).
 
-First break the feature into smaller independent components (and the seams between them). Only then design each component and how they wire together. Do not design a complex system as one undifferentiated whole. Stay high-level — coding details, signatures, and pseudocode belong in the plan.
-
 Present your recommendation and up to two real alternatives (with trade-offs) to the user and ask them to choose. If they disagree or want changes, iterate until they are satisfied.
 
 ### 3. Writing the plan

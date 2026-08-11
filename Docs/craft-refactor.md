@@ -127,7 +127,7 @@ The research is implemented through three plugin-root standards split by load sc
 2. **`standards/principles.md`** — architecture, code-design, and refactoring judgment, including decision hiding and the simplification order. Deletion targets and "Deleted / Deliberately not added" reporting live in the constitution.
 3. **`standards/testing.md`** — test-selection and mocking guidance, loaded when planning, writing, or reviewing tests.
 
-The coder, code reviewer, plan reviewer, polisher, and orchestrator point to these shared files instead of restating the rules. Keeping each file aligned to one scenario reduces instruction dilution while giving every rule one maintained home.
+The coder, code reviewer, plan reviewer, polisher, and orchestrator point to these shared files (via the local plugin path) instead of restating the rules. Keeping each file aligned to one scenario reduces instruction dilution while giving every rule one maintained home.
 
 ## Known failure modes and their mitigations
 

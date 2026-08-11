@@ -5,31 +5,21 @@ description: Prove a feature works by running it live — real process, real req
 
 # Craft Test
 
-Prove the feature works by running it, not by reading it. The goal is a real end-to-end exercise — real process, real requests, real rendering — without ever touching production.
-
-Your context is scarce — spend it on judgment, not labor. Dispatch a subagent for any legwork: discovering commands and credentials, running static checks, booting the server, exercising an endpoint, chasing down a failure. Tell it exactly what to do and what to report back. Keep central what only you can decide: scope, temporary edits and their revert, browser testing, and the final report.
-
-## Steps
+Prove a feature work by actually running it. The goal is a real end-to-end exercise — real process, real requests, real rendering — without ever touching production.
 
 ### 1. Scope
 
 Establish what you're testing and what "works" means: the endpoints, pages, or flows involved, and the observable result that counts as success. Pull this from the conversation or the feature's plan; if it's genuinely unclear, ask.
-
-If the project has build/test/lint commands, delegate them first — no point live-testing code that doesn't compile.
 
 ### 2. Run locally
 
 - Delegate discovery of the run command from the project itself: `package.json` scripts, `Makefile`, `docker-compose.yml`, `Procfile`, README, or existing dev docs. Prefer the project's established dev setup over inventing one.
 - Delegate server start and health check; confirm healthy before testing — don't fire requests at a server that hasn't finished booting.
 
-
-
 ### 3. Credentials & auth
 
 - Delegate credential discovery where the project keeps them: `.env` / `.env.local`, AWS Secrets Manager (`aws secretsmanager get-secret-value`), SSM parameters, config files, docker-compose `environment` blocks.
 - If auth can't be satisfied with available credentials, **temporarily bypass it** — e.g. comment out the auth middleware on the route under test. Tag every such edit with a `TODO(live-test)` comment so nothing is forgotten, and revert it before finishing.
-
-
 
 ### 4. Instrument
 

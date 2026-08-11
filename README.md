@@ -2,12 +2,9 @@
 
 A Cursor plugin for building features the right way.
 
-AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it plans, directs, and judges, while fast parallel subagents do the labor — exploring, coding, reviewing. Every wave of coder output is reviewed by a fresh-context code reviewer; the orchestrator owns the gate (accept findings, loop coders, advance only on Pass), and the finished feature is proven by running it locally, not just reading it.
+AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it owns understanding, architecture, and the plan, while focused subagents explore, review, and implement. Each agent carries its own instructions; the orchestrator owns every gate and proves the finished feature by running it locally.
 
-The main `/craft` workflow asks whether to implement all Tasks at once or one at a time unless you name the pacing:
-
-- **All at once (default)** — explore, interview the user on open decisions, present design options, write a directive-level plan, review it, get approval, implement with parallel coders under fresh-context code review (orchestrator gates each wave), polish, then offer to live-test. Two approval gates: design choice, plan.
-- **Step by step** — same workflow, but one Task at a time with a user approval gate after each implemented Task. Polish and the live-test offer still run once at the end.
+The `/craft` workflow is one elastic path: understand, interview, design (orchestrator), write a directive plan, review it, get approval, implement under fresh-context code review, then offer to live-test. Cost scales with the work — a small change gets a short design and plan. The user always picks the design; the plan gate always fires.
 
 Every run asks before live-testing at the end; say no and it stops after the static checks.
 
@@ -15,52 +12,35 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 
 | Component | Type | Role |
 |---|---|---|
-| `craft` | skill (`/craft`) | Orchestrates the workflow; asks all-at-once vs step-by-step unless pacing is named, directs subagents, gates each code-review wave, live-tests the result |
+| `craft` | skill (`/craft`) | Owns architecture and the plan; directs subagents; gates design and plan; live-tests |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
 | `craft-research` | skill (`/craft-research`) | Researches a topic across many sources and produces a refined doc in `Docs/` |
-| `craft-coder` | subagent | Implements one Task from a directive plan, following repo idioms |
-| `craft-code-reviewer` | subagent (readonly) | Fresh-context review of each implementation wave — Pass / Revise with line-cited findings |
-| `craft-polisher` | subagent | Architect pass over the working diff — restructures and polishes to the shared standards |
-| `craft-reviewer` | subagent (readonly) | Gates a directive plan — verdict plus itemized fixes |
+| `craft-coder` | subagent | Implements one Task from a directive plan (also usable standalone) |
+| `craft-code-reviewer` | subagent (readonly) | Fresh-context review of an implementation wave — Pass / Revise |
+| `craft-polisher` | subagent | Architect polish pass over a working diff (also usable standalone) |
+| `craft-reviewer` | subagent (readonly) | Gates a directive plan — Pass / Needs changes |
 
-Shared coding, design, and testing guidance lives at the plugin root under `standards/` — infrastructure used by the orchestrator and subagents, not private to the craft skill. The skill keeps its own example plan:
-
-| Reference | Used by | Covers |
-|---|---|---|
-| `standards/constitution.md` | coder, code reviewer, polisher, reviewer, orchestrator | Hard write-time constraints + anti-verbosity diff rubric |
-| `standards/principles.md` | orchestrator, reviewer, code reviewer, polisher | Architecture, code design, and refactoring judgment |
-| `standards/testing.md` | orchestrator, reviewer, coder (Tests); code reviewer when tests changed | Test what matters, repo idioms, mocking only at boundaries |
-| `skills/craft/references/example-plan.md` | orchestrator | A worked example directive-level plan |
+Each agent is self-contained — quality bar and role judgment live in its own file. The skill keeps its plan template and architecture judgment under `skills/craft/references/`.
 
 ## The workflow
 
 ```mermaid
 flowchart TD
-    start["/craft"] --> pacing{"Pacing named?"}
-    pacing -->|no| ask["AskQuestion: All at once / Step by step"]
-    pacing -->|yes| restate["Restate the task + slug"]
-    ask --> restate
-    restate --> explore["Explore (focused generic subagents)"]
-    explore --> synthesize["Synthesize: system + unknowns"]
-    synthesize --> interview["Interview the user"]
-    interview --> designs["Design solution, user picks (gate)"]
-    designs --> plan["Orchestrator writes directive plan"]
+    start["/craft"] --> understand["Understand: interview + explore"]
+    understand --> design["Orchestrator designs; user picks"]
+    design --> plan["Orchestrator writes directive plan"]
     plan --> planrev["craft-reviewer loop"]
-    planrev --> gate["User approves plan (gate)"]
-    gate --> build["craft-coder Task waves"]
+    planrev --> planGate["User approves plan"]
+    planGate --> build["craft-coder Task waves"]
     build --> review["craft-code-reviewer"]
     review -->|corrections| build
     review -->|"Pass, more Tasks"| build
-    review -->|"Pass, Task (step-by-step)"| taskgate["User approves Task"]
-    taskgate -->|more Tasks| build
     review -->|"Pass, Tasks done"| tests["craft-coder: Tests"]
-    taskgate -->|last Task| tests
     tests --> testreview["craft-code-reviewer"]
     testreview -->|corrections| tests
-    testreview -->|Pass| polish["craft-polisher"]
-    polish --> live{"Live test?"}
+    testreview -->|Pass| live{"Live test?"}
     live -->|yes| test["craft-test skill"]
     live -->|no| stop["Stop after static checks"]
 ```
@@ -106,14 +86,13 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 
 ## Usage
 
-When no pacing is named, the skill asks whether to implement all Tasks at once or one at a time. Name one to skip the question:
-
 ```
 /craft add OAuth login for the dashboard
-/craft step by step — add OAuth login for the dashboard
 ```
 
-Two approvals always (the design choice and the plan); the plan is reviewed by `craft-reviewer` before that gate. Step-by-step adds a per-Task approval during implementation. Each implementation wave is reviewed by `craft-code-reviewer` (orchestrator owns the gate), then static checks run, and it asks before live-testing — decline and it stops there.
+You always pick the design; the plan is always reviewed by `craft-reviewer` and then approved by you. Parallel coder waves run only for file-disjoint Tasks with pinned contracts; otherwise sequential. Each wave is reviewed by `craft-code-reviewer`, then static checks run, and it asks before live-testing — decline and it stops there.
+
+`craft-coder`, `craft-code-reviewer`, `craft-polisher`, and `craft-reviewer` are usable inside or outside `/craft`.
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 
@@ -133,11 +112,12 @@ Every invocation after that follows the file: work the checks, compare each agai
 
 ## Design notes
 
-- **Delegation-first.** The orchestrator's context is spent on judgment, not labor. Craft subagents inherit the orchestrator's model; model choice for generic dispatches follows the workspace's subagent model-selection rule.
-- **Self-contained skill.** The full workflow lives in `SKILL.md` and reads top to bottom. Shared standards (constitution, principles, testing) live at the plugin root; the skill's example plan stays under `skills/craft/references/`.
-- **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` reviews each wave in a fresh context, and the orchestrator owns the gate — accepts findings, loops coders, advances only on Pass.
+- **Orchestrator owns architecture.** Design and plan stay in one context so decisions don't die in a handoff.
+- **Delegation for labor.** Exploration, coding, and review use subagents; judgment stays with the orchestrator.
+- **Self-contained agents.** Each agent owns its instructions — no shared standards dump. The plan template stays under `skills/craft/references/`.
+- **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` owns the Pass/Revise gate — the orchestrator accepts findings, loops coders, and advances only on Pass.
 - **Prove it runs.** Every run ends with static checks, then offers live testing — run locally with real credentials, stub side effects, never mutate prod, revert every temporary change.
-- **Readonly where it counts.** Exploration subagents and reviewers are readonly; they inform the orchestrator but never edit artifacts.
+- **Readonly where it counts.** Exploration and review agents are readonly; they inform the orchestrator but never edit artifacts.
 
 ## License
 

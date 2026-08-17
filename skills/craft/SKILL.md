@@ -35,8 +35,12 @@ If the plan has a **User actions** section (e.g. DDLs), ask the user to complete
 
 Per Task: dispatch `craft-coder`, then `craft-code-reviewer`. On Revise, resume the coder then the same reviewer. Parallelize only when Tasks touch strictly disjoint files and can complete independently; otherwise run sequential. Only you update Task checkboxes.
 
-### 5. Testing
+### 5. Polishing
 
-When Tasks are done, run the plan's Verification commands (tests, lint, typecheck, etc.). Fix failures via subagents as needed.
+Review the full diff yourself first: does it do what the plan specified, is it consistent with repo conventions and idioms, and can anything be simplified — dead code, single-use helpers, speculative generality, needless layers. Then dispatch `craft-polisher` for an architect pass over the diff.
+
+### 6. Testing
+
+After polishing, run the plan's Verification commands (tests, lint, typecheck, etc.). Fix failures via subagents as needed.
 
 Then ask whether to live-test (recommend yes). If approved, follow [craft-test](../craft-test/SKILL.md); otherwise stop.

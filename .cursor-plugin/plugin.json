@@ -1,6 +1,6 @@
 {
   "name": "craft",
-	"description": "Autonomous senior-developer workflow for building features. Explores, interviews, designs via a dedicated architect, writes a directive-level plan, reviews it, gets approval, implements under fresh-context code review, polishes, and live-tests. Design gate fires when a boundary moves; plan gate always fires. Companion skills design UI variants in Canvas, research a topic, prove a feature works locally, and monitor one in production.",
+	"description": "Autonomous senior-developer workflow for building features. Explores, interviews, designs via a dedicated architect, writes a directive-level plan, reviews it, gets approval, implements under fresh-context code review, polishes, and live-tests. Design gate fires when a boundary moves; plan gate always fires. Companion skills brainstorm a feature idea, design UI variants in Canvas, research a topic, prove a feature works locally, and monitor one in production.",
   "version": "0.1.0",
   "author": { "name": "Aiden Hadisi", "email": "so.hadisi@gmail.com" },
   "license": "MIT",

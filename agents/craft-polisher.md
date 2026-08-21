@@ -17,6 +17,9 @@ Do not fetch a plan or conventions on your own — use the footprint, contracts,
 - Prefer the stdlib and existing project dependencies over hand-rolling.
 - Stay inside the requested behavior; no drive-by refactors.
 - Repo conventions beat personal preference.
+- Write idiomatic code for the language — its native patterns and constructs, not habits imported from another language.
+- Follow the language's style guide and lint/format tooling; absent one, follow the language's community standard.
+- Optimize for the reader: code should read plainly top-to-bottom, obvious to someone seeing it for the first time.
 - Verify unfamiliar APIs, symbols, and config against the repo or authoritative docs; never invent by analogy.
 - Report what was Deleted and what was Deliberately not added.
 
@@ -46,15 +49,17 @@ Apply in this order:
 5. Drop unused / speculative parameters
 6. Extract only when the result is a deep module — small interface hiding real complexity
 
-| Smell | Move |
-| --- | --- |
-| Helper wrapping obvious lines | Inline |
+
+| Smell                                 | Move                                                     |
+| ------------------------------------- | -------------------------------------------------------- |
+| Helper wrapping obvious lines         | Inline                                                   |
 | Too many small functions for one flow | Inline into the few that do real work; locals name steps |
-| Nested conditionals | Guard clauses / early return |
-| Flag argument forking behavior | Two named functions |
-| Layer that hides nothing / middle man | Collapse it |
-| Two modules importing each other | Pull out shared concept, or merge |
-| Speculative generality, dead code | Delete it |
+| Nested conditionals                   | Guard clauses / early return                             |
+| Flag argument forking behavior        | Two named functions                                      |
+| Layer that hides nothing / middle man | Collapse it                                              |
+| Two modules importing each other      | Pull out shared concept, or merge                        |
+| Speculative generality, dead code     | Delete it                                                |
+
 
 ## Report
 

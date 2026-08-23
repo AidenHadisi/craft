@@ -13,6 +13,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | Component | Type | Role |
 |---|---|---|
 | `craft` | skill (`/craft`) | Owns architecture and the plan; directs subagents; gates design and plan; live-tests |
+| `craft-plan` | skill (`/craft-plan`) | Co-authors a dense plan one step at a time — review and approval per step — then implements hands-off |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
@@ -93,6 +94,12 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 You always pick the design; the plan is always reviewed by `craft-reviewer` and then approved by you. Parallel coder waves run only for file-disjoint Tasks with pinned contracts; otherwise sequential. Each wave is reviewed by `craft-code-reviewer`, then static checks run, and it asks before live-testing — decline and it stops there.
 
 `craft-coder`, `craft-code-reviewer`, `craft-polisher`, and `craft-reviewer` are usable inside or outside `/craft`.
+
+When the feature is too complex to plan in one shot but you don't want to sit through every code slice, co-author the plan instead — one step at a time, each reviewed and approved before the next, then a fully hands-off build:
+
+```
+/craft-plan add OAuth login for the dashboard
+```
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 

@@ -23,7 +23,9 @@ Understand the task thoroughly before designing. Never assume on anything import
 
 Read and apply [architecture](references/architecture.md).
 
-Present your recommendation and up to two real alternatives (with trade-offs) to the user and ask them to choose. Iterate until they are satisfied. This agreed design is what keeps independently built slices converging — get it right.
+Keep this deliberately high-level. Name the capabilities the feature needs, the components that own them, and the seams between them — nothing more. Do not design internals, schemas, signatures, or edge cases here; forcing the full design now is exactly what produces ugly results. Each piece gets designed properly when its slice comes up in the loop, with everything learned from the slices before it.
+
+Present your recommendation and up to two real alternatives (with trade-offs) to the user and ask them to choose. Iterate until they are satisfied. This agreed skeleton is what keeps independently built slices converging.
 
 ### 3. Setting up
 
@@ -36,7 +38,7 @@ Make sure you are on a feature branch before any code. If on main or a shared br
 Repeat until the feature is done:
 
 1. **Pick.** Re-read the Architecture section, then choose the next slice: the smallest standalone unit the feature needs next, in dependency order — a schema, one package, one endpoint, one component. For example, for a backend feature the first slice is usually the DB schema; the next is the smallest component/package responsible for a single thing. Also check whether pieces built so far can be wired together now; integration is a valid slice and should not pile up.
-2. **Agree.** Present the slice to the user: what it delivers, roughly which files it touches, and 2–5 observable acceptance criteria. Discuss and adjust. No code until the user agrees; the criteria are then frozen for this slice.
+2. **Design & agree.** Now design this slice properly — this is where detailed design happens, one slice at a time, informed by what previous slices taught you. Present it to the user: what it delivers, the design, roughly which files it touches, and 2–5 observable acceptance criteria. Discuss and adjust. No code until the user agrees; the criteria are then frozen for this slice.
 3. **Build.** Dispatch `craft-coder` with a full brief: the slice, its acceptance criteria, relevant architecture decisions and contracts, and repo conventions. Then `craft-code-reviewer` over the slice diff; on Revise, resume the coder then the same reviewer. Then `craft-polisher` for an architect pass over the slice diff.
 4. **Prove.** Run the Verification commands relevant to the slice. Show the user the diff summary and the verification output — a slice is never done on the coder's word alone.
 5. **Review.** Stop and wait for the user. Apply their change requests (resume the coder, or edit directly for small tweaks) and re-verify.

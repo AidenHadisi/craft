@@ -1,6 +1,7 @@
 ---
-
-## name: craft-plan description: Use when collaboratively planning a complex feature before implementation.
+name: craft-plan
+description: Use when collaboratively planning a complex feature before implementation.
+---
 
 # Craft Plan
 

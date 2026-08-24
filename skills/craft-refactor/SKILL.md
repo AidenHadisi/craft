@@ -1,10 +1,10 @@
 ---
-
-## name: craft-refactor
+name: craft-refactor
 description: >-
   Use when the user wants to refactor, clean up, modernize, or simplify
   existing code — making it more idiomatic, readable, and better designed —
   without changing its observable behavior.
+---
 
 # Craft Refactor
 

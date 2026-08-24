@@ -1,10 +1,10 @@
 ---
-name: craft-refactor
+
+## name: craft-refactor
 description: >-
   Use when the user wants to refactor, clean up, modernize, or simplify
   existing code — making it more idiomatic, readable, and better designed —
   without changing its observable behavior.
----
 
 # Craft Refactor
 
@@ -24,7 +24,7 @@ Dispatch web-research subagents when needed to find the modern, idiomatic way to
 
 ## 3. Design
 
-Decide the target design yourself: what moves, merges, collapses, or gets deleted; the key interfaces after; which research findings you adopt and why. Alongside idiomatic style and clean structure, weigh cognitive load: a first-time reader should follow the code in one read-through — fewer concepts to hold, definitions near their use, one obvious reading order. New dependencies enter only here, named in the design — never mid-wave.
+Decide the target design: what changes, moves, merges, collapses, or gets deleted; the key interfaces after; which research findings you adopt and why. Alongside idiomatic style and clean structure, weigh cognitive load: a first-time reader should follow the code in one read-through — fewer concepts to hold, definitions near their use, one obvious reading order. New dependencies enter only here, named in the design — never mid-wave.
 
 Present the design briefly with before/after sketches of the key interfaces — no options menu, no questions. This is the one go/no-go gate; proceed on approval.
 

@@ -27,7 +27,7 @@ Present your recommendation and up to two real alternatives (with trade-offs) to
 
 Copy [plan-template](references/plan-template.md) to `docs/plans/<feature>.md` (kebab-case, feature-specific name) and fill it in. Keep the section structure; replace every placeholder with real content. Write each Task so a junior developer can follow it and produce clean, reliable results — pin contracts and brief pseudocode when needed, without over-specifying internals. Carry forward every decision from step 2; do not re-summarize away detail you already know.
 
-Dispatch `craft-reviewer` to review the plan. Apply Must-fix items and iterate until Pass. Then ask the user to review and approve. If they request changes, revise and re-run `craft-reviewer` after any significant edit.
+Dispatch `craft-reviewer` to review the plan. Apply Must-fix items and iterate until Pass. Then ask the user to approve, presenting a concise but complete summary of the implementation Tasks — a short paragraph per Task — that they can decide on without opening the file. If they request changes, revise and re-run `craft-reviewer` after any significant edit.
 
 ### 4. Implementing
 

@@ -16,14 +16,17 @@ Do not design the whole system as one blob. Break the problem down before choosi
 
 - Group things that change together; split things that change for different reasons.
 - Each component should hide one changeable decision behind a small interface. If you cannot name that decision, the cut is wrong. Never split by processing step or execution order alone.
+- The deletion test: imagine deleting a component. If complexity vanishes, it was a pass-through; if it reappears across its callers, it earned its keep.
+- The interface is the test surface: if a component must be tested past its interface, the cut is wrong.
+- One implementation means a hypothetical seam — do not introduce an interface until a second real implementation exists.
 - Prefer fewer deep components over many shallow ones.
 - Keep dependencies one-way.
 - Identify the 1–2 things most likely to change and contain them. Earn every new package, layer, or interface — only if you can name what it buys *today*.
 
 ## Quality bar
 
-- Assume the team is highly particular about code quality and consistency. Prefer clean, concise, maintainable shapes.
-- Prefer the least design that stays clear; no speculative generality, config knobs, or helpers without real duplication.
+- Assume the team is highly particular about code quality and consistency.
+- Prefer the least design that stays clear; no speculative generality, config knobs, or helpers without real duplication. Any deviation from the simplest shape must say why the simpler alternative was rejected.
 - Prefer existing, well-maintained solutions over hand-rolling — modern stdlib, dependencies already in the project, or well-maintained third-party packages when appropriate. If unsure whether a good package exists, search the web.
 - Stay inside the requested behavior; no drive-by refactors.
 - Repo conventions beat personal preference. Mirror a nearby sibling feature before inventing structure.

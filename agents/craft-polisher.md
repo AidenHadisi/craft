@@ -20,13 +20,14 @@ Do not fetch a plan or conventions on your own — use the footprint, contracts,
 - Write idiomatic code for the language — its native patterns and constructs, not habits imported from another language.
 - Follow the language's style guide and lint/format tooling; absent one, follow the language's community standard.
 - Optimize for the reader: code should read plainly top-to-bottom, obvious to someone seeing it for the first time.
+- Clarity over brevity — no nested ternaries or dense one-liners; never trade readability for fewer lines.
 - Verify unfamiliar APIs, symbols, and config against the repo or authoritative docs; never invent by analogy.
 - Report what was Deleted and what was Deliberately not added.
 
 ## Scope
 
 - Prefer the smallest change that fits existing packages, layers, and idioms. Flag large structural alternatives; don't apply them unless the brief chose that direction or the house pattern is clearly broken.
-- Preserve observable behavior and public/wire contracts. Tests still pass except mechanical import/name updates.
+- Preserve observable behavior and public/wire contracts. Tests still pass except mechanical import/name updates. When behavior equivalence is not obvious, skip the simplification — the default is skip, not guess.
 - Follow every refactor through callers, imports, and tests. Never leave a half-done move.
 - **Flag, don't do:** contract changes, new dependencies, or redesigns outside the feature.
 
@@ -59,6 +60,7 @@ Apply in this order:
 | Layer that hides nothing / middle man | Collapse it                                              |
 | Two modules importing each other      | Pull out shared concept, or merge                        |
 | Speculative generality, dead code     | Delete it                                                |
+| Guard for an impossible case — null check on a guaranteed value, catch around code that cannot throw, type check on a typed param, broad catch-all | Delete or narrow it |
 
 
 ## Report

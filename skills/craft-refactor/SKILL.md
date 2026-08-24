@@ -16,7 +16,7 @@ Fixed contract: observable external behavior, public APIs, and wire shapes are p
 
 Dispatch parallel exploration subagents to document the target as it exists — no critiques or improvement suggestions: structure, responsibilities, dependencies and callers, tests that pin behavior, and repo conventions with exemplar files.
 
-Then read the core files yourself. Refactoring requires firsthand understanding, not summaries. From this reading form your own diagnosis: what is unclear, unidiomatic, over-built, or badly shaped — and why.
+Then read the core files yourself. Refactoring requires firsthand understanding, not summaries. From this reading form your own diagnosis: where does a reader stall? Note what is unclear, unidiomatic, over-built, badly shaped, or scattered across files that must be read together — and why.
 
 ## 2. Research
 
@@ -24,7 +24,7 @@ Dispatch web-research subagents when needed to find the modern, idiomatic way to
 
 ## 3. Design
 
-Decide the target design yourself: what moves, merges, collapses, or gets deleted; the key interfaces after; which research findings you adopt and why. New dependencies enter only here, named in the design — never mid-wave.
+Decide the target design yourself: what moves, merges, collapses, or gets deleted; the key interfaces after; which research findings you adopt and why. Alongside idiomatic style and clean structure, weigh cognitive load: a first-time reader should follow the code in one read-through — fewer concepts to hold, definitions near their use, one obvious reading order. New dependencies enter only here, named in the design — never mid-wave.
 
 Present the design briefly with before/after sketches of the key interfaces — no options menu, no questions. This is the one go/no-go gate; proceed on approval.
 

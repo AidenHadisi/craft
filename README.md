@@ -18,6 +18,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
 | `craft-research` | skill (`/craft-research`) | Researches a topic across many sources and produces a refined doc in `Docs/` |
+| `craft-refactor` | skill (`/craft-refactor`) | Diagnoses existing code, researches modern idioms, then refactors it in verified behavior-preserving waves |
 | `craft-coder` | subagent | Implements one Task from a directive plan (also usable standalone) |
 | `craft-code-reviewer` | subagent (readonly) | Fresh-context review of an implementation wave — Pass / Revise |
 | `craft-polisher` | subagent | Architect polish pass over a working diff (also usable standalone) |
@@ -106,6 +107,14 @@ For UI work, compare 3–5 mock directions in one Canvas, refine or combine them
 ```
 /craft-design redesign the analytics dashboard
 ```
+
+To clean up existing code rather than build something new, hand it a target and let it work:
+
+```
+/craft-refactor the payment reconciliation package
+```
+
+No interview — it explores the target and forms its own diagnosis, researches current language idioms and packages online, then presents one target design as a single go/no-go gate. On approval it refactors in small verified waves — observable behavior, public APIs, and wire shapes preserved — with `craft-code-reviewer` gating each wave and `craft-polisher` finishing the full diff.
 
 Once it ships, check on it. Standalone — invoke it whenever you want to know how something is behaving, whether craft built it or not:
 

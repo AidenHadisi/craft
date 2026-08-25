@@ -1,7 +1,7 @@
 ---
-name: craft-plan
+
+## name: craft-plan
 description: Use when collaboratively planning a complex feature before implementation.
----
 
 # Craft Plan
 
@@ -19,6 +19,8 @@ Before you do anything else, understand the feature. Making assumptions is never
 - Dispatch parallel exploration subagents to gather information. Their job is to document the codebase as it exists — no critiques or improvement suggestions.
 - Learn the existing architecture, conventions, and integration points. Established project patterns must be followed. Any deviations will likely lead to rejection by the user.
 - Capture each convention as an exemplar: the concrete file a coder should mirror (errors, naming, tests, layout). These feed the plan's Conventions section.
+
+
 
 ## 2. Agree on architecture
 
@@ -39,9 +41,9 @@ Repeat until the plan covers the feature:
 3. **Write.** Append a new step to the plan. Pin contracts, files, errors, edge cases, tests, and information-dense pseudocode for every non-trivial path. Remove design ambiguity without dictating trivial code. Write it assuming the implementer has zero context for this codebase and questionable taste — every design judgment is made here, in the step, never left to the coder. A step is not done while it contains a plan failure: "add appropriate error handling" / "handle edge cases" / "add validation", tests without named behaviors, "similar to Step N", or references to symbols no step defines.
 4. **Self-review.** Re-read the step with fresh eyes: does it cover its requirements, contain no plan-failure phrases, and use contract names and signatures exactly as earlier steps define them? Fix inline.
 5. **Review.** Dispatch `craft-reviewer` to review this step against the requirements, architecture, conventions, and frozen steps. Fix must-fix findings and rerun the same reviewer until pass.
-6. **Approve.** Present the reviewed step to the user. Revise and review again when needed. Once approved, check it off and treat its contracts as frozen.
+6. **Approve.** Present the reviewed step to the user. Revise and review again when needed.
 
-If later work requires changing a frozen step, explain why and get approval first. Uncheck that step and its dependents, update architecture, then revise, review, and reapprove them in dependency order.
+If later work requires changing a frozen step, explain why and get approval first. Update architecture, then revise, review, and reapprove them in dependency order.
 
 ## 4. Approve the complete plan
 

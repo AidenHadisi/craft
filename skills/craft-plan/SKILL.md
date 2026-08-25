@@ -39,7 +39,9 @@ Repeat until the plan covers the feature:
 1. **Pick.** Choose the next smallest standalone component we need to design. It could be database schema, a new small standalone package, or a new API endpoint. Tell the user what it is and why it comes next.
 2. **Design.** Work out its behavior and integration using the architecture and frozen steps. Verify uncertain details against the codebase.
 3. **Write.** Append a new step to the plan. Pin contracts, files, errors, edge cases, tests, and information-dense pseudocode for every non-trivial path. Remove design ambiguity without dictating trivial code. Write it assuming the implementer has zero context for this codebase and questionable taste — every design judgment is made here, in the step, never left to the coder. A step is not done while it contains a plan failure: "add appropriate error handling" / "handle edge cases" / "add validation", tests without named behaviors, "similar to Step N", or references to symbols no step defines.
-4. **Self-review.** Re-read the step with fresh eyes: does it cover its requirements, contain no plan-failure phrases, and use contract names and signatures exactly as earlier steps define them? Fix inline.
+
+   Structure the step as sub-steps numbered `N.1`, `N.2`, … (step 3 → 3.1, 3.2). Write for density, not length: every line must carry a fact or decision the implementer needs. Prefer pseudocode for logic, signatures for contracts, and terse bullets for facts; use prose only where it is genuinely the clearest form. Pick whatever format best fits each sub-step — cut words, never information.
+4. **Self-review.** Re-read the step with fresh eyes: does it cover its requirements, contain no plan-failure phrases, and use contract names and signatures exactly as earlier steps define them? Would a paragraph read faster as pseudocode or bullets without losing information? Fix inline.
 5. **Review.** Dispatch `craft-reviewer` to review this step against the requirements, architecture, conventions, and frozen steps. Fix must-fix findings and rerun the same reviewer until pass.
 6. **Approve.** Present the reviewed step to the user. Revise and review again when needed.
 

@@ -1,4 +1,4 @@
-# <Name>
+
 
 <One paragraph describing the feature: current state, the gap, what we're adding, and what done looks like. Note explicit exclusions here if any.>
 
@@ -15,21 +15,25 @@
 
 <Pasted verbatim into every coder brief. Each entry names one repo-specific convention and the exemplar file to mirror. Cover errors, naming, tests, and layout as applicable.>
 
-- <Convention> — mirror `<path>`
+-  — mirror `<path>`
+
+
 
 ## Steps
 
 <Appended one at a time during the loop, in the order they are designed.>
 
-- [ ] **Step 1 — <name>**
+- [ ] **Step 1 —**
 
 <The one job this component owns, in a sentence or two.>
 
-<Numbered sub-steps. Each describes one piece of the work in detail — the files it touches, the contracts it pins (signatures, endpoints, wire shapes, errors), and its edge and error paths — with pseudocode wherever the logic is non-trivial. No extra headings; the precision lives in the prose.>
+<Sub-steps numbered 1.1, 1.2, … — one piece of the work each. Each explains what it does, pins the contracts it defines (signatures, endpoints, wire shapes, errors), and its edge and error paths. Written dense: pseudocode for logic, signatures for contracts, terse bullets for facts, prose only where it's the clearest form. No extra headings. Complete but concise — every line carries a fact or decision.>
 
 **Tests:**
 
 - `<path>_test.<ext>` — <one behavior per bullet; each asserts an observable outcome>
+
+
 
 ## Verification
 

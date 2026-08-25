@@ -24,7 +24,7 @@ Before you do anything else, understand the feature. Making assumptions is never
 
 ## 2. Agree on architecture
 
-Read and apply [architecture](references/architecture.md) and define the high-level design: capabilities, ownership, seams, and dependency direction. Do not design internals or force a complete decomposition; later components may emerge only after earlier steps.
+Read and apply [architecture](references/architecture.md) and define the high-level design: capabilities, ownership, seams, and dependency direction. Do not design internals or force a complete decomposition; that comes later as you work on each step.
 
 Remember that a design that simply works is not good enough — but neither is an impressive one. Aim for the simplest sound design where every package, layer, and interface is earned today.
 
@@ -34,14 +34,23 @@ Present the recommended architecture and up to two meaningful alternatives with 
 
 Copy [plan-template](references/plan-template.md) to `docs/plans/<feature>.md` and fill in every section except **steps**.
 
+Then outline **steps** as heading-only placeholders — `- [ ] **Step N — <name>**`, one per anticipated step, in dependency order, no design. The outline is provisional: split, merge, rename, and reorder undesigned headings freely as design work teaches you more. It exists so you and the user always know how many steps remain and can spot a missing component early.
+
 Repeat until the plan covers the feature:
 
-1. **Pick.** Choose the next smallest standalone component we need to design. It could be database schema, a new small standalone package, or a new API endpoint. Tell the user what it is and why it comes next.
+1. **Pick.** Take the next undesigned step heading — revising the outline first if it no longer fits. Each step is one smallest standalone component: database schema, a small standalone package, an API endpoint. Tell the user what it is and why it comes next.
 2. **Design.** Work out its behavior and integration using the architecture and frozen steps. Verify uncertain details against the codebase.
-3. **Write.** Append a new step to the plan. Pin contracts, files, errors, edge cases, tests, and information-dense pseudocode for every non-trivial path. Remove design ambiguity without dictating trivial code. Write it assuming the implementer has zero context for this codebase and questionable taste — every design judgment is made here, in the step, never left to the coder. A step is not done while it contains a plan failure: "add appropriate error handling" / "handle edge cases" / "add validation", tests without named behaviors, "similar to Step N", or references to symbols no step defines.
+3. **Write.** Fill in the step under its heading. Pin contracts, files, errors, edge cases, tests, and information-dense pseudocode for every non-trivial path. Remove design ambiguity without dictating trivial code. Write it assuming the implementer has zero context for this codebase and questionable taste — every design judgment is made here, in the step, never left to the coder. A step is not done while it contains a plan failure: "add appropriate error handling" / "handle edge cases" / "add validation", tests without named behaviors, "similar to Step N", or references to symbols no step defines.
 
-   Structure the step as sub-steps numbered `N.1`, `N.2`, … (step 3 → 3.1, 3.2). Write for density, not length: every line must carry a fact or decision the implementer needs. Prefer pseudocode for logic, signatures for contracts, and terse bullets for facts; use prose only where it is genuinely the clearest form. Pick whatever format best fits each sub-step — cut words, never information.
-4. **Self-review.** Re-read the step with fresh eyes: does it cover its requirements, contain no plan-failure phrases, and use contract names and signatures exactly as earlier steps define them? Would a paragraph read faster as pseudocode or bullets without losing information? Fix inline.
+   Structure the step as sub-steps numbered `N.1`, `N.2`, … (step 3 → 3.1, 3.2). The step has two readers: a coder who needs every detail, and the user who must verify each decision in one quick read. Serve both with these formatting rules:
+
+   - **One fact or decision per line.** Never chain several decisions into one sentence with em-dashes, semicolons, or nested parentheticals — split into separate bullets so each can be verified alone.
+   - **Structure over prose.** Pseudocode for logic; signatures and code blocks for contracts; a table for anything enumerable (rules, fields, endpoints, config keys, error cases); terse bullets for facts. Prose only where it is genuinely the clearest form, never more than three sentences in a row.
+   - **Decision apart from rationale.** State the decision plainly on its own line. Cut rationale that merely defends the choice against alternatives nobody raised.
+   - **Tests: one named behavior per bullet**, one line each — never a paragraph of semicolon-joined behaviors.
+
+   Cut words, never information: every line must still carry a fact or decision the implementer needs.
+4. **Self-review.** Re-read the step with fresh eyes: does it cover its requirements, contain no plan-failure phrases, and use contract names and signatures exactly as earlier steps define them? Skim test: scanning only code blocks, tables, and bullet leads, can you find every contract, file, and decision without reading a paragraph? Split any sentence carrying more than one decision. Fix inline.
 5. **Review.** Dispatch `craft-reviewer` to review this step against the requirements, architecture, conventions, and frozen steps. Fix must-fix findings and rerun the same reviewer until pass.
 6. **Approve.** Present the reviewed step to the user. Revise and review again when needed.
 

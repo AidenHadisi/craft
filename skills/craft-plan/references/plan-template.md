@@ -4,6 +4,8 @@
 
 ## Requirements
 
+<One requirement per bullet, one or two sentences each: the outcome or constraint, not the design that satisfies it — design details live in the steps. If a bullet needs sub-bullets or an em-dash chain, it is several requirements; split it.>
+
 - <…>
 - <…>
 
@@ -21,17 +23,17 @@
 
 ## Steps
 
-<Appended one at a time during the loop, in the order they are designed.>
+<Starts as the provisional outline: one `- [ ] **Step N — <name>**` heading per anticipated step, in dependency order, names only. Each is then filled in with its full design during the loop. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more.>
 
 - [ ] **Step 1 —**
 
 <The one job this component owns, in a sentence or two.>
 
-<Sub-steps numbered 1.1, 1.2, … — one piece of the work each. Each explains what it does, pins the contracts it defines (signatures, endpoints, wire shapes, errors), and its edge and error paths. Written dense: pseudocode for logic, signatures for contracts, terse bullets for facts, prose only where it's the clearest form. No extra headings. Complete but concise — every line carries a fact or decision.>
+<Sub-steps numbered 1.1, 1.2, … — one piece of the work each. Each explains what it does, pins the contracts it defines (signatures, endpoints, wire shapes, errors), and its edge and error paths. One fact or decision per line, split — never chained with em-dashes or parentheticals. Pseudocode for logic, code blocks for contracts, tables for enumerables, terse bullets for facts; prose only where it's the clearest form, max three sentences in a row. Rationale, when needed, is one short *Why:* line under the decision. No extra headings. Complete but concise — every line carries a fact or decision.>
 
 **Tests:**
 
-- `<path>_test.<ext>` — <one behavior per bullet; each asserts an observable outcome>
+- `<path>_test.<ext>` — <one named behavior per bullet, one line each; each asserts an observable outcome — never several behaviors semicolon-joined into one bullet>
 
 
 

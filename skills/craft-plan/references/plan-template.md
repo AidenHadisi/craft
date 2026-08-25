@@ -23,7 +23,7 @@
 
 ## Steps
 
-<Starts as the provisional outline: one `- [ ] **Step N — <name>**` heading per anticipated step, in dependency order, names only. Each is then filled in with its full design during the loop. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more.>
+<Starts as the provisional outline: one `- [ ] **Step N — <name>**` heading per anticipated step, in dependency order, names only. Each is then filled in with its full design during the loop. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more. Checkboxes track implementation only — a designed and approved step stays unchecked until its code review passes.>
 
 - [ ] **Step 1 —**
 

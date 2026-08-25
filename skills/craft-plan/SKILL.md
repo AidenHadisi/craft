@@ -52,7 +52,7 @@ Repeat until the plan covers the feature:
    Cut words, never information: every line must still carry a fact or decision the implementer needs.
 4. **Self-review.** Re-read the step with fresh eyes: does it cover its requirements, contain no plan-failure phrases, and use contract names and signatures exactly as earlier steps define them? Skim test: scanning only code blocks, tables, and bullet leads, can you find every contract, file, and decision without reading a paragraph? Split any sentence carrying more than one decision. Fix inline.
 5. **Review.** Dispatch `craft-reviewer` to review this step against the requirements, architecture, conventions, and frozen steps. Fix must-fix findings and rerun the same reviewer until pass.
-6. **Approve.** Present the reviewed step to the user. Revise and review again when needed.
+6. **Approve.** Present the reviewed step to the user. Revise and review again when needed. An approved step is frozen but stays `- [ ]` — checkboxes are only checked when the step is implemented.
 
 If later work requires changing a frozen step, explain why and get approval first. Update architecture, then revise, review, and reapprove them in dependency order.
 
@@ -72,7 +72,7 @@ After final approval, execution is hands-off until static verification is done. 
 
 If the plan has user actions the coder cannot do (e.g. DDLs), ask the user to complete those first.
 
-Per step: dispatch `craft-coder` with a full brief — the step text verbatim, the contracts of frozen steps it touches, the plan's Conventions section pasted in full, and the exemplar files to mirror. Then `craft-code-reviewer` over the step diff with the same brief. On revise, resume the coder then the same reviewer. Parallelize only when steps touch strictly disjoint files and can complete independently; otherwise run sequential. Only you update step checkboxes.
+Per step: dispatch `craft-coder` with a full brief — the step text verbatim, the contracts of frozen steps it touches, the plan's Conventions section pasted in full, and the exemplar files to mirror. Then `craft-code-reviewer` over the step diff with the same brief. On revise, resume the coder then the same reviewer. Parallelize only when steps touch strictly disjoint files and can complete independently; otherwise run sequential. Only you update step checkboxes: check a step off when its code review passes, never earlier.
 
 ## 6. Polish
 

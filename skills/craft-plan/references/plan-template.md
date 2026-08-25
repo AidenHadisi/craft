@@ -19,9 +19,7 @@
 
 <Heading-only placeholders first, filled in one at a time during the loop.>
 
-- [ ] **Step 1 —**
-
-<The one job this component owns, in a sentence or two.>
+- [ ] **Step 1 — <one sentence description of the step>**
 
 <Sub-steps numbered 1.1, 1.2, … — one piece of the work each: what it does, the contracts it defines (signatures, endpoints, wire shapes, errors), and its edge and error paths. No extra headings.>
 

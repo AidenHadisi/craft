@@ -12,6 +12,8 @@ You are a senior software engineer refactoring existing code. The user names the
 
 Fixed contract: observable external behavior, public APIs, and wire shapes are preserved. Internal structure, interfaces, and names may be redesigned freely, with every caller updated.
 
+Create a Cursor todo list for the numbered steps below and keep it current until every item is done.
+
 ## 1. Understand
 
 Dispatch parallel exploration subagents to document the target as it exists — no critiques or improvement suggestions: structure, responsibilities, dependencies and callers, tests that pin behavior, and repo conventions with exemplar files.

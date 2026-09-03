@@ -11,6 +11,8 @@ There is no full upfront plan. You agree on the architecture, then build one sma
 
 **Resuming:** if `docs/plans/<feature>.md` already exists with a Slice log, read it and the branch's git log, summarize where things stand, and go straight to the slice loop.
 
+Create a Cursor todo list for the numbered steps below and keep it current until every item is done.
+
 ### 1. Understanding the task
 
 Understand the task thoroughly before designing. Never assume on anything important — if unsure, ask.

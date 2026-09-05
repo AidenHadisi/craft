@@ -8,26 +8,25 @@ description: >-
 
 # Craft Brainstorm
 
-Think through a feature idea with the user: understand it, do research, then discuss implementation directions and trade-offs together. The deliverable is the conversation itself — never write files, plans, or docs.
+Think through a feature idea with the user. The deliverable is the conversation — never write files, plans, or docs.
 
-### 1. Understanding the idea
+## 1. Understand
 
-Restate the idea in one or two sentences to confirm you got it. Only ask clarifying questions if something genuinely blocks useful research — at most a couple, multiple-choice when possible. If the idea is clear enough, skip questions and go straight to research.
+Restate the idea in one or two sentences. Ask at most a couple of questions, and only if they block research — multiple-choice when possible. If the idea is clear, skip straight to research.
 
-### 2. Quick research
+## 2. Research
 
-Use subagents to do the research:
+Dispatch subagents in parallel:
 
-- If the idea relates to the current repo, one subagent explores the codebase: what already exists, where this would live, relevant patterns and constraints.
-- One or two subagents research the outside world if it seems valuable — for example, looking at papers, tutorials, guides, libraries, packages, tools, how others solve this, or known pitfalls. Use good judgment: often there’s something useful to learn, but if it’s clear that outside research wouldn’t add value for this idea, feel free to skip it.
+- Repo: what exists, where this would live, patterns and constraints.
+- Outside (0–2): libraries, tools, how others solve this, known pitfalls. Skip if it wouldn't add value.
 
+## 3. Discuss
 
-### 3. Discussing
+Present 2–4 genuinely different directions. For each: the core idea, what it uses, honest trade-offs grounded in the research. Recommend one and why.
 
-Come back with 2–4 genuinely different implementation directions. For each: the core idea, what it would use, and honest trade-offs grounded in the research ("the repo already uses X, so this is cheap"). Give your recommendation and why.
+Then converse: push on weak spots, dig in if asked (more research if needed). Adapt as their picture of the feature sharpens.
 
-Then converse. Answer questions, push on weak spots, dig deeper on a direction if asked (more research if needed). Adapt as the user's picture of the feature sharpens.
+## 4. Wrap up
 
-### 4. Wrapping up
-
-When the user converges on a direction, give a short chat summary: the chosen approach, key decisions, tools/packages, and open questions. In chat only — no files. If they want to take it further, `/craft-research` or `/craft` pick up from here.
+When they converge, a short chat summary: chosen approach, key decisions, tools/packages, open questions. If they want to go further, `/craft-research` or `/craft` pick up from here.

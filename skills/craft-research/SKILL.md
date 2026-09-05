@@ -8,22 +8,22 @@ description: >-
 
 # Craft Research
 
-Help the user research a topic deeply, discuss approaches, and produce a refined markdown document in `Docs/`. This is collaborative — research, discuss, draft, refine together. Dispatch subagents for research; you own the synthesis and the document.
+Research a topic with the user and produce a refined markdown document in `Docs/`. Dispatch subagents for research; you own the synthesis and the document. Subagents return findings only — you write all files.
 
-### 1. Understanding the goal
+## 1. Understand
 
-Ask what they want to research or plan. Prefer multiple-choice questions when possible to keep it fast. Clarify scope, constraints, and what the output doc should cover. Never assume on anything important — if unsure, ask.
+Ask what they want to research or plan. Prefer multiple-choice. Pin scope, constraints, and what the doc should cover.
 
-### 2. Researching
+## 2. Research
 
-Dispatch multiple subagents to find authoritative information from many angles. Each covers a different angle so you get broad, deep coverage. They should search for official documentation, research papers, whitepapers, technical articles from recognized experts, books, online references, real-world case studies, tutorials, codebases, production examples, known pitfalls, trade-offs, and failure modes. Prioritize reliable, professional sources over random forum posts. Subagents return findings only — you write all files.
+Dispatch multiple subagents, each on a different angle. Prefer official docs, papers, expert write-ups, production examples, and known failure modes over random forum posts.
 
-### 3. Synthesizing and discussing
+## 3. Discuss
 
-Present findings to the user. Discuss trade-offs, approaches, and options together. Answer questions and adapt based on their context and constraints. Don't just dump — have a conversation about what you found and what makes sense for their situation.
+Present findings. Talk through trade-offs and options against their constraints. Adapt before writing.
 
-### 4. Writing the document
+## 4. Write
 
-Write a markdown doc to `Docs/<slug>.md` capturing the plan, approach, key decisions, and references. Structure it clearly with inline links to sources. The doc should be useful standalone — someone reading it later should understand the decisions and reasoning without this chat. Keep it practical and actionable, not academic fluff.
+Write `Docs/<slug>.md`: the plan, approach, key decisions, and inline source links. Standalone — a later reader should understand the decisions without this chat.
 
-Go over the doc with the user. Incorporate feedback, fill gaps, sharpen sections. Iterate until they're satisfied.
+Go over it with the user. Incorporate feedback until they're satisfied.

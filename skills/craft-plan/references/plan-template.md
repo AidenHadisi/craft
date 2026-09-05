@@ -17,15 +17,18 @@
 
 ## Steps
 
-<Heading-only placeholders first, filled in one at a time during the loop.>
+<Starts as a provisional outline: one heading per anticipated step — `- [ ] **Step N — <one sentence description>**` — in dependency order, no design yet. Each step is one smallest standalone component: a schema, a small package, an endpoint. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more. Each heading is then filled in during the loop using the format below. Checkboxes track implementation only — an approved step stays unchecked until its code review passes.>
 
 - [ ] **Step 1 — <one sentence description of the step>**
 
-<Sub-steps numbered 1.1, 1.2, … — one piece of the work each: what it does, the contracts it defines (signatures, endpoints, wire shapes, errors), and its edge and error paths. No extra headings.>
+<Sub-steps numbered 1.1, 1.2, … — one piece of the work each: what it does, the contracts it pins (signatures, endpoints, wire shapes, errors), its edge and error paths, and pseudocode for every non-trivial path. No extra headings. The step has two readers — a coder who needs every detail and a user verifying each decision in one quick read:
+- One fact or decision per line — never several chained into one sentence with em-dashes, semicolons, or nested parentheticals; split so each can be verified alone.
+- Pseudocode for logic; code blocks for contracts; tables for anything enumerable (rules, fields, endpoints, config keys, error cases); terse bullets for facts; prose only where it is genuinely the clearest form.
+- Cut words, never information — every line carries a fact or decision the implementer needs.>
 
 **Tests:**
 
-- <one named behavior per bullet, one line each; each asserts an observable outcome>
+- <one named behavior per bullet, one line each; each asserts an observable outcome — never several behaviors joined into one bullet>
 
 
 ## Verification

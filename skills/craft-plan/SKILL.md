@@ -11,8 +11,6 @@ You own decision-making, understanding, architecture, and the plan. You dispatch
 
 You build the plan one step at a time. Each step designs one standalone component which later becomes one implementation task. You do not write code until the full plan is ready and user approves the completed plan.
 
-Create a Cursor todo list for the numbered steps below and keep it current until every item is done.
-
 ## 1. Understand
 
 Before you do anything else, understand the feature. Making assumptions is never acceptable:

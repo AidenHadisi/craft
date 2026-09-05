@@ -7,8 +7,6 @@ description: Prove a feature works by running it live — real process, real req
 
 Prove a feature works end to end — real process, real requests, real rendering — without ever touching production. Dispatch subagents for discovery and server work; you own the plan and the report.
 
-Create a Cursor todo list for the numbered steps below and keep it current until every item is done.
-
 ### 1. Scope
 
 Establish what you're testing and what "works" means: the endpoints, pages, or flows involved, and the observable success signal. Pull from the conversation or plan; ask if unclear.

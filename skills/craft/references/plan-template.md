@@ -50,3 +50,14 @@
 
 - `<build / typecheck / lint command>`
 - `<test command>`
+
+## Progress
+
+<Phase tracker — check off as each completes. Task-level progress lives in the Changes checkboxes.>
+
+- [ ] Plan approved
+- [ ] User actions done
+- [ ] All Tasks implemented and reviewed
+- [ ] Polished
+- [ ] Verification green
+- [ ] Live-tested

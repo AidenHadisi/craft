@@ -38,3 +38,13 @@ Automated:
 Manual:
 
 - <human check, if any>
+
+## Progress
+
+<Phase tracker — check off as each completes. Step-level progress lives in the Steps checkboxes.>
+
+- [ ] Plan approved
+- [ ] All steps implemented and reviewed
+- [ ] Polished
+- [ ] Verification green
+- [ ] Live-tested

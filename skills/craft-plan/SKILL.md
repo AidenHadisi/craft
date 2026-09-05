@@ -11,6 +11,8 @@ You own decision-making, understanding, architecture, and the plan. You dispatch
 
 You build the plan one step at a time. Each step designs one standalone component which later becomes one implementation task. You do not write code until the full plan is ready and user approves the completed plan.
 
+The plan file is the only progress tracker: once it exists, keep its Progress section and step checkboxes current, and read them first when resuming.
+
 ## 1. Understand
 
 Before you do anything else, understand the feature. Making assumptions is never acceptable:

@@ -1,19 +1,19 @@
 
 
-<One short paragraph describing the feature: current state, the gap, what we're adding, and what done looks like. Note explicit exclusions here if any.>
+<A concise paragraph describing the feature and what we are building>
 
 ## Requirements
 
-- <One requirement per bullet, one or two sentences each: the outcome or constraint, not the design that satisfies it — design details live in the steps.>
+- <One requirement per bullet>
 
 
 ## Architecture
 
-<The agreed design, kept high-level: the capabilities the feature needs, the components that own them, the seams between them (what crosses, which way it flows), and key decisions with a one-line why. Keep it current if a step changes the design.>
+<The agreed design, kept high-level.>
 
 ## Conventions
 
-- <Pasted verbatim into every coder brief. Each entry names one repo-specific convention and the exemplar file to mirror. Cover errors, naming, tests, and layout as applicable.>
+- <Pasted verbatim into every coder brief. Repo-specific convention and the exemplar file to mirror.>
 
 ## Steps
 
@@ -21,14 +21,17 @@
 
 - [ ] **Step 1 — <one sentence description of the step>**
 
-<Sub-steps numbered 1.1, 1.2, … — one piece of the work each: what it does, the contracts it pins (signatures, endpoints, wire shapes, errors), its edge and error paths, and pseudocode for every non-trivial path. No extra headings. The step has two readers — a coder who needs every detail and a user verifying each decision in one quick read:
-- One fact or decision per line — never several chained into one sentence with em-dashes, semicolons, or nested parentheticals; split so each can be verified alone.
-- Pseudocode for logic; code blocks for contracts; tables for anything enumerable (rules, fields, endpoints, config keys, error cases); terse bullets for facts; prose only where it is genuinely the clearest form.
-- Cut words, never information — every line carries a fact or decision the implementer needs.>
+<Sub-steps numbered 1.1, 1.2, … — one piece of the work each: what it does, the contracts it pins (signatures, endpoints, wire shapes, errors), its edge and error paths, and pseudocode for every non-trivial path. No extra headings:
+- One fact or decision per line
+- Pseudocode for logic
+- Code blocks for contracts
+- Tables for anything enumerable (rules, fields, endpoints, config keys, error cases)
+- Terse bullets for facts
+- Prose only where it is genuinely the clearest form>
 
-**Tests:**
+## Tests
 
-- <one named behavior per bullet, one line each; each asserts an observable outcome — never several behaviors joined into one bullet>
+- <one bullet point naming each test case>
 
 
 ## Verification

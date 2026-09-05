@@ -4,7 +4,7 @@ A Cursor plugin for building features the right way.
 
 AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it owns understanding, architecture, and the plan, while focused subagents explore, review, and implement. Each agent carries its own instructions; the orchestrator owns every gate and proves the finished feature by running it locally.
 
-The `/craft` workflow is one elastic path: understand, interview, design (orchestrator), write a directive plan, review it, get approval, implement under fresh-context code review, then offer to live-test. Cost scales with the work — a small change gets a short design and plan. The user always picks the design; the plan gate always fires.
+The `/craft` workflow is one elastic path: understand, interview, agree architecture, co-author a dense plan one step at a time (review and approval per step), then implement hands-off under fresh-context code review, polish, and offer to live-test. The user always picks the design; every step is frozen before the next is designed.
 
 Every run asks before live-testing at the end; say no and it stops after the static checks.
 
@@ -12,8 +12,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 
 | Component | Type | Role |
 |---|---|---|
-| `craft` | skill (`/craft`) | Owns architecture and the plan; directs subagents; gates design and plan; live-tests |
-| `craft-plan` | skill (`/craft-plan`) | Co-authors a dense plan one step at a time — review and approval per step — then implements hands-off |
+| `craft` | skill (`/craft`) | Co-authors a dense plan one step at a time — review and approval per step — then implements hands-off |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
@@ -31,25 +30,24 @@ Each agent is self-contained — quality bar and role judgment live in its own f
 ```mermaid
 flowchart TD
     start["/craft"] --> understand["Understand: interview + explore"]
-    understand --> design["Orchestrator designs; user picks"]
-    design --> plan["Orchestrator writes directive plan"]
-    plan --> planrev["craft-reviewer loop"]
-    planrev --> planGate["User approves plan"]
-    planGate --> build["craft-coder Task waves"]
+    understand --> design["Agree architecture; user picks"]
+    design --> outline["Outline step headings"]
+    outline --> step["Design, write, review, approve one step"]
+    step -->|"more steps"| step
+    step -->|"plan complete"| planGate["User approves full plan"]
+    planGate --> build["craft-coder per step"]
     build --> review["craft-code-reviewer"]
     review -->|corrections| build
-    review -->|"Pass, more Tasks"| build
-    review -->|"Pass, Tasks done"| tests["craft-coder: Tests"]
-    tests --> testreview["craft-code-reviewer"]
-    testreview -->|corrections| tests
-    testreview -->|Pass| live{"Live test?"}
+    review -->|"Pass, more steps"| build
+    review -->|"Pass, steps done"| polish["craft-polisher"]
+    polish --> live{"Live test?"}
     live -->|yes| test["craft-test skill"]
     live -->|no| stop["Stop after static checks"]
 ```
 
 ### Artifacts it produces (in the target repo)
 
-- `docs/plans/<feature>.md` — the implementation plan. Directive-level (where and what, contracts where precision matters), written by the orchestrator.
+- `docs/plans/<feature>.md` — the implementation plan. Co-authored one step at a time; each step is reviewed and approved before the next is designed.
 - `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
 
 ## Install
@@ -92,15 +90,9 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 /craft add OAuth login for the dashboard
 ```
 
-You always pick the design; the plan is always reviewed by `craft-reviewer` and then approved by you. Parallel coder waves run only for file-disjoint Tasks with pinned contracts; otherwise sequential. Each wave is reviewed by `craft-code-reviewer`, then static checks run, and it asks before live-testing — decline and it stops there.
+You pick the architecture; each plan step is reviewed by `craft-reviewer` and approved by you before the next is designed. After the full plan is approved, implementation is hands-off: parallel coder waves run only for file-disjoint steps with pinned contracts; otherwise sequential. Each wave is reviewed by `craft-code-reviewer`, then polish and static checks run, and it asks before live-testing — decline and it stops there.
 
 `craft-coder`, `craft-code-reviewer`, `craft-polisher`, and `craft-reviewer` are usable inside or outside `/craft`.
-
-When the feature is too complex to plan in one shot but you don't want to sit through every code slice, co-author the plan instead — one step at a time, each reviewed and approved before the next, then a fully hands-off build:
-
-```
-/craft-plan add OAuth login for the dashboard
-```
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 

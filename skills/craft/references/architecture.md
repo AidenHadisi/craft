@@ -2,7 +2,7 @@
 
 Apply when designing. Stay at system-design altitude — pieces, ownership, data flow, repo fit. Coding details, signatures, and pseudocode belong in the plan.
 
-## Process — decompose first
+## Decompose first
 
 Do not design the whole system as one blob. Break the problem down before choosing shapes:
 

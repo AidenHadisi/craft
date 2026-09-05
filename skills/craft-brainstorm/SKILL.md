@@ -30,4 +30,4 @@ Then converse. Answer questions, push on weak spots, dig deeper on a direction i
 
 ### 4. Wrapping up
 
-When the user converges on a direction, give a short chat summary: the chosen approach, key decisions, tools/packages, and open questions. In chat only — no files. If they want to take it further, `/craft-research` or `/craft-plan` pick up from here.
+When the user converges on a direction, give a short chat summary: the chosen approach, key decisions, tools/packages, and open questions. In chat only — no files. If they want to take it further, `/craft-research` or `/craft` pick up from here.

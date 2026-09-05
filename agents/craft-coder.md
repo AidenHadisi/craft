@@ -1,6 +1,6 @@
 ---
 name: craft-coder
-description: Implements one focused assignment into the repo. Use from /craft for a plan Task or Tests section, or standalone with an explicit brief.
+description: Implements one focused assignment into the repo. Use from /craft for a plan Step or Tests section, or standalone with an explicit brief.
 model: inherit
 readonly: false
 ---

@@ -1,63 +1,56 @@
-# Plan: <Feature name>
 
-## What we're building
 
-<One or two paragraphs: current state, the gap, what we're adding, and what done looks like.>
+<A concise paragraph describing the feature and what we are building>
 
 ## Requirements
 
-- <Observable requirement>
-- <…>
+- <One requirement per bullet>
 
-## Out of scope
 
-- <Explicit exclusion — with a brief reason if non-obvious>
-- <…>
+## Architecture
 
-## Approach
-
-<Short description of the chosen design: seams, ownership, data flow, how it fits the repo.>
+<The agreed design, kept high-level.>
 
 ## Conventions
 
-- <Repo-specific conventions that implementers must follow for this feature — errors, stores, HTTP, tests, frontend layout, etc.>
+- <Pasted verbatim into every coder brief. Repo-specific convention and the exemplar file to mirror.>
 
-## User actions
+## Steps
 
-- [ ] **<Action title>**
+<Starts as a provisional outline: one heading per anticipated step — `- [ ] **Step N — <one sentence description>**` — in dependency order, no design yet. Each step is one smallest standalone component: a schema, a small package, an endpoint. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more. Each heading is then filled in during the loop using the format below. Checkboxes track implementation only — an approved step stays unchecked until its code review passes.>
 
-```
-<Literal command, SQL, or instructions the user must run before implementation>
-```
+- [ ] **Step 1 — <one sentence description of the step>**
 
-## Changes
-
-- [ ] **Task 1 — <Name>**
-
-<What this Task delivers, in plain language.>
-
-**<N.M> — <Step title>** · `<path>` · create|edit
-
-<Detail a junior can follow for clean, reliable results: named contracts (signatures, endpoints, wire shapes, errors, props) and brief pseudocode when behavior is non-obvious — not a line-by-line walkthrough.>
+<Sub-steps numbered 1.1, 1.2, … — one piece of the work each: what it does, the contracts it pins (signatures, endpoints, wire shapes, errors), its edge and error paths, and pseudocode for every non-trivial path. No extra headings:
+- One fact or decision per line
+- Pseudocode for logic
+- Code blocks for contracts
+- Tables for anything enumerable (rules, fields, endpoints, config keys, error cases)
+- Terse bullets for facts
+- Prose only where it is genuinely the clearest form>
 
 ## Tests
 
-- [`<path>_test.<ext>`](<path>_test.<ext>)
-  - <One behavior per bullet; each asserts an observable oracle>
-  - <…>
+- <one bullet point naming each test case>
+
 
 ## Verification
+
+Automated:
 
 - `<build / typecheck / lint command>`
 - `<test command>`
 
+Manual:
+
+- <human check, if any>
+
 ## Progress
 
-<Phase tracker — check off as each completes. Task-level progress lives in the Changes checkboxes.>
+<Phase tracker — check off as each completes. Step-level progress lives in the Steps checkboxes.>
 
 - [ ] Plan approved
-- [ ] User actions done
-- [ ] All Tasks implemented and reviewed
+- [ ] All steps implemented and reviewed
 - [ ] Polished
 - [ ] Verification green
 - [ ] Live-tested

@@ -17,9 +17,9 @@
 
 ## Steps
 
-[Starts as a provisional outline: one heading per anticipated step — `- [ ] **Step N — <one sentence description>**` — in dependency order, no design yet. Each step is one smallest standalone component: a schema, a small package, an endpoint. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more. Each heading is then filled in during the loop using the format below. Checkboxes track implementation only — an approved step stays unchecked until its code review passes.]
+[Starts as a provisional outline: one `### Step N — <one sentence description>` heading per anticipated step, in dependency order, no design yet. Each step is one smallest standalone component: a schema, a small package, an endpoint. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more. Each heading is then filled in during the loop using the format below. Keep the Progress section's step list in sync with these headings.]
 
-- [ ] **Step 1 — <one sentence description of the step>**
+### Step 1 — <one sentence description of the step>
 
 [Sub-steps numbered 1.1, 1.2, … — one piece of the work each: what it does, the contracts it pins (signatures, endpoints, wire shapes, errors), its edge and error paths, and pseudocode for every non-trivial path. No extra headings. The step has two readers — a coder who needs every detail and a user verifying each decision in one quick read:
 - One fact or decision per line — never several chained into one sentence with em-dashes, semicolons, or nested parentheticals; split so each can be verified alone.
@@ -44,10 +44,11 @@ Manual:
 
 ## Progress
 
-[Phase tracker — check off as each completes. Step-level progress lives in the Steps checkboxes.]
+[The only progress tracker. Check off as each completes. One line per step, mirroring the Steps headings; a step is checked when its code review passes, never earlier.]
 
 - [ ] Plan approved
-- [ ] All steps implemented and reviewed
+- [ ] Step 1 — <one sentence description of the step>
+- [ ] Step 2 — <one sentence description of the step>
 - [ ] Polished
 - [ ] Verification green
 - [ ] Live-tested

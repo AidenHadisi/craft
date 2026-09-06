@@ -5,46 +5,37 @@ description: Use when the user wants to plan and build a feature end to end, say
 
 # Craft
 
-You own decisions, architecture, and the plan. Subagents explore, review, and implement — they do not decide. Every dispatch gets a complete brief; resume the same subagent for corrections. No code until the user approves the completed plan.
+Plan a feature with the user one step at a time, then build it. You own the decisions, the architecture, and the plan; subagents explore, implement, and review. Every dispatch gets a complete brief; resume the same subagent for corrections. No code until the user approves the completed plan.
 
-The plan file is the only progress tracker: keep Progress and step checkboxes current; read them first when resuming.
+The plan file at `docs/plans/<feature>.md` is the only progress tracker: its Progress section lists every phase and every step. Check items off as they complete, and read it first when resuming.
 
 ## 1. Understand
 
-Interview the user to settle behavior and constraints. Dispatch parallel exploration subagents to document the codebase as it exists. Capture each convention as an exemplar file (errors, naming, tests, layout) for the plan's Conventions section.
+Interview the user to settle behavior and constraints. Dispatch subagents to document how the codebase does things today, and capture each convention as an exemplar file for the plan.
 
-## 2. Agree on architecture
+## 2. Architecture
 
-Read [architecture](references/architecture.md). Stay high-level: capabilities, ownership, seams, dependency direction — internals wait for each step.
+Read [architecture](references/architecture.md). Stay high-level: capabilities, ownership, seams. Present a recommendation and up to two alternatives with trade-offs; iterate until the user approves.
 
-Present a recommendation and up to two alternatives with trade-offs. Iterate until the user approves.
+## 3. Plan
 
-## 3. Design the plan one step at a time
+Copy [plan-template](references/plan-template.md) to the plan file and fill it in, with Steps as a heading-only outline. Then design one step at a time:
 
-Copy [plan-template](references/plan-template.md) to `docs/plans/<feature>.md` and fill every section per the template. **Steps** starts as the heading-only outline.
+- Design the step against the architecture and the frozen steps before it, checking the codebase where unsure.
+- Write it per the template, for an implementer with zero context.
+- Dispatch `craft-reviewer`; fix must-fix findings until it passes.
+- Present it to the user. An approved step is frozen; changing it later needs approval first.
 
-Repeat until the plan covers the feature:
+When every step is approved, run `craft-reviewer` over the whole plan, fix until pass, and ask for final approval.
 
-1. **Pick.** Next undesigned heading — revise the outline first if it no longer fits. Tell the user what it is and why next.
-2. **Design.** Behavior and integration against architecture and frozen steps. Verify uncertain details in the codebase.
-3. **Write.** Re-read the template's Steps guidance, then fill in the heading. Assume a zero-context implementer with questionable taste — every design judgment lives in the step.
-4. **Review.** Dispatch `craft-reviewer` against requirements, architecture, conventions, and frozen steps. Fix must-fix findings; rerun the same reviewer until pass.
-5. **Approve.** Present to the user. An approved step is frozen. Changing a frozen step needs approval first — then update architecture and revise, review, and reapprove in dependency order.
+## 4. Implement
 
-## 4. Approve the complete plan
+Per step: `craft-coder` with the step, the contracts it touches, and the conventions; then `craft-code-reviewer` with the same brief. On revise, resume the coder then the reviewer. Parallelize only across steps with disjoint files. Check a step off in Progress when its review passes.
 
-Confirm nothing required is missing and every open question is resolved. Dispatch `craft-reviewer` over the entire plan; fix until pass. Ask for final approval.
+## 5. Polish
 
-## 5. Implement
+Review the full diff yourself for plan fidelity and needless complexity, then dispatch `craft-polisher` over it.
 
-Hands-off until static verification is done. User-only actions (e.g. DDLs) first.
+## 6. Test
 
-Per step: `craft-coder` with the step verbatim, contracts of frozen steps it touches, Conventions in full, and exemplar files. Then `craft-code-reviewer` with the same brief. On revise, resume coder then the same reviewer. Parallelize only when steps touch strictly disjoint files. Check a step off when its code review passes — never earlier; only you update checkboxes.
-
-## 6. Polish
-
-Review the full diff yourself first: plan fidelity, conventions, simplifications (dead code, single-use helpers, speculative generality, needless layers). Then `craft-polisher` with footprint, contracts, and Conventions.
-
-## 7. Test
-
-Run the plan's verification commands. Then ask whether to live-test (recommend yes). If approved, follow [craft-test](../craft-test/SKILL.md); otherwise stop.
+Run the plan's verification commands. Then ask whether to live-test (recommend yes); if approved, follow [craft-test](../craft-test/SKILL.md).

@@ -16,7 +16,7 @@ Ask what they want to research or plan. Prefer multiple-choice. Pin scope, const
 
 ## 2. Research
 
-Dispatch multiple subagents, each on a different angle. Prefer official docs, papers, expert write-ups, production examples, and known failure modes over random forum posts.
+Dispatch multiple subagents, each on a different angle. Prefer official docs, papers, tutorials, expert write-ups, production examples, and known failure modes.
 
 ## 3. Discuss
 

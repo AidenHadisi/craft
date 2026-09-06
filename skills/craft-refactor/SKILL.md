@@ -8,32 +8,24 @@ description: >-
 
 # Craft Refactor
 
-The user names a file, package, or feature; you diagnose, design, and execute. Observable behavior, public APIs, and wire shapes stay; internals may change freely. You own decisions; subagents explore, research, implement, and review. Every dispatch gets a complete brief; resume the same subagent for corrections.
+Make existing code cleaner, simpler, modern, and more idiomatic without changing what it does. The user points you at a file, package, or feature that may be over-engineered, unidiomatic, dated, or more complex than it needs to be.
 
 ## 1. Understand
 
-Dispatch parallel exploration subagents to document the target: structure, responsibilities, callers, tests that pin behavior, conventions with exemplar files.
-
-Then form your own diagnosis from the code — not summaries. Where does a reader stall, and why? Unclear, unidiomatic, over-built, badly shaped, or scattered.
+Read the code and enough of its callers, tests, and neighbors to know how this repo does things. Dispatch subagents to explore what you can't read yourself. Form your own view: where is it over-built, unidiomatic, or hard to follow?
 
 ## 2. Research
 
-When needed, dispatch web-research for the modern idiomatic way: current language/stdlib APIs, well-maintained packages that could replace hand-rolled code. Verify against this project's versions — never an API the toolchain can't use.
+Dispatch subagents to check outside the repo: current language and stdlib features, well-maintained packages that could replace hand-rolled code, patterns the codebase isn't using yet. Only adopt what works with this project's actual versions.
 
-## 3. Design
+## 3. Propose
 
-What changes, moves, merges, collapses, or gets deleted; the key interfaces after; which research you adopt and why. Weigh cognitive load: a first-time reader should follow it in one pass — fewer concepts, definitions near use, one reading order. New dependencies are named here, never mid-wave.
-
-Present briefly with before/after sketches of the key interfaces — one design, no options menu. Proceed on approval.
+Tell the user what you found and what you'd do: what gets simplified, moved, replaced, or deleted, and why it's better. One recommendation, briefly. Wait for their go-ahead.
 
 ## 4. Refactor
 
-Small waves, build stays green — leaves first, then callers. Follow every move through callers, imports, and tests.
+Dispatch subagents to implement and review. Observable behavior, public APIs, and wire shapes stay. Skip any change you can't tell is behavior-preserving. Verify it still works.
 
-Per wave: `craft-coder` with the assignment, target contracts, conventions with exemplars, and the files it owns. Run verification, then `craft-code-reviewer` on the wave diff. On revise, resume coder then the same reviewer. Never start the next wave on a red baseline.
+## 5. Summarize
 
-## 5. Polish and report
-
-`craft-polisher` over the full diff: footprint, contracts, conventions with exemplars. Run full verification after.
-
-Report: structural change, what was deleted, net line count, anything considered but not done.
+What changed, what was deleted, and anything you considered but chose not to do.

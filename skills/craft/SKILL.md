@@ -27,10 +27,9 @@ Repeat until the plan covers the feature:
 
 1. **Pick.** Next undesigned heading — revise the outline first if it no longer fits. Tell the user what it is and why next.
 2. **Design.** Behavior and integration against architecture and frozen steps. Verify uncertain details in the codebase.
-3. **Write.** Re-read the template's Steps guidance, then fill in the heading. Assume a zero-context implementer with questionable taste — every design judgment lives in the step. A step is not done while it contains a plan failure: "add appropriate error handling" / "handle edge cases" / "add validation", tests without named behaviors, "similar to Step N", or symbols no step defines.
-4. **Self-review.** Contracts match earlier steps; no plan-failure phrases. Skim: can you find every contract, file, and decision from code blocks, tables, and bullet leads alone? Split any sentence carrying more than one decision.
-5. **Review.** Dispatch `craft-reviewer` against requirements, architecture, conventions, and frozen steps. Fix must-fix findings; rerun the same reviewer until pass.
-6. **Approve.** Present to the user. An approved step is frozen. Changing a frozen step needs approval first — then update architecture and revise, review, and reapprove in dependency order.
+3. **Write.** Re-read the template's Steps guidance, then fill in the heading. Assume a zero-context implementer with questionable taste — every design judgment lives in the step.
+4. **Review.** Dispatch `craft-reviewer` against requirements, architecture, conventions, and frozen steps. Fix must-fix findings; rerun the same reviewer until pass.
+5. **Approve.** Present to the user. An approved step is frozen. Changing a frozen step needs approval first — then update architecture and revise, review, and reapprove in dependency order.
 
 ## 4. Approve the complete plan
 

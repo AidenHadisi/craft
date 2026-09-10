@@ -23,14 +23,14 @@ Then present the goal, 3–8 acceptance criteria each with the live check that w
 
 Copy [plan-template](references/plan-template.md) to `docs/plans/<feature>.md` (kebab-case) and create `feat/<feature>` if needed. Fill in everything already known from the interview — goal, requirements, criteria, conventions, verification, live test.
 
-Then design the architecture per [architecture](references/architecture.md): capabilities, the components that own them, the seams between them. Write it into the plan and dispatch `craft-critic` with the plan and the draft. Adopt or reject each objection in Design rulings, with a reason. If you adopt a rival that changes components or seams, rewrite and critique once more.
+Then design the architecture per [architecture](references/architecture.md): capabilities, the components that own them, the seams between them. Write it into the plan and dispatch `craft-critic` with the plan and the draft. Adopt or reject each objection in Design rulings, with a reason. If you adopt, rewrite and dispatch the critic again. Repeat until it returns Holds — cap 3 critiques, then stop and ask.
 
 ## 3. Slices
 
 Repeat until the committed slices cover every acceptance criterion:
 
 1. **Pick** the smallest standalone unit needed next, in dependency order. Wiring finished pieces together is a valid slice.
-2. **Design** it with 2–5 observable criteria. Critique it the same way as the architecture, then open its Slice log entry with the frozen criteria.
+2. **Design** it with 2–5 observable criteria. Dispatch `craft-critic` with the plan and the slice; adopt or reject in Design rulings. Then open its Slice log entry with the frozen criteria.
 3. **Build** with `craft-coder`: the slice, its criteria, the relevant architecture and contracts, the conventions and exemplars. One writer at a time.
 4. **Check** by running the relevant Verification commands yourself.
 5. **Review** with `craft-code-reviewer` over the slice diff. On Revise, resume the coder, then the same reviewer.
@@ -48,6 +48,7 @@ Dispatch `craft-code-reviewer` over the whole branch diff; on Revise, resume the
 Never park, never guess. Record the blocker in the plan first, then ask, when:
 
 - the slice cap is hit
+- the architecture critic has not held after 3 rounds
 - an objection cannot be settled, or adopting it would change a frozen criterion
 - the local environment cannot be reached
 

@@ -25,8 +25,10 @@ Do not design the whole system as one blob. Break the problem down before choosi
 
 ## Quality bar
 
-- Assume the team is highly particular about code quality and consistency.
-- Prefer the least design that stays clear; no speculative generality, config knobs, or helpers without real duplication. Any deviation from the simplest shape must say why the simpler alternative was rejected.
+- Less code is better.
+- Simple is better than complex.
+- Assume the team is highly particular about code quality and consistency. The code must be maintainable and easy to understand and read by any human.
+- Prefer the least design that stays clear; no speculative generality, config knobs, or helpers without real duplication.
 - Prefer existing, well-maintained solutions over hand-rolling — modern stdlib, dependencies already in the project, or well-maintained third-party packages when appropriate. If unsure whether a good package exists, search the web.
 - Stay inside the requested behavior; no drive-by refactors.
 - Repo conventions beat personal preference. Mirror a nearby sibling feature before inventing structure.

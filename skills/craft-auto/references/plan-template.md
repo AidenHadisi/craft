@@ -36,7 +36,7 @@
 
 ## Live test
 
-<How to start the dev environment, how to reach it (URL, port, credentials, test account), and which side effects to stub. Written before any code, refined as slices land.>
+<How to run the project locally and reach the feature: start command, URL, test credentials, and any side effects to stub. Refined as slices land.>
 
 ## Design rulings
 

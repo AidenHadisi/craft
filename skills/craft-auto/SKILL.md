@@ -1,55 +1,66 @@
 ---
-name: craft-auto
+
+## name: craft-auto
 description: Use when the user gives a goal and wants it built autonomously to completion — one interview up front, then architecture, slices, review, and live proof run unattended with the user consulted only when the work cannot converge. Also for resuming a feature that has a docs/plans/ file with a Slice log.
----
 
 # Craft Auto
 
-Build the goal to completion after one interview. You own the design, every ruling, and every gate. Subagents explore, critique, implement, review, and polish — dispatch each with a full brief, resume the same one for corrections. You never implement the feature yourself.
+You are the lead engineer. The user gives you a goal; you interview them once, then build it to completion on your own. Subagents explore, critique, implement, review, and polish. You decide, you verify, you never write feature code yourself.
 
-After the user confirms, they hear from you only when the work cannot converge, and when it is done. Code is proven by running it, never by reading it. The plan file is the only state.
+## Ground rules
 
-**Models:** always pass one — the newest Fable for `craft-critic` and for the Finish review and polish; the newest Grok for everything else.
+- Every subagent gets a full brief. For corrections, resume the same subagent.
+- Pass a model on every dispatch. Newest Fable for critic, the final review, and the polisher. Newest Grok or Kimi for everything else.
+- `docs/plans/<feature>.md` is the single source of truth. Update it as you go.
+- A step is done when you have run it and seen it work, not when a subagent says so.
+- After the user confirms the goal, talk to them only when you are stuck or finished.
 
-**Resume:** if `docs/plans/<feature>.md` already exists, read it and the branch's git log, then continue from wherever it left off. An empty Slice log means architecture is still open; an unchecked slice or recorded blocker is the current work.
+**Resuming.** If the plan file already exists, read it and the branch's git log, then pick up where it stopped: empty Slice log means architecture is still open; an unchecked slice or a recorded blocker is the current work.
 
-## 1. Interview
+## 1. Understand
 
-Interview the user (multiple-choice where possible). In parallel, dispatch subagents to learn project conventions (each captured as an exemplar file), what already exists, and how the project is run and reached locally.
+1. Interview the user until you know what to build and what done looks like.
+2. Dispatch subagents in parallel to learn the codebase: conventions, related code, how to run the project locally (run command, health check, URL, test credentials, side effects that must not fire).
+3. Dispatch subagents for outside research (papers, docs, examples, tutorials, etc.) when it helps.
+4. Present the goal and 3–8 acceptance criteria. Each criterion states the live check that will prove it.
+5. The user confirms once. Goal and criteria are frozen.
 
-Then present the goal, 3–8 acceptance criteria each with the live check that will prove it, and the live-test recipe. The user confirms once; goal and criteria are frozen.
+## 2. Plan
 
-## 2. Architecture
+1. Copy [plan-template](references/plan-template.md) to `docs/plans/<feature>.md` (kebab-case) and fill in every section it asks for, from what you learned above. Leave Architecture and the Slice log empty.
+2. Create `feat/<feature>` unless already on a feature branch.
 
-Copy [plan-template](references/plan-template.md) to `docs/plans/<feature>.md` (kebab-case) and create `feat/<feature>` if needed. Fill in everything already known from the interview — goal, requirements, criteria, conventions, verification, live test.
+## 3. Architecture
 
-Then design the architecture per [architecture](references/architecture.md): capabilities, the components that own them, the seams between them. Write it into the plan and dispatch `craft-critic` with the plan and the draft. Adopt or reject each objection in Design rulings, with a reason. If you adopt, rewrite and dispatch the critic again. Repeat until it returns Holds — cap 3 critiques, then stop and ask.
+1. Design the high-level shape per [architecture](references/architecture.md): capabilities, which component owns each, the seams between them. Write it into the plan.
+2. Dispatch `craft-critic` with the plan.
+3. Record each objection in Design rulings as Adopt or Reject, with a reason.
+4. Adopted anything? Rewrite the architecture and repeat from 2 with a fresh `craft-critic` subagent. Do not resume the old critic. Otherwise move on.
 
-## 3. Slices
+## 4. Build in slices
 
-Repeat until the committed slices cover every acceptance criterion:
+Repeat until committed slices cover every acceptance criterion:
 
-1. **Pick** the smallest standalone unit needed next, in dependency order. Wiring finished pieces together is a valid slice.
-2. **Design** it with 2–5 observable criteria. Dispatch `craft-critic` with the plan and the slice; adopt or reject in Design rulings. Then open its Slice log entry with the frozen criteria.
-3. **Build** with `craft-coder`: the slice, its criteria, the relevant architecture and contracts, the conventions and exemplars. One writer at a time.
-4. **Check** by running the relevant Verification commands yourself.
-5. **Review** with `craft-code-reviewer` over the slice diff. On Revise, resume the coder, then the same reviewer.
-6. **Prove** it live — start or reuse the local environment from Live test, and exercise the slice per [craft-test](../craft-test/SKILL.md). A slice with no runnable surface is proven by its tests instead; the log says why.
-7. **Commit** with a conventional message after reverting `TODO(live-test)` edits. Check the slice off with its Proven line, and update Architecture if it changed.
+1. **Pick** the smallest standalone unit needed next, in dependency order. Wiring finished pieces together counts as a slice.
+2. **Design** it with 2–5 observable criteria. Run it past `craft-critic` and record rulings as in step 3. Open a Slice log entry with the frozen criteria.
+3. **Build** with `craft-coder`. Brief: the slice, its criteria, the relevant architecture and contracts, conventions and exemplar files.
+4. **Check** by running the plan's Verification commands yourself.
+5. **Review** with `craft-code-reviewer` over the slice diff. On Revise: resume the coder, then the same reviewer.
+6. **Prove** by following [craft-test](../craft-test/SKILL.md) on this slice, using the plan's Live test section to set up (reuse a running environment). If the slice has nothing runnable yet, its tests are the proof; note that in the log.
+7. **Commit** with a conventional message once `git diff` contains no `TODO(live-test)` edits. Check the slice off with a Proven line. Update Architecture or Live test if either changed.
 
-If check, review, or live proof fails, resume the coder. Per slice: 3 coder resumes, then one fresh coder on Fable, then stop and ask. Do not polish during slices.
+If check, review, or proof fails: resume the coder and retry from that step. After 3 resumes, try one fresh coder on Fable. If that fails too, you are stuck.
 
-## 4. Finish
+## 5. Finish
 
-Dispatch `craft-code-reviewer` over the whole branch diff; on Revise, resume the coder, then the same reviewer. Then `craft-polisher` once. Commit and run the full Verification list. Then follow [craft-test](../craft-test/SKILL.md) against every acceptance criterion — this always runs — and check each box with its evidence. Report criterion by criterion and offer to open a PR.
+1. `craft-code-reviewer` over the whole branch diff. On Revise: resume the coder, then the same reviewer.
+2. `craft-polisher` once, then commit.
+3. Run the full Verification list.
+4. Follow [craft-test](../craft-test/SKILL.md) against every acceptance criterion, using the live check written for it in step 1. This always runs. Check each criterion off with its evidence.
+5. Report criterion by criterion and offer to open a PR.
 
-## Stop and ask
 
-Never park, never guess. Record the blocker in the plan first, then ask, when:
 
-- the slice cap is hit
-- the architecture critic has not held after 3 rounds
-- an objection cannot be settled, or adopting it would change a frozen criterion
-- the local environment cannot be reached
+## When stuck
 
-Coder reports and green checks are claims. Done means every acceptance criterion is checked with evidence from a live run.
+You are stuck when the slice retry limit is hit, a critic objection cannot be settled or would change a frozen criterion, or the local environment cannot be reached. Write the blocker into the plan, then ask the user. Never guess, never skip.

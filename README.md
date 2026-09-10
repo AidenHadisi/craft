@@ -13,7 +13,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | Component | Type | Role |
 |---|---|---|
 | `craft` | skill (`/craft`) | Co-authors a dense plan one step at a time — user approval per step, one plan review at the end — then implements hands-off |
-| `craft-auto` | skill (`/craft-auto`) | Interviews once, then runs to the goal unattended — three-lens design tribunal, per-slice critique, capped review loops, live proof and a commit per slice |
+| `craft-auto` | skill (`/craft-auto`) | Interviews once, then runs to the goal unattended — every design critiqued before it is built, capped review loops, live proof and a commit per slice |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
@@ -106,7 +106,7 @@ To hand over a goal and get back a finished, proven feature:
 /craft-auto add OAuth login for the dashboard
 ```
 
-It interviews you once and ends that interview with acceptance criteria, each paired with the live check that will prove it. From there it runs unattended. Its architecture draft goes to three `craft-critic` agents — simplicity, idiom and modernity, correctness — each obliged to propose a rival design or show what it compared against; the orchestrator rules on every objection in the plan's Design rulings. Every slice gets one targeted critique before it is coded, then is coded, checked, reviewed under a capped fix loop, polished, **run live** against the local environment, and committed. Finish is a whole-branch review and the full `craft-test` flow against every criterion — never a question. It stops to ask only when a loop cannot converge or the local environment cannot be reached.
+It interviews you once and ends that interview with acceptance criteria, each paired with the live check that will prove it. From there it runs unattended. Every design — the architecture and then each slice — goes to `craft-critic`, which must propose a rival design or show what it compared against; the orchestrator rules on each objection in the plan's Design rulings. Each slice is then coded, checked, reviewed under a capped fix loop, polished, **run live** against the local environment, and committed. Finish is a whole-branch review and the full `craft-test` flow against every criterion — never a question. It stops to ask only when a loop cannot converge or the local environment cannot be reached.
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 
@@ -137,7 +137,7 @@ Every invocation after that follows the file: work the checks, compare each agai
 - **Orchestrator owns architecture.** Design and plan stay in one context so decisions don't die in a handoff.
 - **Delegation for labor.** Exploration, coding, and review use subagents; judgment stays with the orchestrator.
 - **Self-contained agents.** Each agent owns its instructions — no shared standards dump. The plan template stays under `skills/craft/references/`.
-- **Critique, not consensus.** `/craft-auto` critics run on the strongest model and must name a challenger design or show what they compared against; the orchestrator rules in writing, and rulings are settled.
+- **Critique, not consensus.** `/craft-auto`'s critic must name a challenger design or show what it compared against; the orchestrator rules in writing, and rulings are settled.
 - **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` owns the Pass/Revise gate over the full diff — the orchestrator accepts findings, loops coders, and advances only on Pass.
 - **Prove it runs.** Every run ends with static checks, then offers live testing — run locally with real credentials, stub side effects, never mutate prod, revert every temporary change.
 - **Readonly where it counts.** Exploration and review agents are readonly; they inform the orchestrator but never edit artifacts.

@@ -40,9 +40,9 @@
 
 ## Design rulings
 
-<Append-only. One line per rival design and per risk a critic raised.>
+<Append-only. One line per critic objection.>
 
-- <lens> · Adopt | Reject · <reason>
+- <objection> · Adopt | Reject · <reason>
 
 ## Slice log
 

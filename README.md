@@ -106,7 +106,7 @@ To hand over a goal and get back a finished, proven feature:
 /craft-auto add OAuth login for the dashboard
 ```
 
-It interviews you once and ends that interview with acceptance criteria, each paired with the live check that will prove it. From there it runs unattended. Every design — the architecture and then each slice — goes to `craft-critic`, which must propose a rival design or show what it compared against; the orchestrator rules on each objection in the plan's Design rulings. Each slice is then coded, checked, reviewed under a capped fix loop, polished, **run live** against the local environment, and committed. Finish is a whole-branch review and the full `craft-test` flow against every criterion — never a question. It stops to ask only when a loop cannot converge or the local environment cannot be reached.
+It interviews you once and ends that interview with acceptance criteria, each paired with the live check that will prove it. From there it runs unattended. Every design — the architecture and then each slice — goes to `craft-critic`, which must propose a rival design or show what it compared against; the orchestrator rules on each objection in the plan's Design rulings. Each slice is then coded, checked, reviewed under a capped fix loop, **run live** against the local environment, and committed. Finish is a whole-branch review and polish, then the full `craft-test` flow against every criterion — never a question. It stops to ask only when a loop cannot converge or the local environment cannot be reached.
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 

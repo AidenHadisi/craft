@@ -34,15 +34,14 @@ Repeat until the committed slices cover every acceptance criterion:
 3. **Build** with `craft-coder`: the slice, its criteria, the relevant architecture and contracts, the conventions and exemplars. One writer at a time.
 4. **Check** by running the relevant Verification commands yourself.
 5. **Review** with `craft-code-reviewer` over the slice diff; on Revise, resume the coder then the same reviewer.
-6. **Polish** with `craft-polisher`, then re-run the checks.
-7. **Prove** it live — start or reuse the local environment from the plan's Live test section and exercise the slice per [craft-test](../craft-test/SKILL.md). Only a slice with no runnable surface is proven by its tests instead, and the log says why.
-8. **Commit** with a conventional message after reverting `TODO(live-test)` edits; check the slice off with its Proven line and update Architecture if it changed.
+6. **Prove** it live — start or reuse the local environment from the plan's Live test section and exercise the slice per [craft-test](../craft-test/SKILL.md). Only a slice with no runnable surface is proven by its tests instead, and the log says why.
+7. **Commit** with a conventional message after reverting `TODO(live-test)` edits; check the slice off with its Proven line and update Architecture if it changed.
 
 Failures at any step go back to the coder.
 
 ## 5. Finish
 
-`craft-code-reviewer` then `craft-polisher` over the whole branch diff; commit and run the full Verification list. Then follow [craft-test](../craft-test/SKILL.md) against every acceptance criterion and check each box with its evidence — this always runs. Report criterion by criterion and offer to open a PR.
+`craft-code-reviewer` then `craft-polisher` over the whole branch diff — the only polish pass; commit and run the full Verification list. Then follow [craft-test](../craft-test/SKILL.md) against every acceptance criterion and check each box with its evidence — this always runs. Report criterion by criterion and offer to open a PR.
 
 ## Hard rules
 

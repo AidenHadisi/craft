@@ -1,9 +1,6 @@
 # Design critique
 
 Apply before any design is built. The point is a forced search for a better design, not agreement: every critic must name a rival or show what it compared against, and you must rule on every rival and risk in writing.
-
-Critics judge; they do not explore. Evidence is gathered once by legwork agents into the plan's Dossier and handed to every critic and coder. When a critic reports missing evidence, extend the Dossier with a legwork agent and re-run that critic rather than letting it look for itself.
-
 ## Lenses
 
 One lens per `craft-critic` dispatch; the brief names it.
@@ -14,16 +11,16 @@ One lens per `craft-critic` dispatch; the brief names it.
 
 ## Models
 
-Pass a model explicitly on every dispatch — the newest available in the family, never a pinned version:
+Pass a model explicitly on every dispatch — the newest available in the family, never a pinned version. Critics do their own legwork through explorer subagents; tell them the legwork family too.
 
 | Work | Family |
 |---|---|
 | Judgment — `craft-critic`, `craft-code-reviewer`, `craft-polisher` | Fable |
-| Legwork — exploration, `craft-coder`, live testing | Grok |
+| Legwork — exploration, `craft-coder`, live testing, critics' explorers | Grok |
 
 ## Architecture tribunal
 
-Dispatch all three lenses in parallel on the same draft, each with the full brief: goal, requirements, the draft, the Dossier, rulings so far. Rule on every objection — *Adopt* or *Reject: reason*. An adopted **Major** means rewrite the draft, not patch it, then run one more full round. Cap: 2 rounds; after that decide, and record the disagreements you overruled.
+Dispatch all three lenses in parallel on the same draft, each with the full brief: the plan so far, the draft, the lens, rulings so far. Rule on every objection — *Adopt* or *Reject: reason*. An adopted **Major** means rewrite the draft, not patch it, then run one more full round. Cap: 2 rounds; after that decide, and record the disagreements you overruled.
 
 ## Slice critique
 

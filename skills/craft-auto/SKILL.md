@@ -1,7 +1,7 @@
 ---
-
-## name: craft-auto
+name: craft-auto
 description: Use when the user gives a goal and wants it built autonomously to completion — one interview up front, then architecture, slices, review, and live proof run unattended with the user consulted only when the work cannot converge. Also for resuming a feature that has a docs/plans/ file with a Slice log.
+---
 
 # Craft Auto
 

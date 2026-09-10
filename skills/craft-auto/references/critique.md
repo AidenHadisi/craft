@@ -12,12 +12,12 @@ One lens per `craft-critic` dispatch; the brief names it.
 
 ## Models
 
-Pass the model explicitly on every dispatch. Judgment runs on the latest Fable; legwork runs on the latest Grok. Current roster — update here when models change:
+Pass a model explicitly on every dispatch — the newest available in the family, never a pinned version:
 
-| Work | Model |
+| Work | Family |
 |---|---|
-| `craft-critic`, `craft-code-reviewer`, `craft-polisher` | `claude-fable-5-1-thinking-medium` |
-| Exploration, `craft-coder`, live-test legwork | `cursor-grok-4.6-high` |
+| Judgment — `craft-critic`, `craft-code-reviewer`, `craft-polisher` | Fable |
+| Legwork — exploration, `craft-coder`, live testing | Grok |
 
 ## Architecture tribunal
 

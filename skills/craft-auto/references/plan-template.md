@@ -18,7 +18,7 @@
 
 <The definition of done. Frozen after the user confirms. A box is checked only with evidence from a live run.>
 
-- [ ] <Observable criterion> — proof: <request / page / command and the expected observable result>
+- [ ] <Observable criterion> — proof: <request / page / command and the expected observable result; the action to stop before, if any>
 - [ ] <…>
 
 ## Architecture
@@ -36,7 +36,7 @@
 
 ## Live test
 
-<How to run the project locally and reach the feature: start command, URL, test credentials, and any side effects to stub. Refined as slices land.>
+<How to run the project locally and reach the feature: start command, URL, what the dev environment connects to (local or real DB and services), the test account, and outbound calls to stub. Refined as slices land.>
 
 ## Design rulings
 

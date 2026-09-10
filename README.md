@@ -140,7 +140,7 @@ Every invocation after that follows the file: work the checks, compare each agai
 - **Self-contained agents.** Each agent owns its instructions — no shared standards dump. The plan template stays under `skills/craft/references/`.
 - **Critique, not consensus.** `/craft-auto`'s critic searches for a challenger design and either proposes a better one or shows why the draft holds; the orchestrator rules in writing, and rulings are settled.
 - **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` owns the Pass/Revise gate over the full diff — the orchestrator accepts findings, loops coders, and advances only on Pass.
-- **Prove it runs.** Every run ends with static checks, then offers live testing — run locally with real credentials, stub side effects, never mutate prod, revert every temporary change.
+- **Prove it runs.** Every run ends with static checks, then live testing — run locally under a test account, real data where it is safe, stop before anything leaves the system, revert every temporary change.
 - **Readonly where it counts.** Exploration and review agents are readonly; they inform the orchestrator but never edit artifacts.
 
 ## License

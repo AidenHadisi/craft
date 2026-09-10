@@ -1,6 +1,6 @@
 ---
 name: craft-test
-description: Prove a feature works by running it live — real process, real requests, real rendering — without ever touching production. Use when the user asks to test or verify a feature, after an implementation lands, or standalone anytime something needs to be proven working.
+description: Prove a feature works by running it live — real process, real requests, real rendering, real data where it is safe — with nothing ever leaving the system. Use when the user asks to test or verify a feature, after an implementation lands, or standalone anytime something needs to be proven working.
 ---
 
 # Craft Test
@@ -11,8 +11,8 @@ Prove the feature by running it. You do not run it yourself — `craft-tester` d
 
 Gather what the tester needs. Pull from the conversation or plan; dispatch a subagent to find anything missing; ask the user only if it still cannot be found.
 
-- **Run instructions:** start command, URL, credentials or test account, side effects that must be stubbed (email, SMS, webhooks, billing, queues).
-- **Criteria:** what "works" means, as observable checks — an endpoint and expected response, a page and expected render, a flow and its end state.
+- **Run instructions:** start command, URL, what the local environment is connected to (local or real database and services), the test account to use, and any outbound calls to stub (email, SMS, webhooks, payments).
+- **Criteria:** what "works" means, as observable checks — an endpoint and expected response, a page and expected render, a flow and its end state. For each, the action the tester must stop before, if any ("save the draft; do not Send").
 - **Verification commands:** build, typecheck, lint, tests.
 - **Scope:** which slice or the whole feature.
 
@@ -30,6 +30,7 @@ Tell the user, criterion by criterion, what was run and what was observed. Say p
 
 ## Hard rules
 
-- Never mutate production hosts, databases, or queues.
+- Nothing leaves the system: no message, payment, or notification reaches a real person or external service.
+- Real data is fine under a test account; the tester touches only records it created and removes them after.
 - Every temporary change is reverted before reporting done.
 - If live testing is impossible, say so rather than skipping silently.

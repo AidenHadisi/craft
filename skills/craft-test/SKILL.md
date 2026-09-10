@@ -15,18 +15,18 @@ What you're testing and what "works" means: endpoints, pages, or flows, and the 
 
 Get a healthy local process running and make the path safe to exercise:
 
-- Start from the project's established run command. Confirm the server is healthy before sending requests.
-- Use credentials the project already keeps. If auth blocks the path, temporarily bypass it.
-- Add debug logs *before* the first request — entry/exit, branch inputs, external-call results. Log values, not moments (`saved search id=42` beats `got here`).
-- Before flows that email, SMS, webhook, bill, or enqueue: stub the call (log instead).
+- Find and start from the project's established run command. Confirm the server is healthy before sending requests.
+- Use credentials the project already keeps. If auth blocks the path, ask the user to login for you before you continue, or if login is not possible, find a way to temporarily bypass it.
+- If necessary, add debug logs to capture entry/exit, branch inputs, external-call results. Log values, not moments (`saved search id=42` beats `got here`).
+- Ensure all work is safe to run. Before flows that email, SMS, webhook, bill, or enqueue: stub the call (log instead). Yor test should never send real emails, or mutate production data.
 
-Tag every temporary edit `TODO(live-test)` — they all get reverted at the end.
+Tag every temporary edit `TODO(live-test)` — and ensure they all get reverted at the end.
 
 ## 3. Exercise
 
-**Backend** — curl changed endpoints with real bodies; check status and shape. Mutating ops are fine against local/dev databases only.
+**Backend** — curl changed endpoints with real bodies; check status and shape. Mutating ops are fine against local/dev databases only, never production.
 
-**Frontend** — open touched pages in the Cursor browser. Confirm it renders, the feature responds, and there are no console errors. Ask the user to log in if blocked. Never click destructive actions, payments, or external OAuth.
+**Frontend** — open touched pages in the browser. Confirm it renders, the feature responds, and there are no console errors. Confirm the design is clean and user firendly. Ask the user to log in if blocked. Never click destructive actions, payments, or external OAuth.
 
 When something misbehaves, read the logs you added. Deeper logging along the path stays tagged `TODO(live-test)`.
 
@@ -36,6 +36,6 @@ Revert every temporary change. `git diff` and a search for `TODO(live-test)` mus
 
 ## Hard rules
 
-- Never point tests at production hosts, databases, or queues.
+- Never mutate production hosts, databases, or queues.
 - Every temporary change is reverted before reporting done.
 - If live testing is impossible, say so rather than skipping silently.

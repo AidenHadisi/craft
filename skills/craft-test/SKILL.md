@@ -5,34 +5,28 @@ description: Prove a feature works by running it live — real process, real req
 
 # Craft Test
 
-Prove the feature end to end — real process, real requests, real rendering — never production. Dispatch subagents for discovery and server work; you own the plan and the report.
+Prove the feature by running it. You do not run it yourself — `craft-tester` does. You write the brief, judge the evidence, and report.
 
-## 1. Scope
+## 1. Brief
 
-What you're testing and what "works" means: endpoints, pages, or flows, and the observable success signal. Pull from the conversation or plan; ask if unclear.
+Gather what the tester needs. Pull from the conversation or plan; dispatch a subagent to find anything missing; ask the user only if it still cannot be found.
 
-## 2. Prepare
+- **Run instructions:** start command, URL, credentials or test account, side effects that must be stubbed (email, SMS, webhooks, billing, queues).
+- **Criteria:** what "works" means, as observable checks — an endpoint and expected response, a page and expected render, a flow and its end state.
+- **Verification commands:** build, typecheck, lint, tests.
+- **Scope:** which slice or the whole feature.
 
-Get a healthy local process running and make the path safe to exercise:
+## 2. Dispatch
 
-- Find and start from the project's established run command. Confirm the server is healthy before sending requests.
-- Use credentials the project already keeps. If auth blocks the path, ask the user to login for you before you continue, or if login is not possible, find a way to temporarily bypass it.
-- If necessary, add debug logs to capture entry/exit, branch inputs, external-call results. Log values, not moments (`saved search id=42` beats `got here`).
-- Ensure all work is safe to run. Before flows that email, SMS, webhook, bill, or enqueue: stub the call (log instead). Yor test should never send real emails, or mutate production data.
+Dispatch `craft-tester` with the brief. It verifies, starts the environment, exercises every criterion, reverts its temporary edits, and returns a report with a Ran/Saw line per criterion.
 
-Tag every temporary edit `TODO(live-test)` — and ensure they all get reverted at the end.
+## 3. Judge
 
-## 3. Exercise
+The report is evidence, not a verdict. For each criterion, check that what it ran is the check you briefed and that what it saw proves the criterion. Open any screenshot it recorded. If the cleanup line is not clean, or a Saw line is vague, resume the tester and ask for the specific output. Spot-check one criterion yourself if anything looks off.
 
-**Backend** — curl changed endpoints with real bodies; check status and shape. Mutating ops are fine against local/dev databases only, never production.
+## 4. Report
 
-**Frontend** — open touched pages in the browser. Confirm it renders, the feature responds, and there are no console errors. Confirm the design is clean and user firendly. Ask the user to log in if blocked. Never click destructive actions, payments, or external OAuth.
-
-When something misbehaves, read the logs you added. Deeper logging along the path stays tagged `TODO(live-test)`.
-
-## 4. Revert & report
-
-Revert every temporary change. `git diff` and a search for `TODO(live-test)` must both be clean. Report what was tested, how, and what was observed.
+Tell the user, criterion by criterion, what was run and what was observed. Say plainly what failed or could not be exercised.
 
 ## Hard rules
 

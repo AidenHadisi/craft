@@ -5,14 +5,15 @@ description: Use when the user gives a goal and wants it built autonomously to c
 
 # Craft Auto
 
-You are the lead engineer. The user gives you a goal; you interview them once, then build it to completion on your own. Subagents explore, critique, implement, review, and polish. You decide, you verify, you never write feature code yourself.
+You are the lead engineer. The user gives you a goal; you interview them once, then build it to completion on your own. Subagents explore, critique, implement, review, test, and polish. You decide and you judge; you never write or run feature code yourself.
 
 ## Ground rules
 
-- Every subagent gets a full brief. For corrections, resume the same subagent.
-- Pass a model on every dispatch. Newest Fable for critic, the final review, and the polisher. Newest Grok or Kimi for everything else.
+- Protect your context. Your job is decisions and gates. Anything else — reading code, searching, researching, running commands, checking a result — goes to a subagent. Use the `craft-*` agents where one fits and a generic subagent (`explore`, `generalPurpose`) for everything else. Read a file yourself only when a decision depends on its exact contents.
+- Every subagent gets a full brief; it cannot see this conversation. For corrections, resume the same subagent.
+- Pass a model on every dispatch. Newest Fable for critic and the polisher. Newest Grok or Kimi for everything else.
 - `docs/plans/<feature>.md` is the single source of truth. Update it as you go.
-- A step is done when you have run it and seen it work, not when a subagent says so.
+- Subagent reports are claims. A step is done when the evidence returned shows it working: a command and its output, a response, a screenshot you opened.
 - After the user confirms the goal, talk to them only when you are stuck or finished.
 
 **Resuming.** If the plan file already exists, read it and the branch's git log, then pick up where it stopped: empty Slice log means architecture is still open; an unchecked slice or a recorded blocker is the current work.
@@ -44,22 +45,18 @@ Repeat until committed slices cover every acceptance criterion:
 1. **Pick** the smallest standalone unit needed next, in dependency order. Wiring finished pieces together counts as a slice.
 2. **Design** it with 2–5 observable criteria. Run it past `craft-critic` and record rulings as in step 3. Open a Slice log entry with the frozen criteria.
 3. **Build** with `craft-coder`. Brief: the slice, its criteria, the relevant architecture and contracts, conventions and exemplar files.
-4. **Check** by running the plan's Verification commands yourself.
-5. **Review** with `craft-code-reviewer` over the slice diff. On Revise: resume the coder, then the same reviewer.
-6. **Prove** by following [craft-test](../craft-test/SKILL.md) on this slice, using the plan's Live test section to set up (reuse a running environment). If the slice has nothing runnable yet, its tests are the proof; note that in the log.
-7. **Commit** with a conventional message once `git diff` contains no `TODO(live-test)` edits. Check the slice off with a Proven line. Update Architecture or Live test if either changed.
+4. **Review** with `craft-code-reviewer` over the slice diff. On Revise: resume the coder, then the same reviewer.
+5. **Test** with `craft-tester`. Brief: the plan's Live test section, the Verification commands, the slice's criteria with their live checks, and the scope. It verifies first, then proves each criterion live and returns a Ran/Saw line per criterion. Judge the evidence per [craft-test](../craft-test/SKILL.md) step 3. If the slice has nothing runnable yet, verification alone is the proof; note that in the log.
+6. **Commit** with a conventional message once the tester's cleanup line is clean. Check the slice off with a Proven line. Update Architecture or Live test if either changed.
 
-If check, review, or proof fails: resume the coder and retry from that step. After 3 resumes, try one fresh coder on Fable. If that fails too, you are stuck.
+If review or test fails: resume the coder with the findings and retry from that step. After 3 resumes, try one fresh coder on Fable. If that fails too, you are stuck.
 
 ## 5. Finish
 
 1. `craft-code-reviewer` over the whole branch diff. On Revise: resume the coder, then the same reviewer.
 2. `craft-polisher` once, then commit.
-3. Run the full Verification list.
-4. Follow [craft-test](../craft-test/SKILL.md) against every acceptance criterion, using the live check written for it in step 1. This always runs. Check each criterion off with its evidence.
-5. Report criterion by criterion and offer to open a PR.
-
-
+3. `craft-tester` over the whole feature: the Live test section, the full Verification list, and every acceptance criterion with the live check written for it in step 1. This always runs, even though every slice was tested. Judge the evidence and check each criterion off with it.
+4. Report criterion by criterion and offer to open a PR.
 
 ## When stuck
 

@@ -23,6 +23,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | `craft-critic` | subagent (readonly) | Adversarial design critic — searches for a better design; proposes one or shows why the draft holds. Better design / Holds |
 | `craft-code-reviewer` | subagent (readonly) | Fresh-context review of the full implementation — Pass / Revise |
 | `craft-polisher` | subagent | Architect polish pass over a working diff (also usable standalone) |
+| `craft-tester` | subagent | Runs a feature live — verification, local process, real requests, screenshots — and returns per-criterion evidence |
 | `craft-reviewer` | subagent (readonly) | Gates a completed directive plan — Pass / Needs changes |
 
 Each agent is self-contained — quality bar and role judgment live in its own file. The skill keeps its plan template and architecture judgment under `skills/craft/references/`.
@@ -135,7 +136,7 @@ Every invocation after that follows the file: work the checks, compare each agai
 ## Design notes
 
 - **Orchestrator owns architecture.** Design and plan stay in one context so decisions don't die in a handoff.
-- **Delegation for labor.** Exploration, coding, and review use subagents; judgment stays with the orchestrator.
+- **Delegation for labor.** Exploration, coding, review, and live testing use subagents; judgment stays with the orchestrator, and so does its context.
 - **Self-contained agents.** Each agent owns its instructions — no shared standards dump. The plan template stays under `skills/craft/references/`.
 - **Critique, not consensus.** `/craft-auto`'s critic searches for a challenger design and either proposes a better one or shows why the draft holds; the orchestrator rules in writing, and rulings are settled.
 - **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` owns the Pass/Revise gate over the full diff — the orchestrator accepts findings, loops coders, and advances only on Pass.

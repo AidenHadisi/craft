@@ -44,11 +44,12 @@ Manual:
 
 ## Progress
 
-[The only progress tracker. Check off as each completes. One line per step, mirroring the Steps headings; a step is checked when its code review passes, never earlier.]
+[The only progress tracker. Check off as each completes. One line per step, mirroring the Steps headings; a step is checked when its coder reports done, never earlier.]
 
 - [ ] Plan approved
 - [ ] Step 1 — <one sentence description of the step>
 - [ ] Step 2 — <one sentence description of the step>
+- [ ] Code review passed
 - [ ] Polished
 - [ ] Verification green
 - [ ] Live-tested

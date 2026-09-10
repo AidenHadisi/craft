@@ -23,14 +23,15 @@ Copy [plan-template](references/plan-template.md) to the plan file and fill it i
 
 - Design the step against the architecture and the frozen steps before it, checking the codebase where unsure.
 - Write it per the template, for an implementer with zero context.
-- Dispatch `craft-reviewer`; fix must-fix findings until it passes.
 - Present it to the user. An approved step is frozen; changing it later needs approval first.
 
-When every step is approved, run `craft-reviewer` over the whole plan, fix until pass, and ask for final approval.
+When every step is approved, dispatch `craft-reviewer` once over the whole plan. On `Needs changes`: apply a minor redesign (wording, a pinned contract, a single step's internals) and re-run; for a major redesign (architecture or reworked approved steps), present it and its trade-offs, and on approval redo the affected architecture/steps, then re-run. Ask for final approval once it passes.
 
 ## 4. Implement
 
-Per step: `craft-coder` with the step, the contracts it touches, and the conventions; then `craft-code-reviewer` with the same brief. On revise, resume the coder then the reviewer. Parallelize only across steps with disjoint files. Check a step off in Progress when its review passes.
+Per step: `craft-coder` with the step, the contracts it touches, and the conventions. Parallelize only across steps with disjoint files. Check a step off in Progress when the coder reports done.
+
+When every step is done, dispatch `craft-code-reviewer` once with the plan and the full diff. On `Revise`, resume the relevant coder(s) with the findings, then re-run the reviewer. Advance only on `Pass`; check Code review passed then.
 
 ## 5. Polish
 

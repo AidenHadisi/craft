@@ -2,6 +2,8 @@
 
 Apply before any design is built. The point is a forced search for a better design, not agreement: every critic must name a rival or show what it compared against, and you must rule on every rival and risk in writing.
 
+Critics judge; they do not explore. Evidence is gathered once by legwork agents into the plan's Dossier and handed to every critic and coder. When a critic reports missing evidence, extend the Dossier with a legwork agent and re-run that critic rather than letting it look for itself.
+
 ## Lenses
 
 One lens per `craft-critic` dispatch; the brief names it.
@@ -21,7 +23,7 @@ Pass a model explicitly on every dispatch — the newest available in the family
 
 ## Architecture tribunal
 
-Dispatch all three lenses in parallel on the same draft, each with the full brief: goal, requirements, the draft, conventions with exemplar files, rulings so far. Rule on every objection — *Adopt* or *Reject: reason*. An adopted **Major** means rewrite the draft, not patch it, then run one more full round. Cap: 2 rounds; after that decide, and record the disagreements you overruled.
+Dispatch all three lenses in parallel on the same draft, each with the full brief: goal, requirements, the draft, the Dossier, rulings so far. Rule on every objection — *Adopt* or *Reject: reason*. An adopted **Major** means rewrite the draft, not patch it, then run one more full round. Cap: 2 rounds; after that decide, and record the disagreements you overruled.
 
 ## Slice critique
 

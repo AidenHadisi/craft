@@ -25,9 +25,14 @@
 
 <The agreed design: components and the one job each owns, the seams between them (what crosses, which way it flows), and key decisions with a one-line why. This section keeps slices converging — keep it current when a slice changes the design.>
 
-## Conventions
+## Dossier
 
-- <Repo-specific convention implementers must follow for this feature — errors, stores, HTTP, tests, frontend layout, etc.> — exemplar: `<path>`
+<Evidence for critics and coders, gathered by legwork agents; extend it when a critic reports missing evidence.>
+
+- **Sibling features:** <`path` — how it does the comparable thing, with the relevant excerpt>
+- **Conventions:** <convention implementers must follow — errors, stores, HTTP, tests, frontend layout> — exemplar: `<path>`
+- **Already available:** <what the stdlib and current dependencies provide for this problem>
+- **Worth considering:** <well-maintained packages, with what each would replace>
 
 ## Verification
 

@@ -15,7 +15,7 @@ Design quality is the point: before anything is built, `craft-critic` agents are
 
 Understand the goal thoroughly before designing. Never assume on anything important — if unsure, ask; prefer multiple-choice questions.
 
-Dispatch subagents in parallel to learn project conventions — each captured as an exemplar file for the plan — what already exists, how the feature connects to the current system, and how the project is run and reached locally: command, URL, credentials, test accounts. Then present the goal statement, 3–8 acceptance criteria each with the live proof that will check it, and the live-test recipe. The user confirms once. Goal and criteria are then frozen; the recipe is refined as slices land.
+Dispatch subagents in parallel to build the plan's Dossier: how sibling features do this, with the relevant excerpts; the conventions to follow, each with an exemplar file; what the stdlib and current dependencies already provide and which packages are worth considering; and how the project is run and reached locally — command, URL, credentials, test accounts. Then present the goal statement, 3–8 acceptance criteria each with the live proof that will check it, and the live-test recipe. The user confirms once. Goal and criteria are then frozen; the recipe is refined as slices land.
 
 ## 2. Architecture
 
@@ -31,7 +31,7 @@ Repeat until the committed slices cover every acceptance criterion:
 
 1. **Pick.** Re-read Architecture; choose the smallest standalone unit needed next, in dependency order. Wiring finished pieces together is a valid slice and should not pile up.
 2. **Design.** Design this slice properly with 2–5 observable acceptance criteria, then run one slice critique per [critique](references/critique.md) and rule. Open the slice's entry in the Slice log with its criteria — unchecked, frozen.
-3. **Build.** Dispatch `craft-coder` with the slice, its criteria, the relevant architecture and contracts, and the conventions with their exemplar files. One writer at a time — never parallel coders.
+3. **Build.** Dispatch `craft-coder` with the slice, its criteria, the relevant architecture and contracts, and the Dossier. One writer at a time — never parallel coders.
 4. **Check.** Run the relevant Verification commands yourself; failures go back to the coder before any review.
 5. **Review.** `craft-code-reviewer` over the slice diff. On Revise, resume the coder then the same reviewer.
 6. **Polish.** `craft-polisher` over the slice diff, then re-run the checks.

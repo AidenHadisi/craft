@@ -16,7 +16,7 @@ Read the code and enough of its callers, tests, and neighbors to know how this r
 
 ## 2. Research
 
-Dispatch subagents to check outside the repo: current language and stdlib features, well-maintained packages that could replace hand-rolled code, patterns the codebase isn't using yet. Only adopt what works with this project's actual versions.
+Dispatch `craft-researcher` to check outside the repo: current language and stdlib features, well-maintained packages that could replace hand-rolled code, patterns the codebase isn't using yet. Only adopt what works with this project's actual versions.
 
 ## 3. Propose
 

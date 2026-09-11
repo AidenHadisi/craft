@@ -1,29 +1,30 @@
 ---
 name: craft-research
 description: >-
-  Deep research and planning skill. Use when the user wants to research how to
-  build something, plan an approach, learn about a technology, or produce a
-  technical document informed by reliable sources.
+  Deep research skill. Use when the user wants to research a topic, concept, or
+  question across many sources and produce a refined document in Docs/.
 ---
 
 # Craft Research
 
-Research a topic with the user and produce a refined markdown document in `Docs/`. Dispatch subagents for research; you own the synthesis and the document. Subagents return findings only — you write all files.
+Research a topic with the user and produce a refined markdown document in `Docs/`. You own the map and the document. `craft-researcher` does the reading — findings only, never files.
 
 ## 1. Understand
 
-Ask what they want to research or plan. Prefer multiple-choice. Pin scope, constraints, and what the doc should cover.
+Ask what they want to research. Prefer multiple-choice. Pin scope, constraints, and what the doc should cover.
 
 ## 2. Research
 
-Dispatch multiple subagents, each on a different angle. Prefer official docs, papers, tutorials, expert write-ups, production examples, and known failure modes.
+Break the topic into distinct areas. If you cannot name them yet, dispatch `craft-researcher` to map the field, then split that map into areas.
+
+Dispatch one `craft-researcher` per area, in parallel. Each gets one focused question, not the whole topic. If a report surfaces a new area that still matters, dispatch more.
 
 ## 3. Discuss
 
-Present findings. Talk through trade-offs and options against their constraints. Adapt before writing.
+Present findings. Talk through what's established, contested, and the options. Adapt before writing.
 
 ## 4. Write
 
-Write `Docs/<slug>.md`: the plan, approach, key decisions, and inline source links. Standalone — a later reader should understand the decisions without this chat.
+Write `Docs/<slug>.md`: the picture, the key findings, and inline source links. Standalone — a later reader should understand it without this chat.
 
 Go over it with the user. Incorporate feedback until they're satisfied.

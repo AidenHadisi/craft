@@ -17,14 +17,15 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
-| `craft-research` | skill (`/craft-research`) | Researches a topic across many sources and produces a refined doc in `Docs/` |
+| `craft-research` | skill (`/craft-research`) | Breaks a topic into areas, researches each in parallel, and produces a refined doc in `Docs/` |
 | `craft-refactor` | skill (`/craft-refactor`) | Diagnoses existing code, researches modern idioms, then refactors it in verified behavior-preserving waves |
-| `craft-coder` | subagent | Implements one Task from a directive plan (also usable standalone) |
+| `craft-coder` | subagent | Implements one focused assignment into the repo |
 | `craft-critic` | subagent (readonly) | Adversarial design critic — searches for a better design; proposes one or shows why the draft holds. Better design / Holds |
-| `craft-code-reviewer` | subagent (readonly) | Fresh-context review of the full implementation — Pass / Revise |
-| `craft-polisher` | subagent | Architect polish pass over a working diff (also usable standalone) |
+| `craft-code-reviewer` | subagent (readonly) | Fresh-context review of an implementation — Pass / Revise |
+| `craft-polisher` | subagent | Restructures and polishes a working diff without changing observable behavior |
 | `craft-tester` | subagent | Runs a feature live — verification, local process, real requests, screenshots — and returns per-criterion evidence |
-| `craft-reviewer` | subagent (readonly) | Gates a completed directive plan — Pass / Needs changes |
+| `craft-reviewer` | subagent (readonly) | Gates a completed plan before it is built — Pass / Needs changes |
+| `craft-researcher` | subagent (readonly) | Deep web research — finds and fully reads authoritative sources, returns synthesized findings |
 
 Each agent is self-contained — quality bar and role judgment live in its own file. The skill keeps its plan template and architecture judgment under `skills/craft/references/`.
 
@@ -99,7 +100,7 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 
 You pick the architecture; each plan step is approved by you before the next is designed. After every step is approved, `craft-reviewer` runs once over the whole plan — a major redesign comes back to you before the plan is rewritten. After you approve the full plan, implementation is hands-off: parallel coder waves run only for file-disjoint steps with pinned contracts; otherwise sequential. When every step is done, `craft-code-reviewer` reviews the full diff once, then polish and static checks run, and it asks before live-testing — decline and it stops there.
 
-`craft-coder`, `craft-code-reviewer`, `craft-polisher`, and `craft-reviewer` are usable inside or outside `/craft`.
+Every `craft-*` agent is usable on its own, not only from a skill.
 
 To hand over a goal and get back a finished, proven feature:
 
@@ -136,12 +137,12 @@ Every invocation after that follows the file: work the checks, compare each agai
 ## Design notes
 
 - **Orchestrator owns architecture.** Design and plan stay in one context so decisions don't die in a handoff.
-- **Delegation for labor.** Exploration, coding, review, and live testing use subagents; judgment stays with the orchestrator, and so does its context.
+- **Delegation for labor.** Exploration, research, coding, review, and live testing use subagents; judgment stays with the orchestrator, and so does its context.
 - **Self-contained agents.** Each agent owns its instructions — no shared standards dump. The plan template stays under `skills/craft/references/`.
 - **Critique, not consensus.** `/craft-auto`'s critic searches for a challenger design and either proposes a better one or shows why the draft holds; the orchestrator rules in writing, and rulings are settled.
 - **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` owns the Pass/Revise gate over the full diff — the orchestrator accepts findings, loops coders, and advances only on Pass.
 - **Prove it runs.** Every run ends with static checks, then live testing — run locally under a test account, real data where it is safe, stop before anything leaves the system, revert every temporary change.
-- **Readonly where it counts.** Exploration and review agents are readonly; they inform the orchestrator but never edit artifacts.
+- **Readonly where it counts.** Exploration, research, and review agents are readonly; they inform the orchestrator but never edit artifacts.
 
 ## License
 

@@ -19,7 +19,7 @@ Restate the idea in one or two sentences. Ask at most a couple of questions, and
 Dispatch several subagents in parallel to research:
 
 - Repo: what exists, where this would live, patterns and constraints.
-- Outside (when needed): research papers, libraries, tools, documentation, tutorials, how others solve this, known pitfalls. Skip if it wouldn't add value.
+- Outside (when needed): `craft-researcher` for papers, libraries, tools, documentation, tutorials, how others solve this, known pitfalls. Skip if it wouldn't add value.
 
 ## 3. Discuss
 

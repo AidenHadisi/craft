@@ -23,7 +23,7 @@ Dispatch several subagents in parallel to research:
 
 ## 3. Discuss
 
-Present 2–4 genuinely different directions. For each: the core idea, what it uses, honest trade-offs grounded in the research. Recommend one and why.
+Present some genuinely different directions. For each: the core idea, what it uses, honest trade-offs grounded in the research. Recommend one and why.
 
 Then converse: push on weak spots, dig in if asked (more research if needed). Adapt as their picture of the feature sharpens.
 

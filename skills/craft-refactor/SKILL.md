@@ -20,7 +20,9 @@ Dispatch `craft-researcher` to check outside the repo: current language and stdl
 
 ## 3. Propose
 
-Tell the user what you found and what you'd do: what gets simplified, moved, replaced, or deleted, and why it's better. One recommendation, briefly. Wait for their go-ahead.
+Form one target design from what you learned. Dispatch `craft-critic` against it and the existing code. If it returns a better design, take it unless you have a concrete reason not to.
+
+Then tell the user: what gets simplified, moved, replaced, or deleted, and why it's better. One recommendation. Wait for their go-ahead.
 
 ## 4. Refactor
 

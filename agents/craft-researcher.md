@@ -24,9 +24,6 @@ Stop only when further sources would not change the Answer.
 
 <the current, sourced picture — what is true, what is contested, what follows from the evidence>
 
-### Evidence
-- <claim> — <source, and why it is authoritative>
-
 ### Sources
 - [title](url) — primary | docs | paper | tutorial | guide. <what it contributed>
 

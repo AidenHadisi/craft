@@ -122,7 +122,7 @@ To clean up existing code rather than build something new, hand it a target and 
 /craft-refactor the payment reconciliation package
 ```
 
-No interview — it explores the target and forms its own diagnosis, researches current language idioms and packages online, then presents one target design as a single go/no-go gate. On approval it refactors in small verified waves — observable behavior, public APIs, and wire shapes preserved — with `craft-code-reviewer` gating each wave and `craft-polisher` finishing the full diff.
+No interview — it explores the target and forms its own diagnosis, researches current language idioms and packages online, runs the target design past `craft-critic`, then presents one recommendation as a single go/no-go gate. On approval it refactors in small verified waves — observable behavior, public APIs, and wire shapes preserved — with `craft-code-reviewer` gating each wave and `craft-polisher` finishing the full diff.
 
 Once it ships, check on it. Standalone — invoke it whenever you want to know how something is behaving, whether craft built it or not:
 

@@ -1,14 +1,12 @@
 ---
 name: craft-brainstorm
 description: >-
-  Use when the user wants to brainstorm or discuss a feature idea — exploring
-  how it could be built, which tools or packages fit, and what approach makes
-  sense — before any plan or implementation exists.
+  Use when the user wants to brainstorm or discuss an idea or problem.
 ---
 
 # Craft Brainstorm
 
-Think through a feature idea with the user. The deliverable is the conversation — never write files, plans, or docs.
+Think through an idea or problem with the user. The deliverable is the conversation — never write files, plans, or docs.
 
 ## 1. Understand
 
@@ -18,14 +16,14 @@ Restate the idea in one or two sentences. Ask at most a couple of questions, and
 
 Dispatch several subagents in parallel to research:
 
-- Repo: what exists, where this would live, patterns and constraints.
-- Outside (when needed): `craft-researcher` for papers, libraries, tools, documentation, tutorials, how others solve this, known pitfalls. Skip if it wouldn't add value.
+- Repo and code (when relevant): what exists, where this would live, patterns and constraints.
+- Outside (when relevant): `craft-researcher` for papers, libraries, tools, documentation, tutorials, how others solve this, known pitfalls. Skip if it wouldn't add value.
 
 ## 3. Discuss
 
 Present some genuinely different directions. For each: the core idea, what it uses, honest trade-offs grounded in the research. Recommend one and why.
 
-Then converse: push on weak spots, dig in if asked (more research if needed). Adapt as their picture of the feature sharpens.
+Then converse: push on weak spots, dig in if asked (more research if needed). Adapt as their picture of the idea sharpens.
 
 ## 4. Wrap up
 

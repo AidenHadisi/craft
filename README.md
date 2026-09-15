@@ -18,7 +18,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
 | `craft-research` | skill (`/craft-research`) | Breaks a topic into areas, researches each in parallel, and produces a refined doc in `Docs/` |
-| `craft-refactor` | skill (`/craft-refactor`) | Diagnoses existing code, researches modern idioms, then refactors it in verified behavior-preserving waves |
+| `craft-refactor` | skill (`/craft-refactor`) | Recovers a behavior spec from existing code, generates a clean design from that spec, critic-loops it, then refactors without changing observable behavior |
 | `craft-coder` | subagent | Implements one focused assignment into the repo |
 | `craft-critic` | subagent (readonly) | Adversarial design critic — searches for a better design; proposes one or shows why the draft holds. Better design / Holds |
 | `craft-code-reviewer` | subagent (readonly) | Fresh-context review of an implementation — Pass / Revise |
@@ -122,7 +122,7 @@ To clean up existing code rather than build something new, hand it a target and 
 /craft-refactor the payment reconciliation package
 ```
 
-No interview — it explores the target and forms its own diagnosis, researches current language idioms and packages online, runs the target design past `craft-critic`, then presents one recommendation as a single go/no-go gate. On approval it refactors in small verified waves — observable behavior, public APIs, and wire shapes preserved — with `craft-code-reviewer` gating each wave and `craft-polisher` finishing the full diff.
+No interview — it explores the target, recovers a mostly non-technical spec of how the thing should work, and designs a simple modern solution from that spec. `craft-critic` loops that design until it holds (or hits the cap). Then it presents one recommendation as a single go/no-go gate. On approval, it refactors in small verified waves — observable behavior, public APIs, and wire shapes preserved — with `craft-code-reviewer` on the diff and `craft-polisher` finishing. If there is no narrow boundary, it steers the existing code toward the sketch instead of replacing it.
 
 Once it ships, check on it. Standalone — invoke it whenever you want to know how something is behaving, whether craft built it or not:
 

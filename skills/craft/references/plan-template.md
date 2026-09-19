@@ -6,7 +6,7 @@
 
 ## Criteria
 
-- <observable behavior a live test can prove> — proof: <command / request / page and the expected observable; the action to stop before, if any>
+- <observable behavior a live test can prove>
 
 ## Out of scope
 

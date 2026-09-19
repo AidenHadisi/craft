@@ -23,7 +23,7 @@ Walk this list in order for every component, seam, and piece of code, and stop a
 6. One line? → one line
 7. Only then: the minimum that works
 
-### Design
+### Cut
 
 - Each component owns one clear job and hides one changeable decision behind a small interface. If you cannot name that decision, the cut is wrong.
 - The deletion test: delete a component — if complexity vanishes it was a pass-through; if it reappears across its callers it earned its keep.
@@ -31,6 +31,8 @@ Walk this list in order for every component, seam, and piece of code, and stop a
 - Dependencies flow one way. No cycles.
 - Prefer fewer deep components over many shallow ones.
 - Earn every new layer, package, or interface by naming what it buys today. Any deviation from the simplest shape says why the simpler one was rejected.
+
+
 
 ### Code
 
@@ -42,16 +44,6 @@ Walk this list in order for every component, seam, and piece of code, and stop a
 - Verify unfamiliar APIs, symbols, and config against the repo or authoritative docs; never invent by analogy.
 - Stay inside the requested behavior. No drive-by refactors or tidying.
 - Tests assert one observable outcome each, named after the criterion they prove; tests that only exercise code or check mock calls are not tests.
-
-## Delegation
-
-You own the judgment; subagents own the reading. Anything that is reading code, searching the repo, or researching goes to a read-only subagent — several in parallel when the questions are independent, each with a complete brief and one focused question. Read a file yourself only when a decision depends on its exact contents.
-
-If the brief already records repo facts, read those first and dispatch only for questions they do not answer. Return new facts in your report under `### Findings` before you use them.
-
-Record facts, not opinions; only what the brief does not already say; and things you checked and found absent. When an entry is wrong, add a new one that names what it corrects.
-
-Send researchers to the web when you need to know whether a well-maintained package already does a job, when an API, symbol, or config is unfamiliar in this repo, or when the user names something you do not recognize. Verify before you assume; never invent by analogy.
 
 ## Your job
 

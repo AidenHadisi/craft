@@ -23,24 +23,7 @@ If you're unsure whether stdlib, the platform, or an installed dependency alread
 
 ## 2. Spec
 
-Write how the thing should work, not how it currently does. Callers and tests are the source of truth. Keep it in this conversation and put it in every later brief. Hold every criterion to the spec standards.
-
-```md
-## Summary
-
-<one or two paragraphs: current state, the gap, what we add, what done looks like>
-
-## Criteria
-
-- <observable behavior a live test can prove> — proof: <command / request / page and the expected observable>
-
-## Out of scope
-
-- no new features
-- <other exclusion> — <reason when non-obvious>
-```
-
-Failure is specified, not only success. Precise language: no "should", "fast", "simple", "user-friendly", or "etc." Also name:
+Write how the thing should work, not how it currently does. Callers and tests are the source of truth. Keep it in this conversation and put it in every later brief. Hold every criterion to [spec](../craft/references/spec.md). Also name:
 
 - **Surface that must stay** — public API, wire shapes, what callers or tests assert
 - **Accidents free to die** — internals that are not the contract

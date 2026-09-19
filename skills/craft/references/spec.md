@@ -1,14 +1,14 @@
-These standards bind everyone who writes or reviews the spec of this feature. The spec is the contract the user approves — the plan's Summary, Criteria, and Out of scope sections; it says what and why, never how. Each role's brief says what to do when the spec falls short.
+## Standards
+
+These standards bind everyone who writes or reviews the spec. The spec is the contract; it says what and why, never how.
 
 ### Shape
 
-Three sections, in order, with these headings:
+Three sections, in order:
 
 - **Summary** — current state, the gap, what we add, what done looks like (one or two paragraphs)
-- **Criteria** — the done-list: observable behaviors a live test can prove
+- **Criteria** — observable behaviors a live test can prove
 - **Out of scope** — exclusions, with a reason when non-obvious
-
-Approval freezes this spec. Later steps read Criteria from here.
 
 ### What a good spec is
 
@@ -19,8 +19,8 @@ Approval freezes this spec. Later steps read Criteria from here.
 - Existing behavior is preserved unless a criterion says otherwise, and every such change is named.
 - Precise language: no "should", "fast", "simple", "user-friendly", or "etc." A criterion is either true or false when the feature runs.
 - Consistent with what the repo already does: sibling features, existing behavior, established terms. Uses the repo's names for things. Claims about current behavior are true.
-- The user's intent is held, not invented. When the feature leaves room for interpretation, the answer comes from the user, not from the writer.
-- Decisions recorded as settled in the rulings stay settled unless there is new evidence.
+- The user's intent is held, not invented. When the work leaves room for interpretation, the answer comes from the user, not from the writer.
+- Decisions marked as settled stay settled unless there is new evidence.
 - The shortest spec that does all of the above. Bullets over prose.
 
 ### The ladder
@@ -34,35 +34,8 @@ Walk this list in order for anything the spec proposes to build, and stop at the
 5. Installed dependency? → do not spec building it
 6. Only then: spec the minimum that meets the criteria
 
-## Hold the user's intent
-
-You represent the user. When the feature leaves room for interpretation, interview them before writing. Never invent product decisions.
-
-## If the spec was sent back
-
-The newest ruling or review says why. Rule on every point in it:
-
-- **Adopt** when it makes the spec tighter or more correct without losing something the user asked for.
-- **Reject**, with a reason, when it does not.
-- When a point cuts or changes something the user explicitly wanted, ask the user before ruling.
-- Points rejected in earlier rulings stay rejected unless the reviewer brought new evidence.
-
-Rewrite the spec for the adopted points; do not append a reply. Record each ruling as `<point> · Adopt | Reject · <reason>` in the plan's `## Rulings`.
-
 ## Write
 
-Use exactly these headings, in this order. Prefer bullets over prose.
+Interview before inventing product decisions. If a review sent the spec back, rule on every point: **Adopt** when it makes the spec tighter or more correct without losing something the user asked for; **Reject**, with a reason, when it does not. Ask the user before cutting something they explicitly wanted. Rewrite for the adopted points; do not append a reply. Record each ruling as `<point> · Adopt | Reject · <reason>`.
 
-```md
-## Summary
-
-<one or two paragraphs: current state, the gap, what we add, what done looks like>
-
-## Criteria
-
-- <observable behavior a live test can prove> — proof: <command / request / page and the expected observable; the action to stop before, if any>
-
-## Out of scope
-
-- <exclusion> — <reason when non-obvious>
-```
+Use the Shape headings. Prefer bullets. Each criterion includes `— proof: <command / request / page and the expected observable; the action to stop before, if any>`.

@@ -7,9 +7,11 @@ description: Use when designing or redesigning a UI, page, component, screen, or
 
 Mock and iterate UI directions in Canvas until the user picks a winner or hybrid, then implement that design in the product.
 
+Hold the implementation to [architecture](../craft/references/architecture.md).
+
 ## 1. Understand
 
-Interview to settle details (multiple-choice when possible). Dispatch subagents for repo context: conventions, what exists, how this connects.
+Interview to settle details (multiple-choice when possible). Dispatch subagents for repo context: conventions, what exists, how this connects. Keep what they return and put it in later briefs.
 
 ## 2. Sketch
 
@@ -19,4 +21,4 @@ The user can tweak a variant, combine elements, add a direction, or drop one. Ed
 
 ## 3. Implement
 
-Once they approve a design, implement it in the real frontend. Preserve existing data flow and behavior.
+Once they approve a design, dispatch `craft-coder` with the chosen direction, the sibling components to mirror, repo conventions, and the architecture standards. Then dispatch `craft-code-reviewer` over the diff. On Revise: resume the coder, then the same reviewer. Preserve existing data flow and behavior.

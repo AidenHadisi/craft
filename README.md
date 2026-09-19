@@ -2,9 +2,9 @@
 
 A Cursor plugin for building features the right way.
 
-AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent an **autonomous senior developer**: it owns understanding, architecture, and the plan, while focused subagents explore, review, and implement. Each agent carries its own instructions; the orchestrator owns every gate and proves the finished feature by running it locally.
+AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent the **planner**: it owns understanding, the spec, the architecture, and the plan, while focused subagents explore, review, implement, polish, and live-test. Each agent carries the standards verbatim in its own file; the orchestrator owns every gate and proves the finished feature by running it locally.
 
-The `/craft` workflow is one elastic path: understand, interview, agree architecture, co-author a dense plan one step at a time (user approval per step), run one `craft-reviewer` pass over the whole plan, then implement hands-off, run one fresh-context code review over the full diff, polish, and offer to live-test. The user always picks the design; every step is frozen before the next is designed.
+The `/craft` workflow is one elastic path: explore and interview, write a spec (Summary / Criteria / Out of scope) and get it reviewed then approved, design the architecture and steps and get those reviewed then approved, implement hands-off, polish, run a fresh-context code review over the full diff, and offer to live-test. The user approves two documents — the spec, then the architecture. A blocked coder comes back as a third gate.
 
 Every run asks before live-testing at the end; say no and it stops after the static checks.
 
@@ -12,7 +12,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 
 | Component | Type | Role |
 |---|---|---|
-| `craft` | skill (`/craft`) | Co-authors a dense plan one step at a time — user approval per step, one plan review at the end — then implements hands-off |
+| `craft` | skill (`/craft`) | Writes spec then architecture with a review and a user gate on each, then implements hands-off |
 | `craft-auto` | skill (`/craft-auto`) | Interviews once, then runs to the goal unattended — every design critiqued before it is built, capped review loops, live proof and a commit per slice |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
@@ -24,38 +24,38 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | `craft-code-reviewer` | subagent (readonly) | Fresh-context review of an implementation — Pass / Revise |
 | `craft-polisher` | subagent | Restructures and polishes a working diff without changing observable behavior |
 | `craft-tester` | subagent | Runs a feature live — verification, local process, real requests, screenshots — and returns per-criterion evidence |
-| `craft-reviewer` | subagent (readonly) | Gates a completed plan before it is built — Pass / Needs changes |
+| `craft-reviewer` | subagent (readonly) | Gates a spec or architecture before it is built — Better design / Needs changes / Pass |
 | `craft-researcher` | subagent (readonly) | Deep web research — finds and fully reads authoritative sources, returns synthesized findings |
 
-Each agent is self-contained — quality bar and role judgment live in its own file. The skill keeps its plan template and architecture judgment under `skills/craft/references/`.
+Each agent carries the standards verbatim; shared references (spec, architecture, plan template) live under `skills/craft/references/`.
 
 ## The workflow
 
 ```mermaid
 flowchart TD
-    start["/craft"] --> understand["Understand: interview + explore"]
-    understand --> design["Agree architecture; user picks"]
-    design --> outline["Outline step headings"]
-    outline --> step["Design, write, approve one step"]
-    step -->|"more steps"| step
-    step -->|"plan complete"| planReview["craft-reviewer"]
-    planReview -->|minor redesign| planReview
-    planReview -->|major redesign| redo["User approves redesign; redo affected steps"]
-    redo --> planReview
-    planReview -->|Pass| planGate["User approves full plan"]
-    planGate --> build["craft-coder per step"]
-    build -->|"more steps"| build
-    build -->|"steps done"| review["craft-code-reviewer"]
-    review -->|corrections| build
-    review -->|Pass| polish["craft-polisher"]
-    polish --> live{"Live test?"}
+    start["/craft"] --> understand["Understand: explore + interview, record Findings"]
+    understand --> spec["Write Summary / Criteria / Out of scope"]
+    spec --> specReview["craft-reviewer on the spec"]
+    specReview -->|"Needs changes: rule Adopt/Reject"| spec
+    specReview -->|Pass| specGate["Gate: user approves spec"]
+    specGate --> arch["Architecture + steps"]
+    arch --> archReview["craft-reviewer on architecture"]
+    archReview -->|"Needs changes"| arch
+    archReview -->|Pass| archGate["Gate: user approves architecture"]
+    archGate --> coder["craft-coder per step, runs checks"]
+    coder -->|Blocked| unblock["Gate: user decides"]
+    unblock --> coder
+    coder --> polish["craft-polisher"]
+    polish --> codeReview["craft-code-reviewer"]
+    codeReview -->|Revise| coder
+    codeReview -->|Pass| live{"Live test?"}
     live -->|yes| test["craft-test skill"]
     live -->|no| stop["Stop after static checks"]
 ```
 
 ### Artifacts it produces (in the target repo)
 
-- `docs/plans/<feature>.md` — the implementation plan. Co-authored one step at a time; each step is approved before the next is designed, then `craft-reviewer` runs once over the whole plan.
+- `docs/plans/<feature>.md` — the board. Spec (Summary / Criteria / Out of scope), Findings, Architecture, Steps, Rulings, then progress through build, review, and live proof.
 - `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
 
 ## Install
@@ -98,7 +98,7 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 /craft add OAuth login for the dashboard
 ```
 
-You pick the architecture; each plan step is approved by you before the next is designed. After every step is approved, `craft-reviewer` runs once over the whole plan — a major redesign comes back to you before the plan is rewritten. After you approve the full plan, implementation is hands-off: parallel coder waves run only for file-disjoint steps with pinned contracts; otherwise sequential. When every step is done, `craft-code-reviewer` reviews the full diff once, then polish and static checks run, and it asks before live-testing — decline and it stops there.
+You approve two documents. First the spec — what and why, never how — after `craft-reviewer` tries to beat it. Then the architecture and its steps, after another review. A major redesign comes back to you before settled pieces are rewritten. After you approve the architecture, implementation is hands-off: the coder runs the repo's check commands; a blocked slice comes back as a gate. When every step is done, polish and `craft-code-reviewer` run over the full diff, and it asks before live-testing — decline and it stops there.
 
 Every `craft-*` agent is usable on its own, not only from a skill.
 
@@ -108,7 +108,7 @@ To hand over a goal and get back a finished, proven feature:
 /craft-auto add OAuth login for the dashboard
 ```
 
-It interviews you once and ends that interview with acceptance criteria, each paired with the live check that will prove it. From there it runs unattended. Every design — the architecture and then each slice — goes to `craft-critic`, which searches for a better design and either proposes one or shows why the draft holds; the orchestrator rules on each objection in the plan's Design rulings. Each slice is then coded, checked, reviewed under a capped fix loop, **run live** against the local environment, and committed. Finish is a whole-branch review and polish, then the full `craft-test` flow against every criterion — never a question. It stops to ask only when a loop cannot converge or the local environment cannot be reached.
+It interviews you once and ends that interview with criteria, each paired with the live check that will prove it. From there it runs unattended. Every design — the architecture and then each slice — goes to `craft-critic`, which searches for a better design and either proposes one or shows why the draft holds; the orchestrator rules on each objection in the plan's Rulings. Each slice is then coded (checks included), reviewed under a capped fix loop, **run live** against the local environment, and committed. Finish is a whole-branch review and polish, then the full `craft-test` flow against every criterion — never a question. A `Saw:` line that does not show the criterion is a failed proof. It stops to ask only when a loop cannot converge, the coder is blocked, or the local environment cannot be reached.
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 
@@ -136,9 +136,9 @@ Every invocation after that follows the file: work the checks, compare each agai
 
 ## Design notes
 
-- **Orchestrator owns architecture.** Design and plan stay in one context so decisions don't die in a handoff.
+- **Orchestrator owns architecture.** Spec, design, and plan stay in one context so decisions don't die in a handoff.
 - **Delegation for labor.** Exploration, research, coding, review, and live testing use subagents; judgment stays with the orchestrator, and so does its context.
-- **Self-contained agents.** Each agent owns its instructions — no shared standards dump. The plan template stays under `skills/craft/references/`.
+- **Standards in every agent.** Each agent carries the spec and design standards verbatim; shared references live under `skills/craft/references/`.
 - **Critique, not consensus.** `/craft-auto`'s critic searches for a challenger design and either proposes a better one or shows why the draft holds; the orchestrator rules in writing, and rulings are settled.
 - **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` owns the Pass/Revise gate over the full diff — the orchestrator accepts findings, loops coders, and advances only on Pass.
 - **Prove it runs.** Every run ends with static checks, then live testing — run locally under a test account, real data where it is safe, stop before anything leaves the system, revert every temporary change.

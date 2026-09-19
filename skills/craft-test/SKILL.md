@@ -9,12 +9,13 @@ Prove the feature by running it. You do not run it yourself — `craft-tester` d
 
 ## 1. Brief
 
-Gather what the tester needs. Pull from the conversation or plan; dispatch a subagent to find anything missing; ask the user only if it still cannot be found.
+Gather what the tester needs. Pull from the conversation; dispatch a subagent to find anything missing in the repo; ask the user only if it still cannot be found.
 
 - **Run instructions:** start command, URL, what the local environment is connected to (local or real database and services), the test account to use, and any outbound calls to stub (email, SMS, webhooks, payments).
 - **Criteria:** what "works" means, as observable checks — an endpoint and expected response, a page and expected render, a flow and its end state. For each, the action the tester must stop before, if any ("save the draft; do not Send").
 - **Verification commands:** build, typecheck, lint, tests.
-- **Scope:** which slice or the whole feature.
+- **Scope:** what to prove — a piece of work or the whole feature.
+- **Prior run:** if a prior run failed, say so — the tester re-runs everything, not only the failed criterion.
 
 ## 2. Dispatch
 
@@ -22,7 +23,9 @@ Dispatch `craft-tester` with the brief. It verifies, starts the environment, exe
 
 ## 3. Judge
 
-The report is evidence, not a verdict. For each criterion, check that what it ran is the check you briefed and that what it saw proves the criterion. Open any screenshot it recorded. If the cleanup line is not clean, or a Saw line is vague, resume the tester and ask for the specific output. Spot-check one criterion yourself if anything looks off.
+The report is evidence, not a verdict. For each criterion, check that what it ran is the check you briefed and that what it saw proves the criterion. A `Saw:` line that does not show the criterion (no status, no value, no screenshot for a page) is a failed proof. Open any screenshot it recorded. If the cleanup line is not clean, or a Saw line is vague, resume the tester and ask for the specific output. Spot-check one criterion yourself if anything looks off.
+
+The result is pass only when every criterion passed and cleanup is clean.
 
 ## 4. Report
 
@@ -34,3 +37,4 @@ Tell the user, criterion by criterion, what was run and what was observed. Say p
 - Real data is fine under a test account; the tester touches only records it created and removes them after.
 - Every temporary change is reverted before reporting done.
 - If live testing is impossible, say so rather than skipping silently.
+- After a failed proof is fixed, re-run every criterion, not only the failed one.

@@ -1,35 +1,70 @@
+# <Feature name>
 
+## Summary
 
-[One short paragraph describing the feature: current state, the gap, what we're adding, and what done looks like. Note explicit exclusions here if any.]
+<one or two paragraphs: current state, the gap, what we add, what done looks like>
 
-## Requirements
+## Criteria
 
-- [One requirement per bullet, one or two sentences each: the outcome or constraint, not the design that satisfies it — design details live in the steps.]
+- <observable behavior a live test can prove> — proof: <command / request / page and the expected observable; the action to stop before, if any>
 
+## Out of scope
+
+- <exclusion> — <reason when non-obvious>
+
+## Findings
+
+Facts about this repo: paths, current behavior, siblings, conventions, packages present, and things checked and found absent. Later entries win over earlier ones.
+
+- <fact, with the path or command that shows it>
 
 ## Architecture
 
-[The agreed design, kept high-level: the capabilities the feature needs, the components that own them, the seams between them (what crosses, which way it flows), and key decisions with a one-line why. Keep it current if a step changes the design.]
+### Components
 
-## Conventions
+- **<name>** — <the one job it owns>. Files: `<path>`, `<path>`. Mirrors `<sibling path>` when there is one.
 
-- [Pasted verbatim into every coder brief. Each entry names one repo-specific convention and the exemplar file to mirror. Cover errors, naming, tests, and layout as applicable.]
+### Seams
+
+- <from> → <to>: <what crosses>
+
+### Key decisions
+
+- <decision> — <why, one line>
 
 ## Steps
 
-[Starts as a provisional outline: one `### Step N — <one sentence description>` heading per anticipated step, in dependency order, no design yet. Each step is one smallest standalone component: a schema, a small package, an endpoint. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more. Each heading is then filled in during the loop using the format below. Keep the Progress section's step list in sync with these headings.]
+Starts as a heading-only outline: one `### N. <short title>` per anticipated step, in dependency order, no design yet. Split, merge, rename, and reorder undesigned headings freely as design work teaches you more. Each heading is then filled in using the format below. Keep the Progress section's step list in sync with these headings.
 
-### Step 1 — <one sentence description of the step>
+### 1. <short title>
 
-[Sub-steps numbered 1.1, 1.2, … — one piece of the work each: what it does, the contracts it pins (signatures, endpoints, wire shapes, errors), its edge and error paths, and pseudocode for every non-trivial path. No extra headings. The step has two readers — a coder who needs every detail and a user verifying each decision in one quick read:
-- One fact or decision per line — never several chained into one sentence with em-dashes, semicolons, or nested parentheticals; split so each can be verified alone.
-- Pseudocode for logic; code blocks for contracts; tables for anything enumerable (rules, fields, endpoints, config keys, error cases); terse bullets for facts; prose only where it is genuinely the clearest form.
-- Cut words, never information — every line carries a fact or decision the implementer needs.]
+<One sentence: what this step delivers and which component(s) it builds.>
+
+1.1 <One piece of the work: what it does, in which file.>
+
+```ts
+<the contract it pins — signature, endpoint, wire shape, error — when a later step depends on it>
+```
+
+1.2 <Next piece, including its edge and error paths.>
+
+**Criteria:**
+
+- <observable behavior a branch review can check in the diff or a tester can run>
 
 **Tests:**
 
-- [one named behavior per bullet, one line each; each asserts an observable outcome — never several behaviors joined into one bullet]
+- <one named behavior, one line, asserting one observable outcome>
 
+## Rulings
+
+Append-only. One line per reviewer point.
+
+- <point> · Adopt | Reject · <reason>
+
+## Conventions
+
+- <Repo-specific convention implementers must follow — errors, naming, tests, layout as applicable> — exemplar: `<path>`
 
 ## Verification
 
@@ -44,11 +79,11 @@ Manual:
 
 ## Progress
 
-[The only progress tracker. Check off as each completes. One line per step, mirroring the Steps headings; a step is checked when its coder reports done, never earlier.]
+The only progress tracker. Check off as each completes. One line per step, mirroring the Steps headings; a step is checked when its coder reports done, never earlier.
 
+- [ ] Spec approved
 - [ ] Plan approved
 - [ ] Step 1 — <one sentence description of the step>
-- [ ] Step 2 — <one sentence description of the step>
 - [ ] Code review passed
 - [ ] Polished
 - [ ] Verification green

@@ -13,6 +13,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | Component | Type | Role |
 |---|---|---|
 | `craft` | skill (`/craft`) | Writes spec then architecture with a review and a user gate on each, then implements hands-off |
+| `craft-quick` | skill (`/craft-quick`) | Quickly explores, critic-loops a short task list, asks for approval, then builds and runs automated checks |
 | `craft-auto` | skill (`/craft-auto`) | Interviews once, then runs to the goal unattended — every design critiqued before it is built, capped review loops, live proof and a commit per slice |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
@@ -101,6 +102,14 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 You approve two documents. First the spec — what and why, never how — after `craft-reviewer` tries to beat it. Then the architecture and its steps, after another review. A major redesign comes back to you before settled pieces are rewritten. After you approve the architecture, implementation is hands-off: the coder runs the repo's check commands; a blocked slice comes back as a gate. When every step is done, polish and `craft-code-reviewer` run over the full diff, and it asks before live-testing — decline and it stops there.
 
 Every `craft-*` agent is usable on its own, not only from a skill.
+
+For a smaller change that needs design judgment without the full workflow:
+
+```
+/craft-quick add filtering to the audit log
+```
+
+It explores only the relevant code, asks questions only when blocked by a real decision, writes a short numbered task list in chat, and runs it through `craft-critic` until it holds. You approve that list once; then one `craft-coder` pass builds it and runs the repo's automated checks. It creates no spec, plan file, branch, commit, PR, or live test.
 
 To hand over a goal and get back a finished, proven feature:
 

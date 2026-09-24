@@ -22,6 +22,7 @@ Walk this list in order for every piece of code, and stop at the first yes:
 - Dependencies flow one way. No cycles.
 - Prefer fewer deep pieces over many shallow ones.
 - Earn every new layer, package, or interface by naming what it buys today. Any deviation from the simplest shape says why the simpler one was rejected.
+- Shape for the next change. Where a kind of thing will clearly grow — more fields, variants, handlers, callers — pick the shape where adding one is a new entry, not edits in several places: data over branching, one generic path over copies, a table or map over a chain of ifs. This is a choice of shape, not extra code; if it costs more code or a new layer today, YAGNI wins.
 
 ### Code
 
@@ -40,56 +41,51 @@ Start from repo facts you already have; read the repo only for what they do not 
 
 1. **List the jobs:** persist X, expose Y, render Z, …
 2. **Fit them to the repo** — files to change, sibling to mirror, package or stdlib instead of hand-rolled code.
-3. **Cut into tasks** in dependency order. A small feature can be one task. Do not invent tasks for setup, plumbing, or wiring that aren't real work.
-4. **Write each task** so a coder can build it without guessing.
+3. **Cut into steps** in dependency order. A small feature can be one step. Do not invent steps for setup, plumbing, or wiring that aren't real work.
+4. **Write each step** so a coder can build it without guessing and without adding anything.
 
 ## Write
 
-The architecture is a numbered list of tasks. No Components, Seams, Key decisions, or Slices headings.
+Steps go under `## Steps` in the plan file, one `### N. <short title>` each. No Components, Seams, Key decisions, or Slices headings.
 
-Each task is a title plus a short body. Name the files, the sibling to mirror, and the edge and error paths in a line or two. Put a schema, signature, or short pseudocode in a code block when a later task or the coder would otherwise guess. Cut words, never information.
+Each step names the files, the sibling to mirror, and the edge and error paths, then shows every piece of code it adds: full code for signatures, types, schemas, queries, and non-obvious logic; pseudocode only where the code is mechanical. The step fixes both the design and the amount of code. If the coder would have to choose a name, a shape, or whether to add a helper, the step is not done. Cut words, never information.
 
-A small feature is one or two tasks.
+Tests go under `## Tests`, one short title per bullet, one behavior each. Tests are written in the step that owns them, not a separate step.
 
-Use this shape:
-
-````md
-1. **<task title>**
-
-<What to do, in which files. Mirror `<sibling path>` when there is one. Edges and errors in a line or two.>
-
-```ts
-<schema, signature, or pseudocode — only when it pins something>
-```
-
-2. **<next task title>**
-
-<…>
-
-**Checks:** `<lint / typecheck / test command>`
-````
+A small feature is one or two steps.
 
 Filled example (do not copy the domain; copy the density):
 
 ````md
-1. **Accept an optional `filter` query param**
+## Steps
 
-In `internal/audit/handler.go`, read `filter` from the query string and pass it on the existing list params. Mirror `internal/events/handler.go`. Unknown params stay ignored; empty means no filter.
+### 1. Accept an optional `filter` query param
+
+In `internal/audit/handler.go`, read `filter` from the query string and pass it on the existing list params, mirroring `internal/events/handler.go`. Unknown params stay ignored; empty means no filter.
 
 ```go
 type ListParams struct {
     Limit  int
     Filter string // optional; case-insensitive substring on Message
 }
+
+// in List, after the existing limit parsing:
+params.Filter = r.URL.Query().Get("filter")
 ```
 
-2. **Apply the filter in the store**
+### 2. Apply the filter in the store
 
-In `internal/audit/store.go`, when `Filter` is non-empty, add `WHERE message ILIKE '%' || $n || '%'`. Same empty-list JSON as today when nothing matches. No new index.
+In `internal/audit/store.go`, extend the existing query builder. Same empty-list JSON as today when nothing matches. No new index. Add both tests to `internal/audit/handler_test.go`.
 
-3. **Test the query**
+```go
+if p.Filter != "" {
+    args = append(args, p.Filter)
+    where = append(where, fmt.Sprintf("message ILIKE '%%' || $%d || '%%'", len(args)))
+}
+```
 
-In `internal/audit/handler_test.go`: `filters by message substring` and `empty filter returns all`.
+## Tests
 
-**Checks:** `go test ./internal/audit/...`
+- filters by message substring
+- empty filter returns all
 ````

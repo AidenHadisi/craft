@@ -13,7 +13,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | Component | Type | Role |
 |---|---|---|
 | `craft` | skill (`/craft`) | Writes spec then architecture with a review and a user gate on each, then implements hands-off |
-| `craft-quick` | skill (`/craft-quick`) | Quickly explores, critic-loops a short task list, asks for approval, then builds and runs automated checks |
+| `craft-quick` | skill (`/craft-quick`) | Quickly explores, critic-loops a short plan file, asks for approval, then builds and runs automated checks |
 | `craft-auto` | skill (`/craft-auto`) | Interviews once, then runs to the goal unattended — every design critiqued before it is built, capped review loops, live proof and a commit per slice |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
@@ -21,7 +21,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | `craft-research` | skill (`/craft-research`) | Breaks a topic into areas, researches each in parallel, and produces a refined doc in `Docs/` |
 | `craft-refactor` | skill (`/craft-refactor`) | Recovers a behavior spec from existing code, generates a clean design from that spec, critic-loops it, then refactors without changing observable behavior |
 | `craft-coder` | subagent | Implements one focused assignment into the repo |
-| `craft-critic` | subagent (readonly) | Adversarial design critic — searches for a better design; proposes one or shows why the draft holds. Better design / Holds |
+| `craft-critic` | subagent (readonly) | Fresh-eyes design critic — steps back from the whole design, finds where it got overbuilt or went wrong, and proposes a simpler one or shows why it holds. Better design / Holds |
 | `craft-code-reviewer` | subagent (readonly) | Fresh-context review of an implementation — Pass / Revise |
 | `craft-polisher` | subagent | Restructures and polishes a working diff without changing observable behavior |
 | `craft-tester` | subagent | Runs a feature live — verification, local process, real requests, screenshots — and returns per-criterion evidence |
@@ -109,7 +109,7 @@ For a smaller change that needs design judgment without the full workflow:
 /craft-quick add filtering to the audit log
 ```
 
-It explores only the relevant code, asks questions only when blocked by a real decision, writes a short numbered task list in chat, and runs it through `craft-critic` until it holds. You approve that list once; then one `craft-coder` pass builds it and runs the repo's automated checks. It creates no spec, plan file, branch, commit, PR, or live test.
+It explores only the relevant code, asks questions only when blocked by a real decision, writes a short plan to `docs/plans/<task>.md` (Progress, Steps with every piece of code spelled out, Tests, and Notes for resuming), and runs it through `craft-critic` until it holds. You approve the plan once; then one `craft-coder` pass builds it and runs the repo's automated checks. It creates no spec, branch, commit, PR, or live test.
 
 To hand over a goal and get back a finished, proven feature:
 

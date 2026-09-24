@@ -5,7 +5,14 @@ description: Quickly plan and build a small, clear feature with one architecture
 
 # Craft Quick
 
-Move from a clear request to tested code with one user gate. Keep everything in the conversation: no spec, plan file, live testing, branch, commit, or PR.
+Move from a clear request to tested code with one user gate. No spec, live testing, branch, commit, or PR.
+
+The plan file at `docs/plans/<task>.md` is the board. Check items off in Progress as they complete, append to Notes whenever you learn something, and read it first when resuming.
+
+## Start
+
+- **Resuming:** read the plan file and pick up at the first unchecked Progress item.
+- **New work:** follow the steps below.
 
 ## 1. Explore
 
@@ -13,34 +20,36 @@ Quickly inspect the relevant code, neighboring examples, conventions, and availa
 
 Ask questions only when a missing product decision or constraint would materially change the implementation. Otherwise use the simplest repo-consistent interpretation.
 
-## 2. Architecture
+Copy [plan-template](references/plan-template.md) to `docs/plans/<task>.md` (kebab-case). Write the title and description, and record what exploration found and any user answers under Notes.
 
-Propose the work as numbered tasks in dependency order. Each task is a title plus a short body: files to change, sibling to mirror, and a schema, signature, or pseudocode block when the coder would otherwise guess.
+## 2. Steps
 
-Do not write Components, Seams, Key decisions, or Slices.
+Write Steps and Tests into the plan. Each step spells out all the code it adds, so the coder makes no design choices and adds nothing beyond it. Keep Progress in sync with the step headings.
 
-Hold the design to the Standards in [architecture](references/architecture.md) and use that file's Write format. Do not create a plan file.
+Hold the design to the Standards in [architecture](references/architecture.md) and use that file's Write format.
 
 ## 3. Critic loop
 
-Dispatch a fresh `craft-critic` with the request, repo findings, and proposed tasks.
+Dispatch a fresh `craft-critic` with the request, the plan path, and Notes.
 
 - **Holds:** continue.
-- **Better design:** adopt it unless there is a concrete reason not to. Revise the tasks and dispatch a fresh critic.
+- **Better design:** adopt it unless there is a concrete reason not to. Revise the steps, note the change and why under Notes, and dispatch a fresh critic.
 
 If the loop cannot converge after three critiques, show the disagreement and ask the user.
 
 ## 4. Approve
 
-Show the task list and summarize the alternatives the critic rejected. Let the user decide whether to approve it or make changes.
+Show the steps and tests, and summarize the alternatives the critic rejected. Let the user decide whether to approve them or make changes.
 
-Do not build until the user approves.
+Do not build until the user approves. Check Plan approved.
 
 ## 5. Build and test
 
-Dispatch one `craft-coder` with the approved tasks, files, repo conventions, and automated check commands. The coder implements the whole change and runs the checks.
+Dispatch one `craft-coder` with the plan path, repo conventions, and automated check commands. The coder implements the steps as written, writes the listed tests, and runs the checks.
 
-If the coder reports blocked, show the blocker and ask the user. Otherwise report:
+Check each step off as the coder reports it done, and check Checks green when the checks pass. Record the coder's findings and deviations under Notes.
+
+If the coder reports blocked, record the blocker under Notes, show it, and ask the user. Otherwise report:
 
 - what changed
 - which checks ran and their results

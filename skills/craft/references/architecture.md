@@ -22,6 +22,7 @@ Walk this list in order for every component, seam, and piece of code, and stop a
 - Dependencies flow one way. No cycles.
 - Prefer fewer deep components over many shallow ones.
 - Earn every new layer, package, or interface by naming what it buys today. Any deviation from the simplest shape says why the simpler one was rejected.
+- Shape for the next change. Where a kind of thing will clearly grow — more fields, variants, handlers, callers — pick the shape where adding one is a new entry, not edits in several places: data over branching, one generic path over copies, a table or map over a chain of ifs. This is a choice of shape, not extra code; if it costs more code or a new layer today, YAGNI wins.
 
 ### Code
 

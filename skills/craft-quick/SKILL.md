@@ -9,11 +9,6 @@ Move from a clear request to tested code with one user gate. No spec, live testi
 
 The plan file at `docs/plans/<task>.md` is the board. Check items off in Progress as they complete, append to Notes whenever you learn something, and read it first when resuming.
 
-## Start
-
-- **Resuming:** read the plan file and pick up at the first unchecked Progress item.
-- **New work:** follow the steps below.
-
 ## 1. Explore
 
 Quickly inspect the relevant code, neighboring examples, conventions, and available check commands. Delegate reading when useful, but keep exploration proportional to the task.
@@ -54,5 +49,3 @@ If the coder reports blocked, record the blocker under Notes, show it, and ask t
 - what changed
 - which checks ran and their results
 - any deviations or remaining risks
-
-Stop. Do not live-test, review, polish, commit, create a branch, push, or open a PR.

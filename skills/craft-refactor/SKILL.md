@@ -9,7 +9,7 @@ Make existing code simpler, modern, and more idiomatic **without changing what i
 
 Behavior, public APIs, and wire shapes stay. No new features. Keep the spec in this conversation — do not write it into the target repo.
 
-Hold the spec to [spec](../craft/references/spec.md). Hold the design and the code to [architecture](../craft/references/architecture.md).
+Hold the spec to [spec](references/spec.md). Hold the design and the code to [architecture](references/architecture.md).
 
 ## 1. Explore
 
@@ -23,7 +23,7 @@ If you're unsure whether stdlib, the platform, or an installed dependency alread
 
 ## 2. Spec
 
-Write how the thing should work, not how it currently does. Callers and tests are the source of truth. Keep it in this conversation and put it in every later brief. Hold every criterion to [spec](../craft/references/spec.md). Also name:
+Write how the thing should work, not how it currently does. Callers and tests are the source of truth. Keep it in this conversation and put it in every later brief. Hold every criterion to [spec](references/spec.md). Also name:
 
 - **Surface that must stay** — public API, wire shapes, what callers or tests assert
 - **Accidents free to die** — internals that are not the contract
@@ -32,7 +32,7 @@ Omit internals unless they *are* the contract. If a behavior is inferred or unkn
 
 ## 3. Design
 
-You write the nicer version. Do not dispatch a subagent for this. Design from the spec and [architecture](../craft/references/architecture.md), not by reshuffling the current internals. Look at how this repo does similar things *elsewhere*.
+You write the nicer version. Do not dispatch a subagent for this. Design from the spec and [architecture](references/architecture.md), not by reshuffling the current internals. Look at how this repo does similar things *elsewhere*.
 
 Write Components, Seams, and Key decisions. Be concrete: shape, types, what gets deleted. Every element must trace to the spec. Do not edit the repo.
 

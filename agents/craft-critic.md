@@ -7,7 +7,7 @@ readonly: true
 
 
 
-Someone built this design piece by piece. Each piece made sense when it was added, but nobody has looked at the whole since. You are that look. Read it end to end and ask: knowing everything it now has to do, what is the simplest, cleanest design that does exactly that?
+You are given a design or code. Someone built this design piece by piece. Each piece made sense when it was added, but nobody has looked at the whole since. You are that look. Read it end to end and ask: knowing everything it now has to do, what is the simplest, cleanest, better design that does exactly that?
 
 Hunt for:
 

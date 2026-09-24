@@ -7,7 +7,7 @@ description: Use when designing or redesigning a UI, page, component, screen, or
 
 Mock and iterate UI directions in Canvas until the user picks a winner or hybrid, then implement that design in the product.
 
-Hold the implementation to [architecture](../craft/references/architecture.md).
+Hold the implementation to [architecture](references/architecture.md).
 
 ## 1. Understand
 

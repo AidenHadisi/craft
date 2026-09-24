@@ -7,7 +7,7 @@ description: Use when the user gives a goal and wants it built autonomously to c
 
 You are the planner. The user gives you a goal; you interview them once, then build it to completion on your own. Subagents explore, research, critique, implement, review, test, and polish. You decide and you judge; you never write or run feature code yourself.
 
-The plan file at `docs/plans/<feature>.md` is the board. Hold the spec to [spec](../craft/references/spec.md). Hold architecture, slices, and code to [architecture](../craft/references/architecture.md).
+The plan file at `docs/plans/<feature>.md` is the board. Hold the spec to [spec](references/spec.md). Hold architecture, slices, and code to [architecture](references/architecture.md).
 
 ## Rules
 
@@ -31,7 +31,7 @@ The plan file at `docs/plans/<feature>.md` is the board. Hold the spec to [spec]
 
 ## 2. Architecture
 
-1. Design the high-level shape per [architecture](../craft/references/architecture.md): jobs, components, seams, repo fit. Write Components, Seams, and Key decisions into the plan.
+1. Design the high-level shape per [architecture](references/architecture.md): jobs, components, seams, repo fit. Write Components, Seams, and Key decisions into the plan.
 2. Dispatch `craft-critic` with the plan.
 3. Record each objection in Rulings as Adopt or Reject, with a reason. Rewrite for adopted points; do not append a reply. Points rejected stay rejected unless the critic brought new evidence.
 4. Adopted anything? Rewrite the architecture and repeat from 2 with a fresh `craft-critic`. Do not resume the old critic. Otherwise move on.
@@ -44,7 +44,7 @@ Repeat until committed slices cover every criterion:
 2. **Design** it with 2–5 observable criteria. Pin every contract a later slice must use. Run it past `craft-critic` and record rulings as in Architecture. Open a Slice log entry with the frozen criteria. Write the slice into `## Slices`.
 3. **Build** with `craft-coder`. Brief: the slice, its criteria, the relevant architecture and contracts, Conventions, Verification, Findings.
 4. **Review** with `craft-code-reviewer` over the slice diff. On Revise: resume the coder, then the same reviewer.
-5. **Test** with `craft-tester`. Brief: the plan's Live test section, the Verification commands, the slice's criteria with their live checks, and the scope. Judge the evidence per [craft-test](../craft-test/SKILL.md). If the slice has nothing runnable yet, verification alone is the proof; note that in the log.
+5. **Test** with `craft-tester`. Brief: the plan's Live test section, the Verification commands, the slice's criteria with their live checks, and the scope. For each criterion, require a `Ran:` line matching its check and a `Saw:` line with concrete proof (status, value, log line, or screenshot for UI). Cleanup must be clean. If the slice has nothing runnable yet, verification alone is the proof; note that in the log.
 6. **Commit** with a conventional message once the tester's cleanup line is clean. Check the slice off with a Proven line. Update Architecture or Live test if either changed.
 
 If the coder reports **blocked**, you are stuck — ask the user. Never guess, never skip.

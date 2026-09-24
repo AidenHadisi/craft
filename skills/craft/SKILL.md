@@ -96,9 +96,9 @@ Then dispatch `craft-code-reviewer` once with the plan and the full diff. On **R
 
 ### Test
 
-Ask whether to live-test (recommend yes); if approved, follow [craft-test](../craft-test/SKILL.md). If declined, stop after the checks the coder and reviewer already ran.
+Ask whether to live-test (recommend yes). If approved, dispatch `craft-tester` with the run instructions, criteria and their observable checks, verification commands, scope, and any outbound calls to stub. If declined, stop after the checks the coder and reviewer already ran.
 
-After the tester returns, judge the proof: a `Saw:` line that does not show the criterion (no status, no value, no screenshot for a page) is a failed proof. Record it and send the work back — a fix step for the coder, then the tester re-runs everything, not only the failed criterion.
+After the tester returns, judge the proof: each criterion needs a matching `Ran:` line and concrete `Saw:` evidence (status, value, log line, or screenshot for a page), and cleanup must be clean. Record failed proof and send the work back — a fix step for the coder, then the tester re-runs everything, not only the failed criterion.
 
 ### Finish
 

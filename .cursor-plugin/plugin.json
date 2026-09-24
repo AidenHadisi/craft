@@ -1,6 +1,6 @@
 {
   "name": "craft",
-	"description": "Planner workflow for building features. Explores, interviews, writes a spec then architecture with a review and user gate on each, implements under fresh-context code review, polishes, and live-tests. Companion skills brainstorm a feature idea, design UI variants in Canvas, research a topic, prove a feature works locally, and monitor one in production.",
+	"description": "Feature-building workflows ranging from quick architecture-and-build to full planned and autonomous delivery. Companion skills brainstorm, design UI variants, refactor code, research topics, test locally, and monitor production.",
   "version": "0.1.0",
   "author": { "name": "Aiden Hadisi", "email": "so.hadisi@gmail.com" },
   "license": "MIT",

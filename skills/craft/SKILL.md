@@ -48,12 +48,12 @@ Write Summary, Criteria, and Out of scope into the plan. Hold every criterion to
 
 Dispatch `craft-reviewer` with the spec (Summary, Criteria, Out of scope), Findings, Rulings, and the plan path. You never review your own doc.
 
-On **Better design** or **Needs changes**: rule on every point with Adopt or Reject and a reason in `## Rulings`. Rewrite the spec for the adopted points; do not append a reply. Points rejected stay rejected unless the reviewer brought new evidence. Re-dispatch `craft-reviewer`.
+On **Needs changes**: rule on every point with Adopt or Reject and a reason in `## Rulings`. Rewrite the spec for the adopted points; do not append a reply. Points rejected stay rejected unless the reviewer brought new evidence. Re-dispatch `craft-reviewer`.
 
 On **Pass**, this is a human gate. Do not dispatch anyone.
 
 1. Show the user the spec.
-2. Summarize what the reviewer concluded: the rival they considered, and whether it is buildable as written.
+2. Summarize the review: what it fixed and any Should fix points left open.
 3. Ask one question: approve this spec as written, or send it back with feedback?
 4. Wait for the answer. Approval freezes the spec. Check Spec approved.
 
@@ -63,14 +63,17 @@ If the user sends it back, record their feedback verbatim as a ruling with verdi
 
 Design the shape that meets the approved spec, then cut it into steps a coder can build one at a time. Write Components, Seams, Key decisions, and Steps into the plan. Every file, convention, and exemplar you name must be real.
 
-Dispatch `craft-reviewer` with the spec, the architecture, the steps, Findings, and Rulings.
+Dispatch a fresh `craft-critic` with the spec, the architecture, the steps, Findings, and Rulings.
 
-On **Better design** or **Needs changes**: rule Adopt or Reject in `## Rulings`, rewrite, re-dispatch. On **Major**, present the redesign and its trade-offs and wait before rewriting settled pieces.
+- **Holds:** move on.
+- **Better design:** rule Adopt or Reject on each point in `## Rulings`, rewrite, and dispatch a fresh critic. If the rival would rework settled pieces, present it and its trade-offs and wait before rewriting. Cap 3 critiques, then show the disagreement and ask.
+
+Then dispatch `craft-reviewer` with the same inputs. On **Needs changes**: rule Adopt or Reject in `## Rulings`, rewrite, re-dispatch.
 
 On **Pass**, this is a human gate. Do not dispatch anyone.
 
 1. Show the user the architecture, including the steps it will be built in.
-2. Summarize what the reviewer concluded: the rival they considered, and whether it is buildable as written.
+2. Summarize what the critic rejected and any Should fix points the reviewer left open.
 3. Ask one question: approve this design and start building, or send it back with feedback?
 4. Wait for the answer. Approval freezes the architecture and steps. Check Plan approved.
 

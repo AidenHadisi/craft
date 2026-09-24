@@ -25,7 +25,7 @@ Every run asks before live-testing at the end; say no and it stops after the sta
 | `craft-code-reviewer` | subagent (readonly) | Fresh-context review of an implementation — Pass / Revise |
 | `craft-polisher` | subagent | Restructures and polishes a working diff without changing observable behavior |
 | `craft-tester` | subagent | Runs a feature live — verification, local process, real requests, screenshots — and returns per-criterion evidence |
-| `craft-reviewer` | subagent (readonly) | Gates a spec or architecture before it is built — Better design / Needs changes / Pass |
+| `craft-reviewer` | subagent (readonly) | Gates a spec or architecture before it is built — complete, correct, buildable as written. Needs changes / Pass |
 | `craft-researcher` | subagent (readonly) | Deep web research — finds and fully reads authoritative sources, returns synthesized findings |
 
 Each agent carries the standards verbatim; shared references (spec, architecture, plan template) live under `skills/craft/references/`.
@@ -40,7 +40,9 @@ flowchart TD
     specReview -->|"Needs changes: rule Adopt/Reject"| spec
     specReview -->|Pass| specGate["Gate: user approves spec"]
     specGate --> arch["Architecture + steps"]
-    arch --> archReview["craft-reviewer on architecture"]
+    arch --> archCritic["craft-critic on architecture"]
+    archCritic -->|"Better design: rule Adopt/Reject"| arch
+    archCritic -->|Holds| archReview["craft-reviewer on architecture"]
     archReview -->|"Needs changes"| arch
     archReview -->|Pass| archGate["Gate: user approves architecture"]
     archGate --> coder["craft-coder per step, runs checks"]
@@ -99,7 +101,7 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 /craft add OAuth login for the dashboard
 ```
 
-You approve two documents. First the spec — what and why, never how — after `craft-reviewer` tries to beat it. Then the architecture and its steps, after another review. A major redesign comes back to you before settled pieces are rewritten. After you approve the architecture, implementation is hands-off: the coder runs the repo's check commands; a blocked slice comes back as a gate. When every step is done, polish and `craft-code-reviewer` run over the full diff, and it asks before live-testing — decline and it stops there.
+You approve two documents. First the spec — what and why, never how — after `craft-reviewer` checks it is complete and buildable. Then the architecture and its steps, after `craft-critic` looks for a simpler design and `craft-reviewer` gates it. A major redesign comes back to you before settled pieces are rewritten. After you approve the architecture, implementation is hands-off: the coder runs the repo's check commands; a blocked slice comes back as a gate. When every step is done, polish and `craft-code-reviewer` run over the full diff, and it asks before live-testing — decline and it stops there.
 
 Every `craft-*` agent is usable on its own, not only from a skill.
 

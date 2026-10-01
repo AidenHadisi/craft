@@ -9,6 +9,7 @@ The only progress tracker. Check off as each completes; a step is checked when i
 - [ ] Plan approved
 - [ ] Step 1 — <short title>
 - [ ] Checks green
+- [ ] Polished
 
 ## Steps
 

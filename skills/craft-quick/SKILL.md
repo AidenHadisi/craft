@@ -44,7 +44,13 @@ Dispatch one `craft-coder` with the plan path, repo conventions, and automated c
 
 Check each step off as the coder reports it done, and check Checks green when the checks pass. Record the coder's findings and deviations under Notes.
 
-If the coder reports blocked, record the blocker under Notes, show it, and ask the user. Otherwise report:
+If the coder reports blocked, record the blocker under Notes, show it, and ask the user.
+
+## 6. Polish
+
+Dispatch `craft-polisher` with the plan path, the check commands, and the files the coder touched as the footprint. The work is uncommitted, so tell it to polish the working-tree diff, not branch commits.
+
+Check Polished once it reports with checks still green, and record its changes and flagged items under Notes. Then report:
 
 - what changed
 - which checks ran and their results

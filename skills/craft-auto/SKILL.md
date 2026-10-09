@@ -23,7 +23,7 @@ The plan file at `docs/plans/<feature>.md` is the board. Hold the spec to [spec]
 
 ## 1. Understand
 
-1. Interview the user until you know what to build and what done looks like. Prefer multiple-choice questions. Do not invent product decisions.
+1. Interview the user until you know what to build and what done looks like. Prefer multiple-choice questions unless free text is needed (e.g. when the user needs to type out custom requirements or paste examples). Do not invent product decisions.
 2. Dispatch subagents in parallel to learn the codebase: conventions, related code, how to run the project locally (run command, health check, URL, what the dev environment connects to, the test account, and outbound calls that must not fire).
 3. Dispatch `craft-researcher` for outside research when the request names something unfamiliar, or when you need to know whether a well-maintained package already does a job. Several in parallel for independent angles.
 4. Copy [plan-template](references/plan-template.md) to `docs/plans/<feature>.md` (kebab-case). Write Summary, Criteria, and Out of scope. Each criterion states the live check that will prove it and, where the flow could reach outside the system, the action the check stops before. Fill Findings, Conventions, Verification, and Live test from Explore. Leave Architecture and the Slice log empty until designed. Present the criteria. The user confirms once. Goal and criteria are frozen.

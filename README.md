@@ -4,9 +4,9 @@ A Cursor plugin for building features the right way.
 
 AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent the **planner**: it owns understanding, the spec, the architecture, and the plan, while focused subagents explore, review, implement, polish, and live-test. Each agent carries the standards verbatim in its own file; the orchestrator owns every gate and proves the finished feature by running it locally.
 
-The `/craft` workflow is one elastic path: explore and interview, write a spec (Summary / Criteria / Out of scope) and get it reviewed then approved, design the architecture and steps and get those reviewed then approved, implement hands-off, polish, run a fresh-context code review over the full diff, and offer to live-test. The user approves two documents — the spec, then the architecture. A blocked coder comes back as a third gate.
+The `/craft` workflow is one elastic path: explore (codebase + web for non-trivial architectures) and interview, write a clean spec list and get it reviewed then approved, design the architecture (overview + concrete steps) and get it reviewed then approved, implement hands-off, polish, run a fresh-context code review over the full diff, and live-test the finished feature. The user approves two documents — the spec, then the architecture. A blocked coder comes back as a third gate.
 
-Every run asks before live-testing at the end; say no and it stops after the static checks.
+Every run proves the feature live before creating the PR.
 
 ## What's inside
 
@@ -34,14 +34,14 @@ Each agent carries the standards verbatim; shared references (spec, architecture
 
 ```mermaid
 flowchart TD
-    start["/craft"] --> understand["Understand: explore + interview, record Findings"]
-    understand --> spec["Write Summary / Criteria / Out of scope"]
+    start["/craft"] --> understand["Understand: explore repo + web, interview"]
+    understand --> spec["Write Spec (short list of requirements)"]
     spec --> specReview["craft-reviewer on the spec"]
-    specReview -->|"Needs changes: rule Adopt/Reject"| spec
+    specReview -->|"Needs changes: rule in Notes"| spec
     specReview -->|Pass| specGate["Gate: user approves spec"]
-    specGate --> arch["Architecture + steps"]
+    specGate --> arch["Architecture Overview + steps"]
     arch --> archCritic["craft-critic on architecture"]
-    archCritic -->|"Better design: rule Adopt/Reject"| arch
+    archCritic -->|"Better design: rule in Notes"| arch
     archCritic -->|Holds| archReview["craft-reviewer on architecture"]
     archReview -->|"Needs changes"| arch
     archReview -->|Pass| archGate["Gate: user approves architecture"]
@@ -51,14 +51,13 @@ flowchart TD
     coder --> polish["craft-polisher"]
     polish --> codeReview["craft-code-reviewer"]
     codeReview -->|Revise| coder
-    codeReview -->|Pass| live{"Live test?"}
-    live -->|yes| test["craft-test skill"]
-    live -->|no| stop["Stop after static checks"]
+    codeReview -->|Pass| test["craft-tester: live test"]
+    test --> finish["Finish: commit, push, create PR"]
 ```
 
 ### Artifacts it produces (in the target repo)
 
-- `docs/plans/<feature>.md` — the board. Spec (Summary / Criteria / Out of scope), Findings, Architecture, Steps, Rulings, then progress through build, review, and live proof.
+- `docs/plans/<feature>.md` — the board. Progress, Description, Spec list, Architecture Overview, Steps, Tests, Verification, and Notes.
 - `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
 
 ## Install
@@ -101,7 +100,7 @@ Components are auto-discovered from their default folders (`skills/`, `agents/`,
 /craft add OAuth login for the dashboard
 ```
 
-You approve two documents. First the spec — what and why, never how — after `craft-reviewer` checks it is complete and buildable. Then the architecture and its steps, after `craft-critic` looks for a simpler design and `craft-reviewer` gates it. A major redesign comes back to you before settled pieces are rewritten. After you approve the architecture, implementation is hands-off: the coder runs the repo's check commands; a blocked slice comes back as a gate. When every step is done, polish and `craft-code-reviewer` run over the full diff, and it asks before live-testing — decline and it stops there.
+You approve two documents. First the spec — what and why, never how (a clean, short list of requirements) — after `craft-reviewer` checks it is complete and buildable. Then the architecture (an overview plus concrete steps with code snippets), after `craft-critic` looks for a simpler design and `craft-reviewer` gates it. A major redesign comes back to you before settled pieces are rewritten. After you approve the architecture, implementation is hands-off: the coder runs the repo's check commands; a blocked slice comes back as a gate. When every step is done, polish and `craft-code-reviewer` run over the full diff, followed by live testing with `craft-tester` to prove each spec requirement in a real running process before creating the PR.
 
 Every `craft-*` agent is usable on its own, not only from a skill.
 

@@ -4,7 +4,7 @@ These standards bind everyone who designs, writes, reviews, or polishes code for
 
 ### The ladder
 
-Walk this list in order for every component, seam, and piece of code, and stop at the first yes:
+Walk this list in order for every piece of code, and stop at the first yes:
 
 1. Does this need to exist? → no: skip it (YAGNI)
 2. Already in this codebase? → reuse it, don't rewrite
@@ -16,73 +16,67 @@ Walk this list in order for every component, seam, and piece of code, and stop a
 
 ### Cut
 
-- Each component owns one clear job and hides one changeable decision behind a small interface. If you cannot name that decision, the cut is wrong.
-- The deletion test: delete a component — if complexity vanishes it was a pass-through; if it reappears across its callers it earned its keep.
-- One implementation means no interface. Do not introduce a seam until a second real implementation exists.
+- Each piece of work owns one clear job.
+- The deletion test: delete a piece — if complexity vanishes it was a pass-through; if it reappears across its callers it earned its keep.
+- One implementation means no interface. Do not introduce an abstraction until a second real implementation exists.
 - Dependencies flow one way. No cycles.
-- Prefer fewer deep components over many shallow ones.
-- Earn every new layer, package, or interface by naming what it buys today. Any deviation from the simplest shape says why the simpler one was rejected.
-- Shape for the next change. Where a kind of thing will clearly grow — more fields, variants, handlers, callers — pick the shape where adding one is a new entry, not edits in several places: data over branching, one generic path over copies, a table or map over a chain of ifs. This is a choice of shape, not extra code; if it costs more code or a new layer today, YAGNI wins.
+- Prefer fewer deep pieces over many shallow ones.
+- Earn every new layer, package, or helper by naming what it buys today.
+- Shape for the next change. Where variants or cases will clearly grow, choose data over branching, or a map/table over chained ifs. If it costs more code or layers today, YAGNI wins.
 
 ### Code
 
 - The least code that stays clear: no speculative generality, no config knobs nobody asked for, no helpers without real duplication, no validation of internal typed code, no guards for impossible cases.
 - Idiomatic and modern for the language and its version in this repo; shaped like its neighbors; readable top to bottom.
 - Repo conventions beat personal preference. Mirror a nearby sibling feature before inventing structure.
-- Prefer well-maintained existing solutions — stdlib, dependencies already installed, a well-maintained package — over hand-rolling.
+- Prefer well-maintained existing solutions — stdlib, dependencies already installed, or established packages (informed by web research) — over hand-rolling.
 - Errors are handled, not swallowed.
-- Verify unfamiliar APIs, symbols, and config against the repo or authoritative docs; never invent by analogy.
+- Verify unfamiliar APIs, symbols, and config against authoritative docs or the repo; never invent by analogy.
 - Stay inside the requested behavior. No drive-by refactors or tidying.
-- Tests assert one observable outcome each, named after the criterion they prove; tests that only exercise code or check mock calls are not tests.
+- Tests assert one observable outcome each, named after the behavior they prove; tests that only exercise code or check mock calls are not tests.
 
 ## Process
 
-Start from repo facts you already have; read the repo only for what they do not cover. Every file, convention, and exemplar you name must be real.
+Start from repo facts and web research in Notes; read the repo only for what they do not cover. Every file, convention, and exemplar you name must be real.
 
-1. **List the jobs:** persist X, expose Y, render Z, …
-2. **Cut into components** until each owns one job (see Cut). Independent when either can change without rewriting the other. A small feature can be one component.
-3. **Name the seams** — what crosses, which way. No cycles.
-4. **Fit each to the repo** — files, sibling to mirror, package or stdlib instead of hand-rolled code.
-5. **Slice** — smallest standalone unit that can be committed; order by dependency; union of slice criteria covers the spec; pin shared contracts in the slice that introduces them.
+1. **Architecture Overview:** Write a concise summary of the chosen design, how pieces fit together, and why this design was picked.
+2. **Fit to the repo:** files to change/create, sibling to mirror, package or stdlib instead of hand-rolled code.
+3. **Cut into steps:** in dependency order. A small feature can be one or two steps. Do not invent steps for setup, plumbing, or wiring that aren't real work.
+4. **Write each step:** so a coder can build it without guessing or designing on the fly.
+5. **List tests:** specific behaviors to verify.
 
 ## Write
 
-Two altitudes: **Components, Seams, Key decisions** stay at design altitude. **Slices** carry what a coder with zero context needs — one fact or decision per line, contracts in code blocks, tables for anything enumerable, pseudocode only for a genuinely non-obvious path. Cut words, never information.
+Use `## Architecture Overview`, `## Steps`, and `## Tests`. No Components, Seams, Key decisions, or Slices headings.
 
-Use exactly these headings. Each `###` heading is a slice, the first line under it is the slice's goal, and the bullets under `**Criteria:**` are its criteria.
+- **Architecture Overview** gives the high-level picture: the chosen approach, how the parts interact, and why this design was chosen.
+- Each step under `## Steps` is a `### N. <short title>` heading. It names the files, the sibling to mirror, edge/error paths, and concrete code snippets: full code for signatures, types, schemas, queries, and non-obvious logic; pseudocode only where the code is mechanical.
+- Tests go under `## Tests`, one short bullet per behavior.
 
-````md
-## Components
+```md
+## Architecture Overview
 
-- **<name>** — <the one job it owns>. Files: `<path>`, `<path>`. Mirrors `<sibling path>` when there is one.
+<Concise summary of the chosen architecture, how pieces fit together, and why this approach was chosen (drawing on repo conventions and any web research).>
 
-## Seams
-
-- <from> → <to>: <what crosses>
-
-## Key decisions
-
-- <decision> — <why, one line>
-
-## Slices
+## Steps
 
 ### 1. <short title>
 
-<One sentence: what this slice delivers and which component(s) it builds.>
-
-1.1 <One piece of the work: what it does, in which file.>
+In `<file path>`, <what this step does, mirroring sibling path>.
 
 ```ts
-<the contract it pins — signature, endpoint, wire shape, error — when a later slice depends on it>
+<concrete types, interfaces, signatures, or schemas>
 ```
 
-1.2 <Next piece, including its edge and error paths.>
+### 2. <short title>
 
-**Criteria:**
+In `<file path>`, <implementation logic and handling>.
 
-- <observable behavior a branch review can check in the diff or a tester can run>
+```ts
+<concrete code snippet or query>
+```
 
-**Tests:**
+## Tests
 
-- <one named behavior, one line, asserting one observable outcome>
-````
+- <short title for the one behavior this test proves>
+```

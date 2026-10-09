@@ -11,12 +11,13 @@ Spot-check the repo where the brief is silent or looks wrong.
 
 ## Spec
 
-The spec says what and why, never how: **Summary**, **Criteria**, **Out of scope**. Check that:
+The spec says what and why, never how, formatted as a clear list of items under `## Spec` (or Summary/Criteria/Out of scope when present). Check that:
 
 - two implementers would build the same thing from it
-- every criterion is an observable behavior with a proof that can actually run here
-- failure is specified, not only success
-- existing behavior is preserved unless a criterion names the change
+- every item is an observable behavior or requirement that can actually be verified here
+- failure and edge cases are specified, not only success
+- out-of-scope exclusions are clearly noted
+- existing behavior is preserved unless a change is explicitly named
 - the language is precise (no "should", "fast", "etc.")
 - claims about current behavior are true
 - it holds the user's intent without inventing any, and asks for nothing extra
@@ -26,10 +27,11 @@ The spec says what and why, never how: **Summary**, **Criteria**, **Out of scope
 
 Check that:
 
-- every spec requirement has an owner in the design, and nothing it does is beyond the spec
+- the architecture overview is sound, concise, and fits the repo
+- every spec requirement has an owner in the steps, and nothing they do is beyond the spec
 - the files, siblings, and packages it names are real
 - steps are buildable in order, each needs nothing from a later step, and every shared contract is pinned in the step that introduces it
-- each step is concrete enough that a coder builds it without guessing
+- each step is concrete enough that a coder builds it without guessing (includes concrete snippets for types, schemas, signatures)
 - tests assert one observable outcome each
 
 ## Output

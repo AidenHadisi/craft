@@ -57,7 +57,7 @@ flowchart TD
 
 ### Artifacts it produces (in the target repo)
 
-- `docs/plans/<feature>.md` — the board. Progress, Description, Spec list, Architecture Overview, Steps, Tests, Verification, and Notes.
+- `docs/plans/<feature>.md` — the board. Progress, Description, Findings, Conventions, Spec list, Architecture Overview, Steps, Tests, Verification, and Notes.
 - `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
 
 ## Install

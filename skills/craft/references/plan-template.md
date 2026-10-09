@@ -2,8 +2,6 @@
 
 ## Progress
 
-The only progress tracker. Check off as each completes; a step is checked when its coder reports done, never earlier.
-
 - [ ] Spec approved
 - [ ] Plan approved
 - [ ] Step 1 — <short title>
@@ -16,6 +14,17 @@ The only progress tracker. Check off as each completes; a step is checked when i
 ## Description
 
 <The problem and why it matters, what the user asked for in their words, constraints, references, and key decisions made during the interview.>
+
+## Findings
+
+<Facts about the repo, existing implementations, constraints, and web research on patterns used by robust apps and systems.>
+
+- <codebase finding, sibling path, or constraint>
+- <web research finding: pattern, library, or architectural insight>
+
+## Conventions
+
+- <Repo-specific convention implementers must follow — errors, naming, tests, layout as applicable> — exemplar: `<path>`
 
 ## Spec
 
@@ -51,6 +60,6 @@ Short, clear list of requirements and observable behaviors:
 
 ## Notes
 
-<Append as you learn: repo facts, web research findings, decisions, review rulings, coder deviations, blockers. Enough that a fresh session can resume from this file alone.>
+<Append as you learn: decisions, review rulings, coder deviations, blockers, surprises. Enough that a fresh session can resume from this file alone.>
 
-- <note, finding, or decision>
+- <decision, ruling, or runtime note>

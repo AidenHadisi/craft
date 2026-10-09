@@ -37,7 +37,7 @@ Walk this list in order for every piece of code, and stop at the first yes:
 
 ## Process
 
-Start from repo facts and web research in Notes; read the repo only for what they do not cover. Every file, convention, and exemplar you name must be real.
+Start from repo facts and web research in Findings; read the repo only for what they do not cover. Every file, convention, and exemplar you name must be real.
 
 1. **Architecture Overview:** Write a concise summary of the chosen design, how pieces fit together, and why this design was picked.
 2. **Fit to the repo:** files to change/create, sibling to mirror, package or stdlib instead of hand-rolled code.

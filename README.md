@@ -19,6 +19,7 @@ Every run proves the feature live before creating the PR.
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
 | `craft-research` | skill (`/craft-research`) | Breaks a topic into areas, researches each in parallel, and produces a refined doc in `Docs/` |
+| `craft-paper` | skill (`/craft-paper`) | Drafts, edits, reviews, cites, and formats LaTeX research papers — numbers from the data, citations fetched by identifier, venue rules read fresh |
 | `craft-refactor` | skill (`/craft-refactor`) | Recovers a behavior spec from existing code, generates a clean design from that spec, critic-loops it, then refactors without changing observable behavior |
 | `craft-coder` | subagent | Implements one focused assignment into the repo |
 | `craft-critic` | subagent (readonly) | Fresh-eyes design critic — steps back from the whole design, finds where it got overbuilt or went wrong, and proposes a simpler one or shows why it holds. Better design / Holds |
@@ -26,6 +27,7 @@ Every run proves the feature live before creating the PR.
 | `craft-polisher` | subagent | Restructures and polishes a working diff without changing observable behavior |
 | `craft-tester` | subagent | Runs a feature live — verification, local process, real requests, screenshots — and returns per-criterion evidence |
 | `craft-reviewer` | subagent (readonly) | Gates a spec or architecture before it is built — complete, correct, buildable as written. Needs changes / Pass |
+| `craft-paper-reviewer` | subagent (readonly) | Fresh-context paper review — claims vs evidence, soundness, prior work, numbers vs data, venue fit. Ready / Revise |
 | `craft-researcher` | subagent (readonly) | Deep web research — finds and fully reads authoritative sources, returns synthesized findings |
 
 Each agent carries the standards verbatim; shared references (spec, architecture, plan template) live under `skills/craft/references/`.

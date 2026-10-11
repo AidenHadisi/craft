@@ -45,6 +45,7 @@ Active voice with "we" is the default in most fields ("I" for a solo author; nev
 - Numerals for 10 and above and for any quantity with a unit; spell out numbers below 10 or when starting a sentence.
 - Space between number and unit ("25 kg", "10 %" in SI; "10%" in APA). Match venue convention consistently.
 - Uncertainty to at most two significant digits, estimate rounded to match: `84.7 ± 2.1`, never `84.732 ± 2.1`.
+- Report no more digits than the data supports (`κ = 0.07`, not `0.0729`), with the same decimals throughout a table column.
 - Exact p-values (e.g., `p = .028`), with `p < .001` as the lower floor.
 - Report tests as `t(32) = 2.94, p = .006, d = 0.81, 95% CI [0.60, 1.02]`. Statistical symbols italic, Greek letters upright.
 - Fewer than 4 numbers belong in a sentence; 4–20 go in a table; larger sets belong in a figure.

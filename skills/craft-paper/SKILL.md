@@ -5,68 +5,57 @@ description: Draft, edit, review, cite, and format academic research papers in L
 
 # Craft Paper
 
-Write and revise research papers with the user. The user owns the claims; you make them clear, correct, and ready for the venue.
+Draft, edit, and refine academic research papers with the user. The user owns the research and core claims; you ensure the manuscript meets top-tier publication standards for clarity, rigor, scholarly positioning, and venue compliance.
 
-`paper/PAPER.md` is the board. Read it first when resuming and keep it current:
+## Professional & Academic Standards
+
+- **Scholarly Rigor & Tone:** Write at the standard of leading peer-reviewed venues in the field (e.g., NeurIPS, ICML, ACL, IEEE, ACM, Nature/Science). Tone is objective, precise, and measured. Avoid hype (*unprecedented*, *groundbreaking*), empty boosterism, conversational chatter, and didactic throat-clearing.
+- **Narrative Freedom:** Structure serves the paper's thesis. You and the user have full latitude to order, merge, or divide sections (e.g., positioning Related Work early to frame the problem or late to prioritize novel methods; integrating Preliminaries into Method or Discussion into Results; choosing descriptive vs. declarative headings). The invariant is a cohesive, logical arc: Context $\to$ Problem & Gap $\to$ Core Insight/Contribution $\to$ Evidence & Evaluation $\to$ Limitations.
+- **Data & Claim Fidelity:** Claims must strictly match the empirical evidence or theoretical proofs. Never generalize beyond the studied sample or conditions. Distinguish established findings from conjecture. Every reported number must trace directly to raw experimental logs or data files; never invent or round away critical variance.
+- **Idiomatic LaTeX & Typography:** Follow established scientific typesetting practices: clean math notation, vector graphics (`.pdf`) for plots, `booktabs` for tables (horizontal rules only; never vertical rules), decimal alignment via `siunitx`, and proper semantic citation commands (`\citet` for textual/subject, `\citep` for parenthetical).
+
+## The Board
+
+`paper/PAPER.md` tracks project state and decisions. Read it first when resuming and keep it current:
 
 ```markdown
 # <working title>
 
 ## Venue
-<Undecided, or: venue and track, page limit, template, anonymity, required sections, AI-disclosure rule — with the call-for-papers URL and the date you read it>
+<Undecided, or: target venue, track, page limits, template, anonymity policy, required sections, and AI-disclosure rules — with the CFP URL and access date>
 
 ## Claims
-<1–3 claims a reader could check and prove wrong, each with the evidence behind it>
+<1–3 core falsifiable claims, each paired with the supporting evidence/section>
 
 ## Outline
 
 ## AI use
-<what you drafted or changed, by section>
+<what was drafted, rewritten, or assisted by section, for disclosure>
 
 ## Notes
 ```
 
-Read the reference that matches the work before doing it:
+Consult the specialized references when writing or verifying:
+- [style](references/style.md) — Anti-AI prose patterns, tone, precision, and statistical reporting.
+- [citations](references/citations.md) — Identifier-based fetching, verification endpoints, and anti-stuttering.
 
-- [structure](references/structure.md) — outlining, drafting, or restructuring; section order by paper type and what each section must do
-- [style](references/style.md) — any prose you write or edit
-- [citations](references/citations.md) — adding, fixing, or checking references
-- [figures](references/figures.md) — figures, tables, and reporting statistics
-- [venues](references/venues.md) — choosing or switching a venue, anonymizing, AI disclosure, submission, camera-ready, rebuttals
+## Workflow
 
-## 1. Understand
+### 1. Understand
+Clarify the user's objective: drafting a new paper, revising existing text, conducting a pre-submission review, verifying citations, creating figures/tables, or preparing a final venue submission. Examine existing drafts, code, logs, and notes before asking questions. Settle the core claims and scope with the user before drafting.
 
-Find out what the user wants: a new draft, an edit, a review, citations, figures, or venue formatting. Read their draft, results, code, and notes before asking anything.
+### 2. Venue & Layout
+- **Undecided Venue:** Draft in clean, single-column `\documentclass[11pt]{article}` with 1-inch margins and author-year citations (`natbib` with `plainnat`). Keep sections modular in `paper/sections/`.
+- **Selected Venue:** Consult the venue's current call for papers and author kit. Adopt their official LaTeX template, obey page limits and anonymity requirements (double-blind / single-blind), and include all mandatory sections (e.g., Limitations, Impact Statements, Reproducibility Checklists).
 
-For a new paper, settle the paper type and the claims with the user, and the venue if they know it. Do not draft until they approve the claims.
+### 3. Draft & Revise
+- **Collaborative Outlining:** Outline the narrative progression around the key figures, tables, and empirical proofs before writing prose.
+- **Surgical Editing:** When editing, respect and maintain the author's voice. Improve clarity, precision, and conciseness while explaining non-obvious revisions.
+- **Figures & Tables:** Generate plots and tables from raw data via scripts. Plots must be legible at target column width, use colorblind-safe palettes (e.g., Okabe-Ito, viridis), include explicit units on all axes, and define error bars (SD, SE, CI with sample size $n$).
+- **Compilation:** Compile iteratively with `latexmk -pdf` and visually inspect rendered output. If a LaTeX distribution is missing, confirm before installing TinyTeX.
 
-## 2. Venue
+### 4. Review
+Dispatch a fresh `craft-paper-reviewer` subagent with the compiled PDF, LaTeX sources, venue guidelines, and raw data files. Address major findings and document accepted or declined feedback under Notes in `PAPER.md`. Stop after two review cycles and present remaining items to the user.
 
-Until the user picks a venue, write in a plain single-column `article` with author-year citations, and leave venue-specific parts for later.
-
-Once they pick one, read its current call for papers and author instructions. Never rely on memory; the rules change every year. Move `main.tex` onto the official LaTeX template, record the rules under Venue, and fit the paper to its page limit and required sections.
-
-## 3. Write
-
-For a new draft, outline around the figures and tables first and get the user's approval. Then write in evidence order: results, method, discussion, related work, introduction, and the abstract last. One file per section in `paper/sections/`.
-
-For an edit, change only what needs changing and keep the author's voice. Say what you changed and why.
-
-After each round of changes, compile with `latexmk -pdf` and look at the rendered pages. If LaTeX is missing, ask before installing TinyTeX.
-
-## Rules
-
-- **Numbers come from the user's data.** Every number traces to their results files or logs. If it is not there, ask; never estimate.
-- **Citations are fetched, never written from memory.** Fetch each entry by identifier and confirm it with a second source, as [citations](references/citations.md) describes. If you cannot verify a reference, mark it in the text and tell the user.
-- **Cite on introduction and in related work; avoid citation stuttering.** Cite each dataset, tool, or prior work when first introduced and in Related Work. Refer to it by name thereafter—never repeat parenthetical citations `(Author et al., Year)` every time the system or dataset is named.
-- **Claims match the evidence.** Keep results from this study in the past tense instead of turning them into general truths. Label speculation as speculation.
-- **Figures and tables come from the data.** Generate them by script and look at them rendered.
-- **Write plainly.** Check every draft against the signs of AI prose in [style](references/style.md) — fix the patterns, and replace flagged words unless they are the right word.
-
-## 4. Review
-
-Dispatch a fresh `craft-paper-reviewer` with the compiled PDF, the LaTeX source, the Venue section, and the paths to the results data. Fix what it finds and record anything you decline under Notes. After a significant revision, dispatch a fresh reviewer. Stop after two rounds and show the user what remains.
-
-## 5. Submit
-
-Work through the submission checklist in [venues](references/venues.md), writing any AI disclosure from the AI use section.
+### 5. Finalize & Submit
+Verify clean compilation (no undefined references, unresolved citations, or Type 3 fonts), confirm that all citations are verified, remove internal TODOs/comments, verify anonymization compliance if double-blind, and generate necessary AI disclosures from `PAPER.md`.

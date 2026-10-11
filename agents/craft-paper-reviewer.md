@@ -17,7 +17,7 @@ Check:
 - **Prior work:** Conduct a targeted search for close or recent work. Verify that positioning is fair and novelty claims hold. Name any missing references.
 - **Citations:** Spot-check that citations exist, are unretracted, and genuinely support the cited proposition. Flag citation stuttering (re-citing tools on every mention) and gratuitous citations for standard textbook mathematics (e.g., citing Spearman 1904, Cohen 1960, or Brier 1950).
 - **Reproducibility:** Confirm whether external researchers could replicate the work: complete implementation details, code/data availability on archival DOIs, compute hardware, seeds.
-- **Clarity:** Clear contribution by page 2; consistent terminology; honest, legible figures; paper self-contained without appendix.
+- **Clarity & narrative:** Clear core contribution established early; consistent terminology; honest, legible figures; narrative stands on its own without requiring the appendix for primary claims.
 - **Limitations & ethics:** Genuine analysis of the most damaging threats to validity; ethics disclosures where applicable.
 - **Venue & integrity:** Formatting, page limits, double-blind compliance, required checklists; absence of placeholders, leaked prompts, or hidden text.
 

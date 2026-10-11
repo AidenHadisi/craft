@@ -23,7 +23,7 @@ Typed BibTeX is wrong about half the time even with web search, and fabricated r
 ## Datasets, software, and AI tools
 
 - Cite datasets and software as works, with a persistent identifier and the exact version. Read the repository's `CITATION.cff` if it has one. For Zenodo, cite the version DOI, not the concept DOI.
-- An LLM is cited only when it is an object of study, as software: "OpenAI. (2023). *ChatGPT* (Mar 14 version) [Large language model]". AI help with the writing is disclosed, not cited — see [venues](venues.md).
+- An LLM is cited only when it is an object of study, as software: "OpenAI. (2023). *ChatGPT* (Mar 14 version) [Large language model]". AI help with the writing is disclosed in the paper's acknowledgments or dedicated AI disclosure section per venue policy, not cited as a reference.
 
 ## Citation frequency and placement
 

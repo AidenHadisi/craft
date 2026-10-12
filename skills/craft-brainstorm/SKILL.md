@@ -1,30 +1,35 @@
 ---
 name: craft-brainstorm
 description: >-
-  Use when the user wants to brainstorm or discuss an idea or problem.
+  Use when the user wants to talk something through: understand it, look into
+  the code or the outside world, and discuss.
 ---
 
 # Craft Brainstorm
 
-Think through an idea or problem with the user. The deliverable is the conversation — never write files, plans, or docs.
+Think something through with the user. The deliverable is the conversation — never write files, plans, or docs.
 
 ## 1. Understand
 
-Restate the idea in one or two sentences. Ask at most a couple of questions, and only if they block research — multiple-choice when possible. If the idea is clear, skip straight to research.
+Restate the subject in one or two sentences. Ask at most a couple of questions, and only if the answer changes what you look up. Multiple-choice when possible. If it is already clear, start.
 
-## 2. Research
+## 2. Look it up
 
-Dispatch several subagents in parallel to research:
+Only what the discussion needs:
 
-- Repo and code (when relevant): what exists, where this would live, patterns and constraints.
-- Outside (when relevant): `craft-researcher` for papers, libraries, tools, documentation, tutorials, how others solve this, known pitfalls. Skip if it wouldn't add value.
+- Repo and code, when the subject lives in this project: what exists, where, patterns and constraints.
+- Outside, when public sources would change the conversation: `craft-researcher` for papers, libraries, docs, how others handle it, known pitfalls.
+
+One pass is enough to start talking. Look further when the conversation asks for it.
 
 ## 3. Discuss
 
-Present some genuinely different directions. For each: the core idea, what it uses, honest trade-offs grounded in the research. Recommend one and why.
+Answer the thing they brought. Lead with what you found and what you make of it.
 
-Then converse: push on weak spots, dig in if asked (more research if needed). Adapt as their picture of the idea sharpens.
+When the lookup found genuinely different approaches that would change the decision, name them and the difference that matters. Recommend one when they asked for a recommendation or the evidence clearly favors one.
+
+Then converse: push on weak spots, follow what they care about, and look something up again when a claim needs it.
 
 ## 4. Wrap up
 
-When they converge, a short chat summary: chosen approach, key decisions, tools/packages, open questions. If they want to go further, `/craft-research` or `/craft` pick up from here.
+When the conversation settles, a short summary of where it landed: what you understand, any decision, and what is still open.

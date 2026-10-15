@@ -5,7 +5,7 @@ description: Draft, edit, review, cite, and format academic research papers in L
 
 # Craft Paper
 
-For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+Use the host’s native tools for delegation, browsing, terminal work, and user questions. Resolve Craft agent names against available roles, including plugin prefixes, and inherit the configured model unless the user chooses another. Keep read-only roles read-only across all tools. If a required role or tool is unavailable, report the limitation; do not invent capabilities or replace independent review with self-review.
 
 Draft, edit, and refine academic research papers with the user. The user owns the research and core claims; you ensure the manuscript meets top-tier publication standards for clarity, rigor, scholarly positioning, and venue compliance.
 

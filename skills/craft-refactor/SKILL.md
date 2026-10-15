@@ -5,7 +5,7 @@ description: Use when the user wants to refactor, clean up, modernize, or simpli
 
 # Craft Refactor
 
-For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+Use the host’s native tools for delegation, browsing, terminal work, and user questions. Resolve Craft agent names against available roles, including plugin prefixes, and inherit the configured model unless the user chooses another. Keep read-only roles read-only across all tools. If a required role or tool is unavailable, report the limitation; do not invent capabilities or replace independent review with self-review.
 
 Make existing code simpler, modern, and more idiomatic **without changing what it does**. The user points at a file, package, or feature.
 

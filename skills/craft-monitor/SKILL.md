@@ -5,7 +5,7 @@ description: Monitor a shipped feature against live production data. The first i
 
 # Craft Monitor
 
-For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+Use the host’s native tools for delegation, browsing, terminal work, and user questions. Resolve Craft agent names against available roles, including plugin prefixes, and inherit the configured model unless the user chooses another. Keep read-only roles read-only across all tools. If a required role or tool is unavailable, report the limitation; do not invent capabilities or replace independent review with self-review.
 
 Identify the feature from the invocation or session; ask if unclear. Missing `docs/monitor/<feature>.md` means first run (write the guide); present means follow it. Dispatch subagents for legwork; skip what you already know.
 

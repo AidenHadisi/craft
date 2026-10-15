@@ -7,7 +7,7 @@ description: >-
 
 # Craft Research
 
-For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+Use the host’s native tools for delegation, browsing, terminal work, and user questions. Resolve Craft agent names against available roles, including plugin prefixes, and inherit the configured model unless the user chooses another. Keep read-only roles read-only across all tools. If a required role or tool is unavailable, report the limitation; do not invent capabilities or replace independent review with self-review.
 
 Research a topic with the user and produce a refined markdown document in `Docs/`. You own the map and the document. `craft-researcher` does the reading — findings only, never files.
 

@@ -85,11 +85,11 @@ Claude plugin skills and agents are namespaced, for example `/craft:craft` and `
 
 ## One source of truth
 
-Edit `skills/`, `agents/`, and `references/` only in this repo. Plugin identity and version live in `.cursor-plugin/plugin.json`. The refresh script generates the Codex and Claude manifests from that metadata and converts the same agent prompts to each host's format. `.generated/` is disposable and ignored by Git; installed caches are never source files.
+Edit `skills/` and `agents/` only in this repo. Keep each skill’s supporting files inside its own folder; the build rejects local Markdown links that escape that folder or point to missing files. Plugin identity and version live in `.cursor-plugin/plugin.json`. The refresh script generates the Codex and Claude manifests from that metadata and converts the same agent prompts to each host's format. `.generated/` is disposable and ignored by Git; installed caches are never source files.
 
 Codex's local marketplace points into this repo. Its eight personal agent definitions are links to generated TOML files here. The installer refuses to overwrite unrelated agent files; matching files from an earlier Craft installation can be replaced with links. Claude receives Markdown agents with translated metadata. Read-only roles keep explicit read-only instructions; Claude additionally disables direct file-edit tools. Shell and remote-tool restrictions still depend on the host's permissions.
 
-Python 3.11 or newer is required; no third-party Python packages are needed. Run the checks with `python3 -m unittest discover -s tests -v`.
+Python 3.11 or newer is required; no third-party Python packages are needed.
 
 The supported adapters are Cursor, Codex, and Claude Code. Other skill-capable hosts can reuse the Markdown workflows and prompts, but workflows requiring independent agents need a host with delegation support. `craft-design` uses Canvas when available and a local HTML mockup otherwise.
 

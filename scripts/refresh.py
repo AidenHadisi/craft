@@ -55,12 +55,23 @@ def expected_files(root):
     metadata = json.loads((root / ".cursor-plugin/plugin.json").read_text())
     if metadata["name"] != "craft":
         raise ValueError("The refresh script manages only Craft")
+    # A skill's supporting files must travel with that skill.
+    for skill in sorted((root / "skills").iterdir()):
+        if not skill.is_dir():
+            continue
+        for document in skill.rglob("*.md"):
+            for link in re.findall(r"\]\(([^)]+)\)", document.read_text()):
+                target = link.split("#", 1)[0]
+                if not target or re.match(r"[a-zA-Z][a-zA-Z0-9+.-]*:", target):
+                    continue
+                resolved = (document.parent / target).resolve()
+                if not resolved.is_relative_to(skill.resolve()) or not resolved.exists():
+                    raise ValueError(f"Skill reference must exist inside {skill}: {document}: {link}")
     files = {}
     for host in ("codex", "claude"):
-        for folder in ("skills", "references"):
-            for path in sorted((root / folder).rglob("*")):
-                if path.is_file():
-                    files[Path(host) / path.relative_to(root)] = path.read_bytes()
+        for path in sorted((root / "skills").rglob("*")):
+            if path.is_file():
+                files[Path(host) / path.relative_to(root)] = path.read_bytes()
         files[Path(host) / "LICENSE"] = (root / "LICENSE").read_bytes()
         manifest = dict(metadata)
         if host == "codex":

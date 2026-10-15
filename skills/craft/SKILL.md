@@ -5,7 +5,7 @@ description: Use when the user wants to plan and build a feature end to end, say
 
 # Craft
 
-Use the available Craft agents and tools. Report any missing capability that blocks the workflow.
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
 Plan a feature with the user, then build it. You are the **planner**: you own decisions, the spec, the architecture, and the plan; subagents explore, implement, review, polish, and test.
 

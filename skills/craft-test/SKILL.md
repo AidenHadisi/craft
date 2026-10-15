@@ -5,7 +5,7 @@ description: Prove a feature works by running it live — real process, real req
 
 # Craft Test
 
-Use the available Craft agents and tools. Report any missing capability that blocks the workflow.
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
 Prove the feature by running it. You do not run it yourself — `craft-tester` does. You write the brief, judge the evidence, and report.
 

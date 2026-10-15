@@ -5,7 +5,7 @@ description: Use when the user wants to refactor, clean up, modernize, or simpli
 
 # Craft Refactor
 
-Use the available Craft agents and tools. Report any missing capability that blocks the workflow.
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
 Make existing code simpler, modern, and more idiomatic **without changing what it does**. The user points at a file, package, or feature.
 

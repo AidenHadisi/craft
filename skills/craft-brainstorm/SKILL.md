@@ -7,7 +7,7 @@ description: >-
 
 # Craft Brainstorm
 
-Use the available Craft agents and tools. Report any missing capability that blocks the workflow.
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
 Think something through with the user. The deliverable is the conversation — never write files, plans, or docs.
 

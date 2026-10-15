@@ -5,7 +5,7 @@ description: Draft, edit, review, cite, and format academic research papers in L
 
 # Craft Paper
 
-Use the available Craft agents and tools. Report any missing capability that blocks the workflow.
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
 Draft, edit, and refine academic research papers with the user. The user owns the research and core claims; you ensure the manuscript meets top-tier publication standards for clarity, rigor, scholarly positioning, and venue compliance.
 

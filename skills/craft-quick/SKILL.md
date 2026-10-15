@@ -5,7 +5,7 @@ description: Quickly plan and build a small, clear feature with one architecture
 
 # Craft Quick
 
-Use the available Craft agents and tools. Report any missing capability that blocks the workflow.
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
 Move from a clear request to tested code with one user gate. No spec, live testing, branch, commit, or PR.
 

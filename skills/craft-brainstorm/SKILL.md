@@ -7,6 +7,8 @@ description: >-
 
 # Craft Brainstorm
 
+For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+
 Think something through with the user. The deliverable is the conversation — never write files, plans, or docs.
 
 ## 1. Understand
@@ -15,12 +17,12 @@ Restate the subject in one or two sentences. Ask at most a couple of questions, 
 
 ## 2. Look it up
 
-Only what the discussion needs:
+Dispatch subagents for the lookup. You stay in the conversation. Only what the discussion needs, in parallel when the questions are independent:
 
-- Repo and code, when the subject lives in this project: what exists, where, patterns and constraints.
+- Repo and code, when the subject lives in this project: a read-only subagent for what exists, where, patterns and constraints.
 - Outside, when public sources would change the conversation: `craft-researcher` for papers, libraries, docs, how others handle it, known pitfalls.
 
-One pass is enough to start talking. Look further when the conversation asks for it.
+One pass is enough to start talking. Dispatch again when the conversation asks for another look.
 
 ## 3. Discuss
 
@@ -28,7 +30,7 @@ Answer the thing they brought. Lead with what you found and what you make of it.
 
 When the lookup found genuinely different approaches that would change the decision, name them and the difference that matters. Recommend one when they asked for a recommendation or the evidence clearly favors one.
 
-Then converse: push on weak spots, follow what they care about, and look something up again when a claim needs it.
+Then converse: push on weak spots, follow what they care about, and dispatch again when a claim needs another look.
 
 ## 4. Wrap up
 

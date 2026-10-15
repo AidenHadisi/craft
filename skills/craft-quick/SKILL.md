@@ -5,9 +5,13 @@ description: Quickly plan and build a small, clear feature with one architecture
 
 # Craft Quick
 
+For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+
 Move from a clear request to tested code with one user gate. No spec, live testing, branch, commit, or PR.
 
-The plan file at `docs/plans/<task>.md` is the board. Check items off in Progress as they complete, append to Notes whenever you learn something, and read it first when resuming.
+Keep a concise living plan at `docs/plans/<task>.md`. Choose its headings, order, and layout to suit the task; no template is required. Include the request and what done looks like, relevant findings and constraints, design decisions, concrete implementation steps, tests and check commands, approval and progress, and any results, deviations, or blockers needed to resume.
+
+Freely rewrite and reorganize it as you learn, merging or removing stale material while preserving approved scope, settled decisions and their reasons, and verification evidence. Formatting changes do not reopen approval or authorize scope changes. Read the plan first when resuming and continue from its recorded state.
 
 ## 1. Explore
 
@@ -15,20 +19,20 @@ Quickly inspect the relevant code, neighboring examples, conventions, and availa
 
 Ask questions only when a missing product decision or constraint would materially change the implementation. Otherwise use the simplest repo-consistent interpretation.
 
-Copy [plan-template](references/plan-template.md) to `docs/plans/<task>.md` (kebab-case). Write the title and description, and record what exploration found and any user answers under Notes.
+Create or update `docs/plans/<task>.md` (kebab-case) with the request, relevant findings, constraints, and user answers.
 
 ## 2. Steps
 
-Write Steps and Tests into the plan. Each step spells out all the code it adds, so the coder makes no design choices and adds nothing beyond it. Keep Progress in sync with the step headings.
+Write the implementation steps and tests into the plan. Each step spells out all the code it adds, so the coder makes no design choices and adds nothing beyond it. Keep the recorded progress consistent with the work.
 
-Hold the design to the Standards in [architecture](references/architecture.md) and use that file's Write format.
+Hold the design to the Standards in [architecture](references/architecture.md) and follow its guidance on implementation detail.
 
 ## 3. Critic loop
 
-Dispatch a fresh `craft-critic` with the request, the plan path, and Notes.
+Dispatch a fresh `craft-critic` with the request, the plan path, and relevant decisions.
 
 - **Holds:** continue.
-- **Better design:** adopt it unless there is a concrete reason not to. Revise the steps, note the change and why under Notes, and dispatch a fresh critic.
+- **Better design:** adopt it unless there is a concrete reason not to. Revise the steps, note the change and why in the plan, and dispatch a fresh critic.
 
 If the loop cannot converge after three critiques, show the disagreement and ask the user.
 
@@ -36,21 +40,21 @@ If the loop cannot converge after three critiques, show the disagreement and ask
 
 Show the steps and tests, and summarize the alternatives the critic rejected. Let the user decide whether to approve them or make changes.
 
-Do not build until the user approves. Check Plan approved.
+Do not build until the user approves. Record the approval in the plan.
 
 ## 5. Build and test
 
 Dispatch one `craft-coder` with the plan path, repo conventions, and automated check commands. The coder implements the steps as written, writes the listed tests, and runs the checks.
 
-Check each step off as the coder reports it done, and check Checks green when the checks pass. Record the coder's findings and deviations under Notes.
+Update each step’s status as the coder reports it done, and record the check results. Record the coder's findings and deviations in the plan.
 
-If the coder reports blocked, record the blocker under Notes, show it, and ask the user.
+If the coder reports blocked, record the blocker in the plan, show it, and ask the user.
 
 ## 6. Polish
 
 Dispatch `craft-polisher` with the plan path, the check commands, and the files the coder touched as the footprint. The work is uncommitted, so tell it to polish the working-tree diff, not branch commits.
 
-Check Polished once it reports with checks still green, and record its changes and flagged items under Notes. Then report:
+Record polish completion once it reports with checks still green, and record its changes and flagged items in the plan. Then report:
 
 - what changed
 - which checks ran and their results

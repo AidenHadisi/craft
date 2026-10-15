@@ -37,7 +37,7 @@ Walk this list in order for every piece of code, and stop at the first yes:
 
 ## Process
 
-Start from repo facts and web research in Findings; read the repo only for what they do not cover. Every file, convention, and exemplar you name must be real.
+Start from repo facts and web research in the plan; read the repo only for what they do not cover. Every file, convention, and exemplar you name must be real.
 
 1. **Architecture Overview:** Write a concise summary of the chosen design, how pieces fit together, and why this design was picked.
 2. **Fit to the repo:** files to change/create, sibling to mirror, package or stdlib instead of hand-rolled code.
@@ -47,36 +47,8 @@ Start from repo facts and web research in Findings; read the repo only for what 
 
 ## Write
 
-Use `## Architecture Overview`, `## Steps`, and `## Tests`. No Components, Seams, Key decisions, or Slices headings.
+Choose the organization that makes the design easiest to understand and implement. Cover the chosen approach, how the parts interact, and why this design fits the task and repo.
 
-- **Architecture Overview** gives the high-level picture: the chosen approach, how the parts interact, and why this design was chosen.
-- Each step under `## Steps` is a `### N. <short title>` heading. It names the files, the sibling to mirror, edge/error paths, and concrete code snippets: full code for signatures, types, schemas, queries, and non-obvious logic; pseudocode only where the code is mechanical.
-- Tests go under `## Tests`, one short bullet per behavior.
+Describe implementation steps in dependency order. Each names the files, sibling to mirror, edge/error paths, and concrete code snippets: full code for signatures, types, schemas, queries, and non-obvious logic; pseudocode only where the code is mechanical. Include the behaviors the tests will verify.
 
-```md
-## Architecture Overview
-
-<Concise summary of the chosen architecture, how pieces fit together, and why this approach was chosen (drawing on repo conventions and any web research).>
-
-## Steps
-
-### 1. <short title>
-
-In `<file path>`, <what this step does, mirroring sibling path>.
-
-```ts
-<concrete types, interfaces, signatures, or schemas>
-```
-
-### 2. <short title>
-
-In `<file path>`, <implementation logic and handling>.
-
-```ts
-<concrete code snippet or query>
-```
-
-## Tests
-
-- <short title for the one behavior this test proves>
-```
+Use headings, lists, tables, or diagrams where they help. No particular headings or document layout are required.

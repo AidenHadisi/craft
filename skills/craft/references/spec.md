@@ -4,9 +4,9 @@ These standards bind everyone who writes or reviews the spec. The spec is the co
 
 ### Shape
 
-A clean, short list of bullet items under `## Spec` in the plan:
+A concise, scannable specification in the plan, with headings and layout chosen to suit the work:
 - What the feature does and observable behaviors (happy path, error cases, edge cases)
-- Explicit out-of-scope exclusions (as bullet items, e.g. `- Out of scope: ...`)
+- Explicit out-of-scope exclusions
 
 ### What a good spec is
 
@@ -20,6 +20,6 @@ A clean, short list of bullet items under `## Spec` in the plan:
 
 ## Write
 
-Write the spec directly as bullet items under `## Spec` in the plan file. Keep it concise and scannable.
+Write the spec directly in the plan file. Prefer short bullets; choose headings that make the requirements easy to find.
 
-If `craft-reviewer` sends the spec back, rule on each point under `## Notes` in the plan: **Adopt** when it sharpens or corrects the spec without losing user intent; **Reject** with a reason when it does not. Rewrite the spec list for adopted points; do not append replies.
+If `craft-reviewer` sends the spec back, rule on each point in the plan: **Adopt** when it sharpens or corrects the spec without losing user intent; **Reject** with a reason when it does not. Rewrite the spec list for adopted points; do not append replies.

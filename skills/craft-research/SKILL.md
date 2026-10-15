@@ -7,6 +7,8 @@ description: >-
 
 # Craft Research
 
+For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+
 Research a topic with the user and produce a refined markdown document in `Docs/`. You own the map and the document. `craft-researcher` does the reading — findings only, never files.
 
 ## 1. Understand

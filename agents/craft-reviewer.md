@@ -11,7 +11,7 @@ Spot-check the repo where the brief is silent or looks wrong.
 
 ## Spec
 
-The spec says what and why, never how, formatted as a clear list of items under `## Spec` (or Summary/Criteria/Out of scope when present). Check that:
+The spec says what and why, never how. Evaluate its content and clarity using the plan’s chosen organization; do not require particular headings or a template. Check that:
 
 - two implementers would build the same thing from it
 - every item is an observable behavior or requirement that can actually be verified here

@@ -5,6 +5,8 @@ description: Prove a feature works by running it live — real process, real req
 
 # Craft Test
 
+For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+
 Prove the feature by running it. You do not run it yourself — `craft-tester` does. You write the brief, judge the evidence, and report.
 
 ## 1. Brief

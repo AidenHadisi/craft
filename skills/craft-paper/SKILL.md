@@ -5,6 +5,8 @@ description: Draft, edit, review, cite, and format academic research papers in L
 
 # Craft Paper
 
+For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+
 Draft, edit, and refine academic research papers with the user. The user owns the research and core claims; you ensure the manuscript meets top-tier publication standards for clarity, rigor, scholarly positioning, and venue compliance.
 
 ## Professional & Academic Standards

@@ -5,7 +5,9 @@ description: Use when designing or redesigning a UI, page, component, screen, or
 
 # Craft Design
 
-Mock and iterate UI directions in Canvas until the user picks a winner or hybrid, then implement that design in the product.
+For agent dispatch and tool availability, follow [host compatibility](../../references/host-compatibility.md).
+
+Mock and iterate UI directions until the user picks a winner or hybrid, then implement that design in the product.
 
 Hold the implementation to [architecture](references/architecture.md).
 
@@ -15,9 +17,9 @@ Interview to settle details (multiple-choice when possible). Dispatch subagents 
 
 ## 2. Sketch
 
-Read and follow the installed Canvas skill before creating or editing any `.canvas.tsx`. One canvas, built-in variant switcher, 3–5 genuinely different structural directions (not color swaps). Approximate the repo's visual language with Canvas APIs and theme tokens. Name each direction and state its core idea. Link the canvas per the Canvas skill.
+If a Canvas skill is installed, follow it to create one interactive canvas. Otherwise, create a local HTML mockup with a variant switcher and open it using the host's browser or preview tools. Show 3–5 structurally different directions, using the repo's visual language. Name each direction and state its core idea, then link or open the mockup for the user.
 
-The user can tweak a variant, combine elements, add a direction, or drop one. Edit the same canvas; preserve unaffected variants. Combining is another mock iteration, not implementation approval. Continue until they explicitly pick a winner or hybrid.
+The user can tweak a variant, combine elements, add a direction, or drop one. Edit the same mockup; preserve unaffected variants. Combining is another mock iteration, not implementation approval. Continue until they explicitly pick a winner or hybrid.
 
 ## 3. Implement
 

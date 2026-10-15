@@ -1,0 +1,20 @@
+{
+  "name": "craft-local",
+  "interface": {
+    "displayName": "Craft (local)"
+  },
+  "plugins": [
+    {
+      "name": "craft",
+      "source": {
+        "source": "local",
+        "path": "./.generated/codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

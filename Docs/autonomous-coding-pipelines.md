@@ -148,7 +148,7 @@ Undocumented, do not design around: skill-to-skill invocation, a numeric subagen
 
 Craft already has the right role set: coder, critic, plan reviewer, code reviewer, polisher, tester, researcher, all fresh-context, all returning structured results. That is the hard part, and most of the frameworks above took years to get there. The choppiness comes from the layer around them:
 
-- Two entry points (`craft`, `craft-auto`) with drifted templates, two plan formats, and inconsistent finish behavior (one asks before testing and does not PR; the other always tests and PRs).
+- Earlier workflow variants with drifted templates, two plan formats, and inconsistent finish behavior (one asks before testing and does not PR; the other always tests and PRs).
 - Two critique roles (`craft-reviewer` for plans, `craft-critic` for designs) doing one job.
 - No right-sizing: a bounded change pays the same ceremony as an architectural one. This is the single most common complaint about every framework in section 1.
 - Enforcement lives entirely in SKILL.md prose. Section 4's top-ranked gate is deterministic checks, and the evidence is that prose gates get skipped under pressure.

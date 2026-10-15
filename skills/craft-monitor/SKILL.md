@@ -5,6 +5,8 @@ description: Monitor a shipped feature against live production data. The first i
 
 # Craft Monitor
 
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
+
 Identify the feature from the invocation or session; ask if unclear. Missing `docs/monitor/<feature>.md` means first run (write the guide); present means follow it. Dispatch subagents for legwork; skip what you already know.
 
 ## 1. Write the guide

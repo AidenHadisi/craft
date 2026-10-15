@@ -5,6 +5,8 @@ description: Use when the user wants to refactor, clean up, modernize, or simpli
 
 # Craft Refactor
 
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
+
 Make existing code simpler, modern, and more idiomatic **without changing what it does**. The user points at a file, package, or feature.
 
 Behavior, public APIs, and wire shapes stay. No new features. Keep the spec in this conversation — do not write it into the target repo.

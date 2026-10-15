@@ -1,6 +1,6 @@
 # craft
 
-A Cursor plugin for building features the right way.
+Shared coding workflows for Cursor, Codex, and Claude Code, maintained in one repository.
 
 AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent the **planner**: it owns understanding, the spec, the architecture, and the plan, while focused subagents explore, review, implement, polish, and live-test. Each agent carries the standards verbatim in its own file; the orchestrator owns every gate and proves the finished feature by running it locally.
 
@@ -14,7 +14,6 @@ Every run proves the feature live before creating the PR.
 |---|---|---|
 | `craft` | skill (`/craft`) | Writes spec then architecture with a review and a user gate on each, then implements hands-off |
 | `craft-quick` | skill (`/craft-quick`) | Quickly explores, critic-loops a short plan file, asks for approval, then builds and runs automated checks |
-| `craft-auto` | skill (`/craft-auto`) | Interviews once, then runs to the goal unattended — every design critiqued before it is built, capped review loops, live proof and a commit per slice |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
@@ -30,7 +29,7 @@ Every run proves the feature live before creating the PR.
 | `craft-paper-reviewer` | subagent (readonly) | Fresh-context paper review — claims vs evidence, soundness, prior work, numbers vs data, venue fit. Ready / Revise |
 | `craft-researcher` | subagent (readonly) | Deep web research — finds and fully reads authoritative sources, returns synthesized findings |
 
-Each agent carries the standards verbatim; shared references (spec, architecture, plan template) live under `skills/craft/references/`.
+Each agent carries the standards verbatim; shared references (spec and architecture standards) live under `skills/craft/references/`.
 
 ## The workflow
 
@@ -39,11 +38,11 @@ flowchart TD
     start["/craft"] --> understand["Understand: explore repo + web, interview"]
     understand --> spec["Write Spec (short list of requirements)"]
     spec --> specReview["craft-reviewer on the spec"]
-    specReview -->|"Needs changes: rule in Notes"| spec
+    specReview -->|"Needs changes: record ruling"| spec
     specReview -->|Pass| specGate["Gate: user approves spec"]
     specGate --> arch["Architecture Overview + steps"]
     arch --> archCritic["craft-critic on architecture"]
-    archCritic -->|"Better design: rule in Notes"| arch
+    archCritic -->|"Better design: record ruling"| arch
     archCritic -->|Holds| archReview["craft-reviewer on architecture"]
     archReview -->|"Needs changes"| arch
     archReview -->|Pass| archGate["Gate: user approves architecture"]
@@ -59,42 +58,42 @@ flowchart TD
 
 ### Artifacts it produces (in the target repo)
 
-- `docs/plans/<feature>.md` — the board. Progress, Description, Findings, Conventions, Spec list, Architecture Overview, Steps, Tests, Verification, and Notes.
+- `docs/plans/<feature>.md` — the living plan. For `craft` and `craft-quick`, the model chooses and evolves the layout to suit the task. It captures intent, findings, decisions, implementation details, tests, progress, and verification evidence without a fixed template.
 - `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
 
-## Install
+## Install and refresh
 
-### Marketplace (recommended)
-
-Open the Marketplace panel in Cursor, search for **craft**, and install — choosing project or user scope. Nothing else to set up.
-
-> Not yet published. Until it's live on the [Cursor Marketplace](https://cursor.com/marketplace), use the local install below.
-
-### Local (development)
-
-A plugin loads when it lives under `~/.cursor/plugins/local/` with its `.cursor-plugin/plugin.json` at the root. Clone it straight into place:
+Keep one checkout at `~/.cursor/plugins/local/craft`. Cursor loads this directory directly. Codex and Claude Code use local marketplaces in the same repo and generated packages built from the same skills and agent prompts.
 
 ```bash
 git clone git@github.com:AidenHadisi/craft.git ~/.cursor/plugins/local/craft
+cd ~/.cursor/plugins/local/craft
+python3 scripts/refresh.py
 ```
 
-Or, if you keep your working copy elsewhere, symlink the repo **into** the plugins folder (this is the supported direction — link your repo *in*, not the other way around):
+After every edit, run `python3 scripts/refresh.py` again. It builds both packages, refreshes Codex when its CLI is available, and installs or updates Claude Code when its CLI is available. Missing CLIs are reported and skipped. Reload Cursor and start new sessions to load changes.
+
+For packaging only, use `python3 scripts/refresh.py --build-only`. To check that generated files match the source without modifying anything, use `python3 scripts/refresh.py --check`. Select just one installation with `--target codex` or `--target claude`.
+
+Claude Code can also load the generated package directly for development:
 
 ```bash
-ln -s /path/to/your/craft ~/.cursor/plugins/local/craft
+claude --plugin-dir ~/.cursor/plugins/local/craft/.generated/claude
 ```
 
-Then run **Developer: Reload Window** from the Command Palette. Confirm `/craft` appears in Settings → Rules and that the `craft-*` subagents are available.
+Claude plugin skills and agents are namespaced, for example `/craft:craft` and `craft:craft-coder`. Other hosts may display their own invocation syntax; the workflow names remain the same.
 
-## Publishing
+## One source of truth
 
-Cursor plugins are distributed as public Git repositories reviewed by the Cursor team — there's no publish CLI. To release a new version:
+Edit `skills/` and `agents/` only in this repo. Keep each skill’s supporting files inside its own folder; the build rejects local Markdown links that escape that folder or point to missing files. Plugin identity and version live in `.cursor-plugin/plugin.json`. The refresh script generates the Codex and Claude manifests from that metadata and converts the same agent prompts to each host's format. `.generated/` is disposable and ignored by Git; installed caches are never source files.
 
-1. Bump `version` in `.cursor-plugin/plugin.json` (semver).
-2. Commit a logo to `assets/` and add `"logo": "assets/<file>.svg"` to the manifest (relative paths resolve against the repo on GitHub).
-3. Push to the public repo, then submit the repo URL at [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish).
+Codex's local marketplace points into this repo. Its eight personal agent definitions are links to generated TOML files here. The installer refuses to overwrite unrelated agent files; matching files from an earlier Craft installation can be replaced with links. Claude receives Markdown agents with translated metadata. Read-only roles keep explicit read-only instructions; Claude additionally disables direct file-edit tools. Shell and remote-tool restrictions still depend on the host's permissions.
 
-Components are auto-discovered from their default folders (`skills/`, `agents/`, `rules/`, `commands/`, `hooks/`), so the manifest only needs metadata — no path wiring required.
+Python 3.11 or newer is required; no third-party Python packages are needed.
+
+The supported adapters are Cursor, Codex, and Claude Code. Other skill-capable hosts can reuse the Markdown workflows and prompts, but workflows requiring independent agents need a host with delegation support. `craft-design` uses Canvas when available and a local HTML mockup otherwise.
+
+For a fresh clone, build the packages before adding either local marketplace. Generated packages are intended for local installation; publishing prebuilt packages is a separate release step.
 
 ## Usage
 
@@ -112,15 +111,7 @@ For a smaller change that needs design judgment without the full workflow:
 /craft-quick add filtering to the audit log
 ```
 
-It explores only the relevant code, asks questions only when blocked by a real decision, writes a short plan to `docs/plans/<task>.md` (Progress, Steps with every piece of code spelled out, Tests, and Notes for resuming), and runs it through `craft-critic` until it holds. You approve the plan once; then one `craft-coder` pass builds it and runs the repo's automated checks. It creates no spec, branch, commit, PR, or live test.
-
-To hand over a goal and get back a finished, proven feature:
-
-```
-/craft-auto add OAuth login for the dashboard
-```
-
-It interviews you once and ends that interview with criteria, each paired with the live check that will prove it. From there it runs unattended. Every design — the architecture and then each slice — goes to `craft-critic`, which searches for a better design and either proposes one or shows why the draft holds; the orchestrator rules on each objection in the plan's Rulings. Each slice is then coded (checks included), reviewed under a capped fix loop, **run live** against the local environment, and committed. Finish is a whole-branch review and polish, then the full `craft-test` flow against every criterion — never a question. A `Saw:` line that does not show the criterion is a failed proof. It stops to ask only when a loop cannot converge, the coder is blocked, or the local environment cannot be reached.
+It explores only the relevant code, asks questions only when blocked by a real decision, writes a short plan to `docs/plans/<task>.md` with concrete implementation steps, tests, and enough context and progress to resume, organized to suit the task, and runs it through `craft-critic` until it holds. You approve the plan once; then one `craft-coder` pass builds it and runs the repo's automated checks. It creates no spec, branch, commit, PR, or live test.
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 
@@ -151,7 +142,7 @@ Every invocation after that follows the file: work the checks, compare each agai
 - **Orchestrator owns architecture.** Spec, design, and plan stay in one context so decisions don't die in a handoff.
 - **Delegation for labor.** Exploration, research, coding, review, and live testing use subagents; judgment stays with the orchestrator, and so does its context.
 - **Standards in every agent.** Each agent carries the spec and design standards verbatim; shared references live under `skills/craft/references/`.
-- **Critique, not consensus.** `/craft-auto`'s critic searches for a challenger design and either proposes a better one or shows why the draft holds; the orchestrator rules in writing, and rulings are settled.
+- **Critique, not consensus.** The critic searches for a simpler design or shows why the draft holds; the orchestrator records its rulings in the plan.
 - **Diffs, not reports.** Coder reports are claims; `craft-code-reviewer` owns the Pass/Revise gate over the full diff — the orchestrator accepts findings, loops coders, and advances only on Pass.
 - **Prove it runs.** Every run ends with static checks, then live testing — run locally under a test account, real data where it is safe, stop before anything leaves the system, revert every temporary change.
 - **Readonly where it counts.** Exploration, research, and review agents are readonly; they inform the orchestrator but never edit artifacts.

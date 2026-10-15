@@ -46,46 +46,8 @@ Start from repo facts you already have; read the repo only for what they do not 
 
 ## Write
 
-Steps go under `## Steps` in the plan file, one `### N. <short title>` each. No Components, Seams, Key decisions, or Slices headings.
+Organize the steps and tests however makes the plan clearest. No particular headings or document layout are required. A small feature can be one or two steps.
 
 Each step names the files, the sibling to mirror, and the edge and error paths, then shows every piece of code it adds: full code for signatures, types, schemas, queries, and non-obvious logic; pseudocode only where the code is mechanical. The step fixes both the design and the amount of code. If the coder would have to choose a name, a shape, or whether to add a helper, the step is not done. Cut words, never information.
 
-Tests go under `## Tests`, one short title per bullet, one behavior each. Tests are written in the step that owns them, not a separate step.
-
-A small feature is one or two steps.
-
-Filled example (do not copy the domain; copy the density):
-
-````md
-## Steps
-
-### 1. Accept an optional `filter` query param
-
-In `internal/audit/handler.go`, read `filter` from the query string and pass it on the existing list params, mirroring `internal/events/handler.go`. Unknown params stay ignored; empty means no filter.
-
-```go
-type ListParams struct {
-    Limit  int
-    Filter string // optional; case-insensitive substring on Message
-}
-
-// in List, after the existing limit parsing:
-params.Filter = r.URL.Query().Get("filter")
-```
-
-### 2. Apply the filter in the store
-
-In `internal/audit/store.go`, extend the existing query builder. Same empty-list JSON as today when nothing matches. No new index. Add both tests to `internal/audit/handler_test.go`.
-
-```go
-if p.Filter != "" {
-    args = append(args, p.Filter)
-    where = append(where, fmt.Sprintf("message ILIKE '%%' || $%d || '%%'", len(args)))
-}
-```
-
-## Tests
-
-- filters by message substring
-- empty filter returns all
-````
+Identify each test by the observable behavior it proves. Tests are written in the step that owns them, not a separate step.

@@ -5,9 +5,9 @@ description: Use when the user wants to plan and build a feature end to end, say
 
 # Craft
 
-Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
-
 Plan a feature with the user, then build it. You are the **planner**: you own decisions, the spec, the architecture, and the plan; subagents explore, implement, review, polish, and test.
+
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
 Keep a living plan at `docs/plans/<feature>.md`. Choose its headings, order, and layout to suit the work; no template is required. As the work develops, it should capture:
 

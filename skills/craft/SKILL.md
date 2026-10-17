@@ -16,7 +16,7 @@ Keep one feature workspace at `.craft/<feature>/`, using kebab-case for `<featur
 ## Startup and resume
 
 1. Read applicable project instructions such as `AGENTS.md`, plus relevant local instructions.
-2. Read `.craft/README.md` and the shared guides relevant to the work. If `.craft/README.md` is missing, invoke the available `craft-init` workflow. If it is unavailable, report that limitation and make a focused lookup of the repo conventions and checks needed for this feature before proceeding.
+2. Read `.craft/README.md` and the shared guides relevant to the work. If `.craft/README.md` is missing, dispatch a writable general-purpose subagent with the target repo root, the available `craft-init` skill path (or its full instructions), and the initialize-all-guides scope. Wait for it, then read its generated README and relevant guides. If the skill or delegation is unavailable, report the blocker; do not initialize inline.
 3. For resumed legacy work, read the active `docs/plans/<feature>.md` first. Migrate its decisions, approval records, review rulings, progress, and verification evidence into the feature workspace, then replace the legacy file with a short pointer to `.craft/<feature>/progress.md`. Preserve meaning and evidence, and leave one active source of truth.
 4. For new work, create the feature folder and its documents from the templates. For existing workspaces, read `progress.md` first, then the documents needed for the recorded next action. Preserve existing content; do not reinitialize a workspace on resume.
 5. Explore feature-specific gaps only. Record durable repo facts in the relevant shared `.craft/` guide when they will help future work; keep feature findings in this feature folder.

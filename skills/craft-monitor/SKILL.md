@@ -5,11 +5,13 @@ description: Monitor a shipped feature against live production data. The first i
 
 # Craft Monitor
 
+Monitor a shipped feature against live production data and report meaningful changes or problems.
+
 Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
 Identify the feature from the invocation or session; ask if unclear. Missing `docs/monitor/<feature>.md` means first run (write the guide); present means follow it. Dispatch subagents for legwork; skip what you already know.
 
-Read project instructions, `.craft/README.md`, and relevant observability, deployment, and database guides first. If the README is missing, use `craft-init`; if unavailable, report the limitation and gather the needed context. Reuse access instructions and investigate feature-specific gaps. Correct durable access or service facts in the shared guides; keep feature checks and findings in the monitor guide.
+Read project instructions, `.craft/README.md`, and relevant observability, deployment, and database guides first. If the README is missing, dispatch a writable general-purpose subagent with the target repo root, available `craft-init` skill path (or its full instructions), and the initialize-all-guides scope. Wait for it, then read its generated README and relevant guides. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Reuse access instructions and investigate feature-specific gaps. Correct durable access or service facts in the shared guides; keep feature checks and findings in the monitor guide.
 
 ## 1. Write the guide
 

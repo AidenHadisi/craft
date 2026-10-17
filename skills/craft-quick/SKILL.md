@@ -5,11 +5,11 @@ description: Quickly plan and build a small, clear feature with one architecture
 
 # Craft Quick
 
-Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
-
 Move from a clear request to checked code with one user gate. Quick uses no spec, live testing, branch, commit, or PR.
 
-Read applicable project instructions, `.craft/README.md`, and the shared guides relevant to this task first. If the README is missing, use `craft-init` to initialize the guides. Reuse this context and explore only task-specific gaps. Correct or add durable repository facts in the relevant shared guide as you learn; keep task decisions and results in this task workspace. If `craft-init` is unavailable, report the limitation and gather the context needed for this task.
+Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
+
+Read applicable project instructions, `.craft/README.md`, and the shared guides relevant to this task first. If the README is missing, dispatch a writable general-purpose subagent with the target repo root, available `craft-init` skill path (or its full instructions), and the initialize-all-guides scope. Wait for it, then read its generated README and relevant guides. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Reuse this context and explore only task-specific gaps. Correct or add durable repository facts in the relevant shared guide as you learn; keep task decisions and results in this task workspace.
 
 Keep the task workspace at `.craft/<task>/`, using kebab-case. It contains `progress.md`, `architecture.md`, `implementation.md`, and `testing.md`, each starting from its linked template: [progress](assets/templates/progress.md), [architecture](assets/templates/architecture.md), [implementation](assets/templates/implementation.md), and [testing](assets/templates/testing.md). Adapt the Markdown headings and layout to the task; templates are starting shapes, not schemas. Retain the conventional filenames and responsibilities, and replace prompts with actual content or explicit open questions before approval.
 

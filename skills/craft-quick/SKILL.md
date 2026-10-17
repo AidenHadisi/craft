@@ -11,7 +11,7 @@ Prefer lower-cost models from the latest generation for routine work; use strong
 
 ## Start or resume
 
-Read project instructions, `.craft/README.md`, and relevant shared guides. If the README is missing, dispatch a writable general-purpose subagent with the repo root, `craft-init` skill path or full instructions, and scope to initialize all guides. Wait, then read its output. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Reuse shared context and update durable repo facts there.
+Read project instructions, `.craft/README.md`, and relevant shared guides. If the README is missing, run `craft-init`, then read the shared guides. Reuse shared context and update durable repo facts there.
 
 Use `.craft/<task>/` (kebab-case). Adapt these templates as needed, keeping filenames and responsibilities:
 

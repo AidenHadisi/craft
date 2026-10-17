@@ -9,7 +9,7 @@ Prove the feature by running it. You do not run it yourself — `craft-tester` d
 
 Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
 
-Read project instructions, `.craft/README.md`, and the development, testing, and data guides relevant to this task. If the README is missing, dispatch a writable general-purpose subagent with the target repo root, available `craft-init` skill path (or its full instructions), and the initialize-all-guides scope. Wait for it, then read its generated README and the relevant guides. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Use the guides to build the brief, checking current environment details before testing. Update durable setup or command corrections in the shared guides; feature evidence belongs in the feature's `testing.md` when a workspace exists.
+Read project instructions, `.craft/README.md`, and the development, testing, and data guides relevant to this task. If the README is missing, run `craft-init`, then read the shared guides. Use the guides to build the brief, checking current environment details before testing. Update durable setup or command corrections in the shared guides; feature evidence belongs in the feature's `testing.md` when a workspace exists.
 
 ## 1. Brief
 

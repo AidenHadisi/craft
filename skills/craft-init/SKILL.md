@@ -7,12 +7,6 @@ description: Initialize or refresh the shared .craft/ repository guides when set
 
 Maintain concise, durable project context in the target repo's `.craft/`. These guides complement `AGENTS.md`; they do not replace it or create project rules or skills.
 
-## Run through a delegate
-
-When the main agent invokes `/craft-init`, finds `.craft/README.md` missing, or requests a refresh, it dispatches a writable general-purpose subagent with the target repo root, this skill path or full instructions, and the requested scope. The main agent waits, then reads the generated guides; it does not initialize inline.
-
-The delegated initializer owns discovery and writes all requested guides directly. It does not spawn a nested initializer or require an agent team. If the skill or writable delegation is unavailable, report the blocker.
-
 ## Initialize or refresh
 
 Read current repo instructions and `.craft/` content. Use docs, manifests, configs, scripts, and skills as sources; current instructions and evidence take precedence over cached notes. Inspect broadly once for first setup; otherwise investigate only relevant gaps or the requested refresh area, not merely because a guide is old. Refresh all seven guides by default or only the named area.

@@ -36,7 +36,7 @@ Each agent carries the standards verbatim; shared references (spec and architect
 
 ```mermaid
 flowchart TD
-    start["/craft"] --> context["Read .craft guides; subagent initializes if missing"]
+    start["/craft"] --> context["Read .craft guides; run craft-init if missing"]
     context --> understand["Understand: explore feature + web, interview"]
     understand --> spec["Write Spec (short list of requirements)"]
     spec --> specReview["craft-reviewer on the spec"]
@@ -69,9 +69,9 @@ flowchart TD
 
 `craft-init` discovers the project map, conventions, setup and verification commands, deployment procedures, logs, and database access. Existing project instructions, docs, scripts, configuration, and skills are its starting point. It records sources and distinguishes documented instructions from commands or access actually verified. Unknown topics remain explicit; initialization does not require a deployment or production credentials.
 
-When `.craft/README.md` is missing, code workflows dispatch a writable subagent with the repository root and the `craft-init` skill instructions. The subagent discovers and writes the shared guides; the main agent waits, then reads the saved guides before planning. Initialization never runs in the main agent. If the skill or delegation is unavailable, report the blocker. During work, workflows update durable repository facts in the shared files and keep feature decisions and evidence in the feature workspace. Brainstorming reads existing guides without writing them. Current project instructions and source evidence take precedence over cached notes.
+When `.craft/README.md` is missing, code workflows run `craft-init`, then read the shared guides before planning. During work, workflows update durable repository facts in the shared files and keep feature decisions and evidence in the feature workspace. Brainstorming reads existing guides without writing them. Current project instructions and source evidence take precedence over cached notes.
 
-Use `/craft-init refresh` to revisit the whole guide or `/craft-init refresh testing` for an area; explicit initialization and refresh also run in a subagent. Routine work fills relevant gaps and corrects changed facts; an old date alone does not trigger a full scan. Existing custom content is preserved.
+Use `/craft-init refresh` to revisit the whole guide or `/craft-init refresh testing` for an area. Routine work fills relevant gaps and corrects changed facts; an old date alone does not trigger a full scan. Existing custom content is preserved.
 
 Templates ship inside [craft-init](skills/craft-init/SKILL.md), [craft](skills/craft/SKILL.md), and [craft-quick](skills/craft-quick/SKILL.md). They provide concise default headings and prompts, with room to add, combine, reorder, or omit sections to suit the repository or feature. Keep the conventional filenames and each document's responsibility. Shared guides and feature workspaces are intended to be Git-tracked, subject to repository policy. Resuming a legacy Craft or Craft Quick plan migrates its content and approvals into the feature workspace and leaves a pointer in the old file.
 

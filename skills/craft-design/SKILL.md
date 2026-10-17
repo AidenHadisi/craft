@@ -11,7 +11,7 @@ Prefer lower-cost models from the latest generation for straightforward explorat
 
 Hold the implementation to [architecture](references/architecture.md).
 
-Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, dispatch a writable general-purpose subagent with the target repo root, available `craft-init` skill path (or its full instructions), and the initialize-all-guides scope. Wait for it, then read its generated README and relevant guides. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Investigate task-specific gaps and update the shared guides when durable repository facts change. Pass relevant conventions and commands into later briefs.
+Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, run `craft-init`, then read the shared guides. Investigate task-specific gaps and update the shared guides when durable repository facts change. Pass relevant conventions and commands into later briefs.
 
 ## 1. Understand
 

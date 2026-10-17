@@ -11,7 +11,7 @@ Prefer lower-cost models from the latest generation for straightforward explorat
 
 Behavior, public APIs, and wire shapes stay. No new features. Keep the spec in this conversation — do not write it into the target repo.
 
-Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, dispatch a writable general-purpose subagent with the target repo root, available `craft-init` skill path (or its full instructions), and the initialize-all-guides scope. Wait for it, then read its generated README and relevant guides. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Reuse repository facts, investigate target-specific gaps, and update the shared guides as durable facts change. Shared guide maintenance is separate from the behavior spec and implementation approval.
+Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, run `craft-init`, then read the shared guides. Reuse repository facts, investigate target-specific gaps, and update the shared guides as durable facts change. Shared guide maintenance is separate from the behavior spec and implementation approval.
 
 Hold the spec to [spec](references/spec.md). Hold the design and the code to [architecture](references/architecture.md).
 

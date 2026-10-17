@@ -5,22 +5,21 @@ description: Initialize or refresh the shared .craft/ repository guides when set
 
 # Craft Init
 
-Maintain concise, durable project context in the target repo's `.craft/`. These guides complement `AGENTS.md`; they do not replace it or create project rules or skills.
+Create or refresh concise project guides in `.craft/`. They complement `AGENTS.md` and do not replace project instructions or create rules and skills.
 
-## Initialize or refresh
+## 1. Initialize
 
-Read current repo instructions and `.craft/` content. Use docs, manifests, configs, scripts, and skills as sources; current instructions and evidence take precedence over cached notes. Inspect broadly once for first setup; otherwise investigate only relevant gaps or the requested refresh area, not merely because a guide is old. Refresh all seven guides by default or only the named area.
+Read current project instructions and existing `.craft/` content. Initialize all guides on first setup. For a refresh, update all guides or only the named area.
 
-- Adapt templates to the repo, preserve useful custom content, and keep each fact in one place. Include all seven guides on first setup.
-- Distinguish documented instructions from commands or access actually verified; record the source, result, date, and scope.
-- Use `Unknown` when information is unavailable and `N/A` only with a confirmed reason.
-- Do not store secrets or mutate external systems. Follow repo tracking policy.
+## 2. Explore
 
-Return a concise summary of files, checks, and gaps.
+Inspect project structure, conventions, run and test commands, deployment, logs, and database access. Use documentation, manifests, configs, scripts, and project skills; current evidence takes precedence over cached notes.
 
-During ordinary work with existing guides, read only relevant ones and make small evidence-based corrections. Keep feature findings in the feature workspace.
+Distinguish documented instructions from what you verified; include source, result, date, and scope. Use `Unknown` if unavailable and `N/A` only when confirmed.
 
-## Guide templates
+## 3. Write
+
+Adapt the templates to the repo, preserve useful custom content, and keep each fact in one place.
 
 - [README.md](assets/templates/README.md) — overview, repo map, guide index, discovery status.
 - [conventions.md](assets/templates/conventions.md) — coding patterns and example paths.
@@ -29,3 +28,13 @@ During ordinary work with existing guides, read only relevant ones and make smal
 - [deployment.md](assets/templates/deployment.md) — CI/CD, release, rollback.
 - [observability.md](assets/templates/observability.md) — logs, metrics, dashboards, alerts.
 - [databases.md](assets/templates/databases.md) — data services, schemas, migrations, safe access.
+
+Do not store secrets or mutate external systems; follow repo tracking policy.
+
+## 4. Maintain
+
+During ordinary Craft work, read relevant guides and make small, evidence-based corrections. Inspect only relevant gaps or the requested refresh area; do not rescan because a guide is old. Keep feature findings in the feature workspace.
+
+## 5. Finish
+
+Summarize files changed, checks performed, and remaining gaps.

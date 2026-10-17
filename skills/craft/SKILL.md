@@ -5,59 +5,69 @@ description: Use when the user wants to plan and build a feature end to end, say
 
 # Craft
 
-Plan with the user, then build. You own decisions and planning documents; subagents explore, implement, review, polish, and test.
+Plan the feature with the user, then build and ship it. You own decisions and planning documents; subagents explore, implement, review, polish, and test.
 
 Prefer lower-cost models from the latest generation for routine work; use stronger models for difficult reasoning. Report missing capabilities.
 
-## Start or resume
+## 1. Initialize
 
-Read project instructions, then `.craft/README.md` and relevant shared guides. If the README is missing, run `craft-init`, then read the shared guides. Update shared guides with durable repo facts; keep feature findings in the feature folder.
+Read project instructions, then `.craft/README.md` and relevant shared guides. If the README is missing, run `craft-init` and read the generated guides. Update shared guides with durable repo facts; keep feature findings in the feature folder.
 
-Use `.craft/<feature>/` (kebab-case) for the feature. Templates are adaptable starting points, not schemas; keep conventional filenames and replace prompts before review.
+Use `.craft/<feature>/` (kebab-case) with these conventional filenames. Templates are flexible starting points: adapt sections, but replace prompts before review. `progress.md` is the resume entry and owns current phase, next action, blockers, approvals, step status, and review rulings.
 
-- [progress.md](assets/templates/progress.md): resume entry; phase, next action, blockers, approvals, step status, review rulings/history.
-- [spec.md](assets/templates/spec.md): observable requirements and exclusions.
-- [architecture.md](assets/templates/architecture.md): design and rationale.
-- [implementation.md](assets/templates/implementation.md): dependency-ordered, build-ready steps.
-- [testing.md](assets/templates/testing.md): test plan, check results, and live `Ran:`/`Saw:` evidence.
-- [research.md](assets/templates/research.md): optional durable findings.
+- [progress.md](assets/templates/progress.md) — workflow state.
+- [spec.md](assets/templates/spec.md) — requirements and exclusions.
+- [architecture.md](assets/templates/architecture.md) — design and rationale.
+- [implementation.md](assets/templates/implementation.md) — ordered, build-ready steps.
+- [testing.md](assets/templates/testing.md) — checks and live evidence.
+- [research.md](assets/templates/research.md) — optional research findings.
 
-On resume, read `progress.md` first and preserve existing approvals and evidence. Keep progress as the sole workflow-state record.
-
-## Explore and set up
-
-Reuse the shared guides, then dispatch scoped read-only exploration for feature-specific gaps. Research non-trivial design choices on the web or with `craft-researcher` when useful. Ask only for product decisions that would change the work; never invent them. Record decisions and findings in their owning documents.
+On resume, read progress first and preserve existing approvals and evidence.
 
 Create `feat/<feature>` from the default branch unless already on a feature branch.
 
-## Spec gate
+## 2. Explore
 
-1. Write testable requirements with stable IDs and explicit exclusions in `spec.md`; follow [spec standards](references/spec.md).
-2. Send it to `craft-reviewer`. Record Adopt or Reject and the reason for each finding in `progress.md`; revise and repeat until Pass.
-3. Present the spec and wait for approval before design work. Record the approved scope in `progress.md`; if sent back, revise and re-review.
+Reuse the shared guides, then dispatch read-only subagents for feature-specific code, sibling examples, conventions, constraints, and checks. Parallelize independent exploration. Research non-trivial choices on the web or with `craft-researcher` when useful.
 
-## Design gate
+## 3. Ask
 
-Write the design in `architecture.md`, build-ready steps in `implementation.md`, and planned checks in `testing.md`; follow [architecture standards](references/architecture.md). Steps name owned files, contracts, relevant examples, edge paths, and checks.
+Ask what the user wants, why, and what is out of scope. Prefer multiple choice when suitable. Do not invent product decisions.
 
-1. Dispatch `craft-critic`; record Adopt or Reject with reasons and revise until Holds. After three unresolved rounds, ask the user.
-2. Dispatch `craft-reviewer`; revise and repeat until Pass.
-3. Present the design, steps, and checks. Wait for user approval and record the documents and scope approved in `progress.md`. If sent back, revise through the review loop.
+## 4. Specify
 
-Substantive scope changes reopen the spec gate; design or plan changes reopen this gate. Formatting and evidence updates do not. Do not dispatch work while waiting at a user gate.
+Write observable, testable requirements with stable IDs and exclusions in `spec.md`; follow [spec standards](references/spec.md). Send it to `craft-reviewer` and revise until Pass. Record each finding as Adopt or Reject with a reason in `progress.md`. Then show the spec to the user and wait for approval. Record the approved scope. If sent back, record feedback and re-review.
 
-## Build and review
+## 5. Design
 
-Dispatch `craft-coder` per step. Give each agent named files and step ownership, approved contracts, criteria, repo conventions, and check commands. Parallelize only disjoint files. You own the planning documents; record agent findings and results there. Update step status in `progress.md`. Escalate blockers to the user.
+Write the chosen design in `architecture.md`, build-ready steps in `implementation.md`, and planned checks in `testing.md`; follow [architecture standards](references/architecture.md). Map checks to requirement IDs. Each step names files, ownership, contracts, relevant examples, edge paths, and checks.
 
-When implementation is complete, dispatch `craft-polisher`, then `craft-code-reviewer`. Record the result in `progress.md`. For Revise, record findings, send scoped fixes to the coder, rerun checks, and re-review until Pass.
+Send the design, steps, and checks to `craft-critic`. Adopt or reject findings with reasons and revise until Holds. After three unresolved rounds, ask the user. Then send the same materials to `craft-reviewer` and revise until Pass.
 
-## Live test and finish
+## 6. Approve
 
-Live testing is mandatory before a PR:
+Present the design, steps, and planned checks. Wait for approval before building, and record the approved scope and documents in `progress.md`. If sent back, record feedback and repeat critique and review.
 
-- Dispatch `craft-tester` with the workspace, actual spec and test-plan paths or content, run instructions, and checks. Stub external side effects.
-- Record evidence in `testing.md`: every requirement needs `Ran:` and concrete `Saw:` evidence.
-- Remove temporary test artifacts and edits while preserving pre-test implementation changes. If proof fails, fix and rerun all live checks.
+This gate covers architecture, implementation, and planned testing. Substantive scope changes reopen the spec gate; design or plan changes reopen this gate. Formatting or evidence updates do not. Do not dispatch work while awaiting a gate decision.
 
-After all checks pass, commit on `feat/<feature>`, push it, and create a PR pairing each requirement with its evidence. Share the PR and results with the user.
+## 7. Build
+
+Dispatch `craft-coder` for each step. Give each agent its step, owned files, approved contracts, criteria, conventions, and check commands. Parallelize only disjoint files. Record findings and step status in `progress.md`, and check results in `testing.md`. Escalate blockers to the user.
+
+## 8. Polish
+
+After the steps are done, dispatch `craft-polisher` on the working diff and record completion and material changes.
+
+## 9. Review
+
+Dispatch `craft-code-reviewer` on the full diff. Record its ruling. For Revise, send scoped fixes to the coder, rerun checks, and request review again until Pass.
+
+## 10. Test
+
+Live testing is mandatory before a PR. Dispatch `craft-tester` with the workspace, actual spec and test-plan paths or content, run instructions, and checks. Stub external side effects.
+
+Record `Ran:` and concrete `Saw:` evidence for every requirement in `testing.md`. Remove temporary test artifacts, records, and edits while preserving implementation changes that existed before testing. If proof fails, fix the issue and rerun all live checks.
+
+## 11. Finish
+
+Commit on `feat/<feature>`, push the branch, and create a PR pairing each requirement with its test evidence. Share the PR and results with the user.

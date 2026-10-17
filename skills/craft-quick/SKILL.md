@@ -13,16 +13,11 @@ Prefer lower-cost models from the latest generation for routine work; use strong
 
 Read project instructions, `.craft/README.md`, and relevant shared guides. If the README is missing, run `craft-init`, then read its output. Update shared guides with durable repo facts.
 
-Use `.craft/<task>/` (kebab-case) with these filenames. Adapt the templates while keeping their responsibilities. `progress.md` is the resume entry; preserve existing approvals and evidence.
-
-- [progress.md](assets/templates/progress.md) — phase, next action, blockers, approval, step status, rulings.
-- [architecture.md](assets/templates/architecture.md) — request, done criteria, constraints, exclusions, design.
-- [implementation.md](assets/templates/implementation.md) — ordered build steps.
-- [testing.md](assets/templates/testing.md) — automated commands, expected outcomes, results.
+Use `.craft/<task>/plan.md` (kebab-case) as the task's only plan. Adapt the [plan template](assets/templates/plan.md) and read it first on resume. Keep its progress, decisions, and results current.
 
 ## 2. Explore
 
-Inspect relevant code, examples, conventions, and checks. Explore only task-specific gaps; delegate reading when useful.
+Inspect relevant code, examples, conventions, and checks. Explore only task-specific gaps; when delegating, provide the plan path and relevant context.
 
 ## 3. Ask
 
@@ -30,23 +25,23 @@ Ask only when a missing decision would change the implementation. Otherwise foll
 
 ## 4. Plan
 
-Write the request, done criteria, constraints, exclusions, and chosen design in `architecture.md`. Put implementation steps in `implementation.md` and automated checks, commands, and expected outcomes in `testing.md`. Use clearly named steps and substeps (`1.1`, `1.2`, `2.1`), explaining the implementation with code, pseudocode, schemas, or logic as appropriate. Track step status in `progress.md`. Follow [architecture standards](references/architecture.md).
+Write the request, done criteria, constraints, exclusions, and chosen design in the Architecture section. Use numbered implementation steps and substeps (`1.1`, `1.2`, `2.1`) that explain the concrete changes in prose, code, pseudocode, schemas, queries, or logic as useful. Put automated commands, expected outcomes, and results in Testing. Keep workflow state and step status in Progress. Follow [architecture standards](references/architecture.md).
 
 ## 5. Critique
 
-Send the workspace and decisions to `craft-critic`. Record Adopt or Reject and the reason in `progress.md`; revise until Holds. After three unresolved critiques, ask the user.
+Send the plan path and relevant workspace context to `craft-critic`. Record Adopt or Reject and the reason in the plan, then revise until Holds. Allow at most three critic rounds; if unresolved after the third, ask the user.
 
 ## 6. Approve
 
-Present the design, steps, and automated checks. Wait for approval before building and record its scope in `progress.md`. If sent back, record feedback and revise through the critic loop. Substantive changes reopen this gate; formatting and results do not.
+Present the design, steps, and automated checks. Wait for approval before building and record its scope and any feedback in the plan. If sent back, revise through the critic loop. This is the single approval gate; substantive changes reopen it, while formatting and results do not.
 
 ## 7. Build
 
-Dispatch one `craft-coder` with the approved steps, named files, contracts, criteria, conventions, and check commands. The coder implements the steps and runs the checks. Record step status in `progress.md` and check results in `testing.md`. Escalate blockers to the user. If implementation changes approved scope or design, reopen the approval gate.
+Dispatch one `craft-coder` with the plan path and relevant approved context, named files, criteria, conventions, and check commands. The coder implements the steps and runs the checks. Record step status and check results in the plan. Escalate blockers to the user. If implementation changes approved scope or design, reopen the approval gate.
 
 ## 8. Polish
 
-Dispatch `craft-polisher` on the working diff and confirm the checks remain green.
+Dispatch `craft-polisher` with the plan path and relevant working-diff context. Confirm the checks remain green and record their results in the plan.
 
 ## 9. Finish
 

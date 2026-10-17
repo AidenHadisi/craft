@@ -14,7 +14,7 @@ Every run proves the feature live before creating the PR.
 |---|---|---|
 | `craft` | skill (`/craft`) | Writes spec then architecture with a review and a user gate on each, then implements hands-off |
 | `craft-init` | skill (`/craft-init`) | Initializes or refreshes reusable repository guides in `.craft/` |
-| `craft-quick` | skill (`/craft-quick`) | Uses a small feature workspace, critic-loops the design, asks for approval, then builds and runs automated checks |
+| `craft-quick` | skill (`/craft-quick`) | Writes one task plan, critic-loops the design, asks for approval, then builds and runs automated checks |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
@@ -62,7 +62,7 @@ flowchart TD
 
 - `.craft/README.md` and the shared `conventions.md`, `development.md`, `testing.md`, `deployment.md`, `observability.md`, and `databases.md` — reusable project knowledge, initialized by `craft-init` and maintained as verified facts change.
 - `.craft/<feature>/` — full `craft` feature workspace: `progress.md` is the resume entry point; `spec.md` owns requirements; `architecture.md` owns design; `implementation.md` owns build steps; `testing.md` owns planned checks and evidence. Add `research.md` when useful. Each document has a flexible Markdown template.
-- `.craft/<task>/` — `craft-quick` uses the same document roles with a smaller set: `progress.md`, `architecture.md`, `implementation.md`, and `testing.md`. The request and completion criteria live in `architecture.md`; there is no separate spec. One approval covers the design, steps, and automated test plan.
+- `.craft/<task>/plan.md` — `craft-quick` keeps progress, architecture, implementation steps, and automated testing in one file. There is no separate spec. One approval covers the design, steps, and test plan.
 - `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
 
 ### Shared repository guides
@@ -132,7 +132,7 @@ For a smaller change that needs design judgment without the full workflow:
 /craft-quick add filtering to the audit log
 ```
 
-It reuses the shared guides, explores relevant code, and asks questions only when blocked by a real decision. A concise `.craft/<task>/` workspace holds the request and design in `architecture.md`, steps in `implementation.md`, checks and results in `testing.md`, and approval and resume state in `progress.md`. Its templates adapt to the task. `craft-critic` checks the design until it holds; you approve the design, steps, and test plan once. Then one `craft-coder` builds it, runs automated checks, and hands the diff to `craft-polisher`. It creates no spec, branch, commit, PR, or live test.
+It reuses the shared guides, explores relevant code, and asks questions only when blocked by a real decision. A concise `.craft/<task>/plan.md` holds progress, the request and design, numbered implementation steps, and automated checks and results. Its template adapts to the task. `craft-critic` checks the design until it holds; you approve the design, steps, and test plan once. Then one `craft-coder` builds it, runs automated checks, and hands the diff to `craft-polisher`. It creates no spec, branch, commit, PR, or live test.
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 

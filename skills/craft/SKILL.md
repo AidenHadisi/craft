@@ -5,105 +5,59 @@ description: Use when the user wants to plan and build a feature end to end, say
 
 # Craft
 
-Plan a feature with the user, then build it. You are the **planner**: you own decisions and the canonical feature documents; subagents explore, implement, review, polish, and test.
+Plan with the user, then build. You own decisions and planning documents; subagents explore, implement, review, polish, and test.
 
-Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
+Prefer lower-cost models from the latest generation for routine work; use stronger models for difficult reasoning. Report missing capabilities.
 
-Keep one feature workspace at `.craft/<feature>/`, using kebab-case for `<feature>`. It contains `progress.md`, `spec.md`, `architecture.md`, `implementation.md`, and `testing.md`; add `research.md` when useful. Start each document from its template — [progress](assets/templates/progress.md), [spec](assets/templates/spec.md), [architecture](assets/templates/architecture.md), [implementation](assets/templates/implementation.md), [testing](assets/templates/testing.md), and [research](assets/templates/research.md) — then adapt its sections to the feature. Templates are starting shapes, not schemas: rename, reorder, add, or omit sections while preserving the responsibilities below and the conventional filenames. Replace prompts with actual content or explicit open questions before review. The shared project index and guides live at `.craft/README.md` and `.craft/{conventions,development,testing,deployment,observability,databases}.md`.
+## Start or resume
 
-`progress.md` is the entry point and the only place for current phase, next action, blockers, approval records, implementation-step status, and compact review rulings/history. Keep substantive requirements in `spec.md`, design and rationale in `architecture.md`, build-ready steps in `implementation.md`, and test plans and execution evidence in `testing.md`. Put durable research findings in optional `research.md`. Link these documents to each other where useful; do not duplicate their contents or maintain competing status records.
+Read project instructions, then `.craft/README.md` and relevant shared guides. If the README is missing, dispatch a writable general-purpose subagent with the repo root, `craft-init` skill path or full instructions, and scope to initialize all guides. Wait, then read its output. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Update shared guides with durable repo facts; keep feature findings in the feature folder.
 
-## Startup and resume
+Use `.craft/<feature>/` (kebab-case) for the feature. Templates are adaptable starting points, not schemas; keep conventional filenames and replace prompts before review.
 
-1. Read applicable project instructions such as `AGENTS.md`, plus relevant local instructions.
-2. Read `.craft/README.md` and the shared guides relevant to the work. If `.craft/README.md` is missing, dispatch a writable general-purpose subagent with the target repo root, the available `craft-init` skill path (or its full instructions), and the initialize-all-guides scope. Wait for it, then read its generated README and relevant guides. If the skill or delegation is unavailable, report the blocker; do not initialize inline.
-3. For resumed legacy work, read the active `docs/plans/<feature>.md` first. Migrate its decisions, approval records, review rulings, progress, and verification evidence into the feature workspace, then replace the legacy file with a short pointer to `.craft/<feature>/progress.md`. Preserve meaning and evidence, and leave one active source of truth.
-4. For new work, create the feature folder and its documents from the templates. For existing workspaces, read `progress.md` first, then the documents needed for the recorded next action. Preserve existing content; do not reinitialize a workspace on resume.
-5. Explore feature-specific gaps only. Record durable repo facts in the relevant shared `.craft/` guide when they will help future work; keep feature findings in this feature folder.
+- [progress.md](assets/templates/progress.md): resume entry; phase, next action, blockers, approvals, step status, review rulings/history.
+- [spec.md](assets/templates/spec.md): observable requirements and exclusions.
+- [architecture.md](assets/templates/architecture.md): design and rationale.
+- [implementation.md](assets/templates/implementation.md): dependency-ordered, build-ready steps.
+- [testing.md](assets/templates/testing.md): test plan, check results, and live `Ran:`/`Saw:` evidence.
+- [research.md](assets/templates/research.md): optional durable findings.
 
-## 1. Explore & Research
+On resume, read `progress.md` first and preserve existing approvals and evidence. Migrate an active `docs/plans/<feature>.md`, preserving decisions, rulings, approvals, progress, and evidence, then replace it with a pointer to `progress.md`. Keep progress as the sole workflow-state record.
 
-- **Codebase:** Reuse shared guides, then dispatch read-only subagents for feature-relevant code, siblings, constraints, and missing check commands. Parallelize independent lookups.
-- **Web research:** For non-trivial features or architectural choices, explore the web or dispatch `craft-researcher` to see how robust production systems and standard packages solve the problem cleanly.
-- Record relevant feature findings in `research.md` or the appropriate design document, and capture durable repo-wide facts in the shared guide. Avoid recording transient exploration that the next step does not need.
+## Explore and set up
 
-## 2. Interview & Setup
+Reuse the shared guides, then dispatch scoped read-only exploration for feature-specific gaps. Research non-trivial design choices on the web or with `craft-researcher` when useful. Ask only for product decisions that would change the work; never invent them. Record decisions and findings in their owning documents.
 
-- **Interview:** Ask what the user wants, why, and what is out of bounds. Default to multiple-choice questions unless free text is needed (for open-ended requirements, custom domain details, or code/schema examples). Never invent product decisions.
-- **Branch:** Create `feat/<feature>` from the default branch (unless already on a feature branch).
-- **Initialize workspace:** Create or update `.craft/<feature>/` and its conventional documents. Record intent, context, constraints, interview decisions, and known open questions in the appropriate documents. Keep progress and next action in `progress.md`.
+Create `feat/<feature>` from the default branch unless already on a feature branch.
 
-## 3. Spec (User Gate)
+## Spec gate
 
-Write a concise, testable spec in `spec.md`:
-- Observable behaviors and requirements (happy path, error cases, edge cases), each with a stable, useful ID such as `REQ-1`.
-- Explicit out-of-scope items.
-- Hold to [spec standards](references/spec.md): describe what and why, not implementation details.
+1. Write testable requirements with stable IDs and explicit exclusions in `spec.md`; follow [spec standards](references/spec.md).
+2. Send it to `craft-reviewer`. Record Adopt or Reject and the reason for each finding in `progress.md`; revise and repeat until Pass.
+3. Present the spec and wait for approval before design work. Record the approved scope in `progress.md`; if sent back, revise and re-review.
 
-**Review & Approval:**
-1. Dispatch `craft-reviewer` with `spec.md`, relevant findings and decisions, and the feature workspace path.
-2. If **Needs changes**: rule on each point in `progress.md`, adopt or reject with a reason, update the spec, and re-dispatch.
-3. On **Pass**, stop. Present the spec to the user:
-   - Show the requirements and summarize what review resolved.
-   - Ask: *"Approve this spec as written, or send it back with feedback?"*
-   - On approval: record the approval in `progress.md`, naming `spec.md` and its approved scope. This freezes the spec.
-   - If sent back: record the feedback in `progress.md`, revise, and re-review.
+## Design gate
 
-## 4. Architecture (User Gate)
+Write the design in `architecture.md`, build-ready steps in `implementation.md`, and planned checks in `testing.md`; follow [architecture standards](references/architecture.md). Steps name owned files, contracts, relevant examples, edge paths, and checks.
 
-Design the system shape in `architecture.md`, write dependency-ordered build-ready steps in `implementation.md`, and write the test plan in `testing.md`. Follow [architecture standards](references/architecture.md) without overcomplicating:
-- Architecture overview: chosen design, how pieces connect, and why it fits.
-- Implementation steps: paths, ownership, sibling examples, interfaces/contracts, edge paths, useful snippets, and step dependencies. Keep current step status only in `progress.md`.
-- Test plan: specific observable checks mapped to requirement IDs. Execution evidence is added after the live test.
+1. Dispatch `craft-critic`; record Adopt or Reject with reasons and revise until Holds. After three unresolved rounds, ask the user.
+2. Dispatch `craft-reviewer`; revise and repeat until Pass.
+3. Present the design, steps, and checks. Wait for user approval and record the documents and scope approved in `progress.md`. If sent back, revise through the review loop.
 
-**Critic & Review Loops:**
-1. Dispatch `craft-critic` with the architecture, implementation steps, test plan, findings, and decisions.
-   - If **Better design**: adopt or rule in `progress.md`, revise the affected documents, and re-dispatch (cap at 3 critiques; escalate to user if deadlocked).
-   - If **Holds**: proceed.
-2. Dispatch `craft-reviewer` with the same inputs to verify buildability and completeness.
-   - If **Needs changes**: update the affected documents and re-dispatch until Pass.
-3. On **Pass**, stop. Present the architecture, implementation steps, test plan, and any rejected alternatives to the user:
-   - Ask: *"Approve this design and start building, or send it back with feedback?"*
-   - On approval: record the approval in `progress.md`, naming `architecture.md`, `implementation.md`, and the planned checks in `testing.md`, and the approved design scope. This freezes the design, steps, and test plan; execution evidence is added as work proceeds.
-   - If sent back: record feedback in `progress.md`, revise, and re-review.
+Substantive scope changes reopen the spec gate; design or plan changes reopen this gate. Formatting and evidence updates do not. Do not dispatch work while waiting at a user gate.
 
-Substantive scope changes reopen the spec gate; substantive design or build-plan changes reopen the architecture gate. Record the changed scope and renewed approval in `progress.md`. Formatting or clarity edits that preserve approved meaning do not reopen a gate.
+## Build and review
 
-## 5. Implement & Review
+Dispatch `craft-coder` per step. Give each agent named files and step ownership, approved contracts, criteria, repo conventions, and check commands. Parallelize only disjoint files. You own the planning documents; record agent findings and results there. Update step status in `progress.md`. Escalate blockers to the user.
 
-- **Build steps:** Dispatch `craft-coder` per step (parallelize across disjoint files). Every handoff names the step and owned files, and includes the relevant shared context: requirement IDs, approved architecture and contracts, dependencies, repo conventions, and verification commands. The planner owns canonical feature documents; ask implementers to report findings, deviations, and evidence for the planner to record. Do not assign overlapping file ownership.
-  - Update step status in `progress.md` when the coder reports done.
-  - Record material findings, surprises, and deviations in the appropriate document; if they change approved scope or design, reopen the relevant gate.
-  - **If blocked:** Stop. Show the blocker note and options to the user. Record the blocker and decision in `progress.md`.
-- **Polish:** Once all steps are done, dispatch `craft-polisher` over the working diff. Note material changes and polish completion in `progress.md`.
-- **Code review:** Dispatch `craft-code-reviewer` once over the full diff.
-  - If **Revise**: record the ruling and findings in `progress.md`, resume coder(s) with named files and steps for fixes, re-run checks, and re-review.
-  - On **Pass**: record the review result in `progress.md`.
+When implementation is complete, dispatch `craft-polisher`, then `craft-code-reviewer`. Record the result in `progress.md`. For Revise, record findings, send scoped fixes to the coder, rerun checks, and re-review until Pass.
 
-## 6. Live Test
+## Live test and finish
 
-Live testing is mandatory — every feature must be proven running locally before creating a PR.
+Live testing is mandatory before a PR:
 
-1. Dispatch `craft-tester` with the feature workspace path, `spec.md` and `testing.md` paths or content, run instructions, verification commands, and test scope. Include each requirement's observable criteria and planned checks with expected evidence; IDs alone are not a test brief.
-2. Tester executes checks in a real running process, stubs external side-effects (e.g. emails, payments), and records temporary artifacts for cleanup. The tester reports results; the planner records canonical evidence in `testing.md`.
-3. Judge the report:
-   - Every requirement must have a `Ran:` line and concrete `Saw:` evidence (status code, log line, or UI screenshot) in `testing.md`.
-   - Cleanup means no temporary test artifacts, records, or edits remain. It does not require the implementation working tree or git diff to be clean.
-   - If proof fails: send a fix step to `craft-coder`, update `progress.md`, then re-run all live tests.
-4. When all pass: record successful verification and live-test evidence in `testing.md`; update phase and next action in `progress.md`.
+- Dispatch `craft-tester` with the workspace, actual spec and test-plan paths or content, run instructions, and checks. Stub external side effects.
+- Record evidence in `testing.md`: every requirement needs `Ran:` and concrete `Saw:` evidence.
+- Remove temporary test artifacts and edits while preserving pre-test implementation changes. If proof fails, fix and rerun all live checks.
 
-## 7. Finish
-
-1. Commit remaining changes on `feat/<feature>` with a conventional commit message.
-2. Push: `git push -u origin <branch>`
-3. Create PR: `gh pr create` with what was built and each requirement ID paired with its `Ran:` / `Saw:` evidence.
-4. Share the PR link and evidence summary with the user, then stop.
-
----
-
-## Core Rules
-
-- **You orchestrate, subagents execute:** You own decisions and canonical feature documents. Never write code, review your own docs, polish diffs, or live-test directly. Ask subagents to report findings for you to record.
-- **Protect your context:** Delegate heavy reading, codebase exploration, and web research to read-only subagents.
-- **One active truth:** `progress.md` owns current workflow state and approvals; each other document owns its defined content. Keep decisions, review rulings, approvals, deviations, and evidence discoverable without copying whole documents.
-- **Respect human gates:** During user approval gates or blocker escalations, wait for user input — never dispatch subagents ahead of time.
+After all checks pass, commit on `feat/<feature>`, push it, and create a PR pairing each requirement with its evidence. Share the PR and results with the user.

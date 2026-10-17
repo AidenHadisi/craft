@@ -5,33 +5,33 @@ description: Initialize or refresh the shared .craft/ repository guides when set
 
 # Craft Init
 
-Maintain durable project context for Craft in the target repository's `.craft/` directory. This guide complements host instructions such as `AGENTS.md`; it does not replace them or generate project rules and skills.
+Maintain concise, durable project context in the target repo's `.craft/`. These guides complement `AGENTS.md`; they do not replace it or create project rules or skills.
 
-## Lifecycle and delegation
+## Run through a delegate
 
-- When this skill is invoked directly by the main agent (including `/craft-init`), because `.craft/README.md` is missing, or for an explicit `refresh`, the main agent dispatches a writable general-purpose subagent to execute this skill. Include the target repository root, this skill's path (or its full instructions), and the requested scope. The main agent waits for completion, then reads the generated README and relevant guides. The main agent does not initialize or refresh guides itself.
-- The delegated initializer owns repository discovery, merge decisions, and writing the shared guides. It performs this workflow directly; do not recursively dispatch another initializer or require a nested agent team.
-- Initialization creates all seven guides. `refresh` rechecks all guides; `refresh <area>` rechecks only the requested area while preserving useful custom content.
-- If the skill or writable delegation is unavailable, report the blocker; do not fall back to having the main agent perform initialization.
-- If `.craft/README.md` exists during ordinary Craft work, read it and only the guides relevant to the task. Reuse verified context and check current repository instructions and sources when they conflict. Small, evidence-based corrections to durable facts can be made as part of ordinary work. Keep feature-specific findings and decisions in that feature's folder, not in the project guide.
+When the main agent invokes `/craft-init`, finds `.craft/README.md` missing, or requests a refresh, it dispatches a writable general-purpose subagent with the target repo root, this skill path or full instructions, and the requested scope. The main agent waits, then reads the generated guides; it does not initialize inline.
+
+The delegated initializer owns discovery and writes all requested guides directly. It does not spawn a nested initializer or require an agent team. If the skill or writable delegation is unavailable, report the blocker.
 
 ## Initialize or refresh
 
-1. Read current project instructions and existing `.craft/` content. Start discovery from documentation, manifests, configs, scripts, and project skills. Current instructions, sources, and user direction take precedence over cached claims.
-2. For a first initialization, inspect the repository broadly once. For an existing guide, inspect only gaps relevant to the task; a refresh rechecks only its requested area or areas. Do not rescan merely because a guide is old.
-3. The delegated initializer owns discovery and writing. Investigate the requested scope directly; do not require nested subagents or split guide edits across agents.
-4. Adapt the linked templates into `.craft/`. Their headings are starting points: add, combine, reorder, or omit sections to fit the repo. Replace instructional prompts with facts or explicit gaps. Keep the README short; each fact has one home and other guides link to it. Beside commands and access instructions, distinguish documented claims from what was actually verified, with the result, date, scope, and source. Use `Unknown` for unavailable information and `N/A` only with a confirmed reason.
-5. Include all seven guides initially, using concise `Unknown` or `N/A` notes where appropriate. On later runs, fill missing guides or sections only when relevant to the task or requested refresh. A README alone does not establish that all topics were investigated.
-6. Merge into existing guides, preserving useful custom content. Keep them concise; do not store credentials, tokens, private keys, or copied secret values. Summarize what changed, what was checked, and any remaining gaps.
+Read current repo instructions and `.craft/` content. Use docs, manifests, configs, scripts, and skills as sources; current instructions and evidence take precedence over cached notes. Inspect broadly once for first setup; otherwise investigate only relevant gaps or the requested refresh area, not merely because a guide is old. Refresh all seven guides by default or only the named area.
 
-## Output files
+- Adapt templates to the repo, preserve useful custom content, and keep each fact in one place. Include all seven guides on first setup.
+- Distinguish documented instructions from commands or access actually verified; record the source, result, date, and scope.
+- Use `Unknown` when information is unavailable and `N/A` only with a confirmed reason.
+- Do not store secrets or mutate external systems. Follow repo tracking policy.
 
-- [`README.md`](assets/templates/README.md) — project overview, map, guide index, and discovery status.
-- [`conventions.md`](assets/templates/conventions.md) — observed implementation patterns and representative paths.
-- [`development.md`](assets/templates/development.md) — prerequisites, setup, build, run, and repository workflow.
-- [`testing.md`](assets/templates/testing.md) — test commands, organization, fixtures, and safe test-data guidance.
-- [`deployment.md`](assets/templates/deployment.md) — CI/CD, environments, release and rollback pointers.
-- [`observability.md`](assets/templates/observability.md) — logs, metrics, dashboards, alerts, and access paths.
-- [`databases.md`](assets/templates/databases.md) — databases and services, schema pointers, migrations, and safe access.
+Return a concise summary of files, checks, and gaps.
 
-Keep these project guides Git-tracked subject to the repository's policy. Recheck them when relevant facts change or the user requests a refresh. Do not deploy, mutate external systems, or require credentials to complete initialization. If verification needs unavailable access, record the limitation and the documented source; never imply that it was verified.
+During ordinary work with existing guides, read only relevant ones and make small evidence-based corrections. Keep feature findings in the feature workspace.
+
+## Guide templates
+
+- [README.md](assets/templates/README.md) — overview, repo map, guide index, discovery status.
+- [conventions.md](assets/templates/conventions.md) — coding patterns and example paths.
+- [development.md](assets/templates/development.md) — setup, build, run, workflow.
+- [testing.md](assets/templates/testing.md) — commands, fixtures, safe test data.
+- [deployment.md](assets/templates/deployment.md) — CI/CD, release, rollback.
+- [observability.md](assets/templates/observability.md) — logs, metrics, dashboards, alerts.
+- [databases.md](assets/templates/databases.md) — data services, schemas, migrations, safe access.

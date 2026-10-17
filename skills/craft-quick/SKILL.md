@@ -5,63 +5,34 @@ description: Quickly plan and build a small, clear feature with one architecture
 
 # Craft Quick
 
-Move from a clear request to checked code with one user gate. Quick uses no spec, live testing, branch, commit, or PR.
+Turn a clear request into checked code with one user approval. Quick has no separate spec, live test, branch, commit, or PR.
 
-Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
+Prefer lower-cost models from the latest generation for routine work; use stronger models for difficult reasoning. Report missing capabilities.
 
-Read applicable project instructions, `.craft/README.md`, and the shared guides relevant to this task first. If the README is missing, dispatch a writable general-purpose subagent with the target repo root, available `craft-init` skill path (or its full instructions), and the initialize-all-guides scope. Wait for it, then read its generated README and relevant guides. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Reuse this context and explore only task-specific gaps. Correct or add durable repository facts in the relevant shared guide as you learn; keep task decisions and results in this task workspace.
+## Start or resume
 
-Keep the task workspace at `.craft/<task>/`, using kebab-case. It contains `progress.md`, `architecture.md`, `implementation.md`, and `testing.md`, each starting from its linked template: [progress](assets/templates/progress.md), [architecture](assets/templates/architecture.md), [implementation](assets/templates/implementation.md), and [testing](assets/templates/testing.md). Adapt the Markdown headings and layout to the task; templates are starting shapes, not schemas. Retain the conventional filenames and responsibilities, and replace prompts with actual content or explicit open questions before approval.
+Read project instructions, `.craft/README.md`, and relevant shared guides. If the README is missing, dispatch a writable general-purpose subagent with the repo root, `craft-init` skill path or full instructions, and scope to initialize all guides. Wait, then read its output. If the skill or delegation is unavailable, report the blocker; do not initialize inline. Reuse shared context and update durable repo facts there.
 
-`progress.md` is the resume entry point and owns phase, next action, blockers, approval record, step status, and compact review rulings/history. `architecture.md` owns the request, what done looks like, constraints, out-of-scope items, and chosen design. `implementation.md` owns build-ready steps. `testing.md` owns automated checks and their results. Link documents as useful without duplicating their content or maintaining competing status.
+Use `.craft/<task>/` (kebab-case). Adapt these templates as needed, keeping filenames and responsibilities:
 
-For an existing workspace, read `progress.md` first, then the documents needed for the next action. Preserve existing files and approvals; do not overwrite unrelated workspace content. For legacy work, first read the active `docs/plans/<task>.md`, migrate its decisions, approvals, progress, and check evidence into the appropriate files, then replace the legacy plan with a pointer to `.craft/<task>/progress.md`. Keep one active source of truth.
+- [progress.md](assets/templates/progress.md): resume entry, next action, blockers, approval, step status, rulings.
+- [architecture.md](assets/templates/architecture.md): request, done criteria, constraints, exclusions, design.
+- [implementation.md](assets/templates/implementation.md): build-ready ordered steps.
+- [testing.md](assets/templates/testing.md): automated commands, expected outcomes, and results.
 
-Freely reorganize documents as work develops while preserving approved scope, settled decisions and their reasons, and verification evidence. Formatting changes do not reopen approval or authorize scope changes.
+Resume from `progress.md`, preserve existing approvals and evidence, and migrate a legacy `docs/plans/<task>.md` into the workspace before replacing it with a pointer. Preserve any full-Craft spec or approvals.
 
-## 1. Explore
+## Plan and approve
 
-Quickly inspect the relevant code, neighboring examples, conventions, and available check commands. Delegate reading when useful, but keep exploration proportional to the task.
+Inspect relevant code, examples, conventions, and checks; explore only task-specific gaps. Ask only when a missing decision changes implementation. Write design, steps, and automated checks in their owning documents, following [architecture standards](references/architecture.md). Each step names files, ownership, contracts, edge paths, and code details sufficient to implement without design choices. Keep status in `progress.md`.
 
-Ask questions only when a missing product decision or constraint would materially change the implementation. Otherwise use the simplest repo-consistent interpretation.
+1. Send the workspace and decisions to `craft-critic`. Record Adopt or Reject with reasons in `progress.md`; revise until Holds. After three unresolved critiques, ask the user.
+2. Present the design, steps, and checks for approval. Record the approved scope and documents in `progress.md`. If sent back, revise through the critic loop.
 
-Create or update `.craft/<task>/` and its four conventional documents. Put the request, done criteria, constraints, decisions, and design in `architecture.md`; keep workflow state in `progress.md`.
+Do not build before approval. Substantive changes reopen this gate; formatting and results do not.
 
-## 2. Steps
+## Build and finish
 
-Write the design in `architecture.md`, build-ready steps in `implementation.md`, and automated checks in `testing.md`. Each step spells out the code it adds, so the coder makes no design choices and adds nothing beyond it. Map checks to the done criteria and name the command and expected observable outcome. Keep step status only in `progress.md`.
+Dispatch one `craft-coder` with named steps/files, approved contracts, conventions, criteria, and check commands. Record step status in `progress.md` and check results in `testing.md`; reopen the gate if approved scope or design changes. Escalate blockers to the user. Then dispatch `craft-polisher` on the working diff and confirm checks remain green.
 
-Hold the design to the Standards in [architecture](references/architecture.md) and follow its guidance on implementation detail.
-
-## 3. Critic loop
-
-Dispatch a fresh `craft-critic` with the request, the workspace path, the architecture, implementation steps, test plan, and relevant decisions.
-
-- **Holds:** continue.
-- **Better design:** adopt it unless there is a concrete reason not to. Revise the affected documents, record the ruling and reason in `progress.md`, and dispatch a fresh critic.
-
-If the loop cannot converge after three critiques, show the disagreement and ask the user.
-
-## 4. Approve
-
-Show the architecture, implementation steps, and automated checks, and summarize the alternatives the critic rejected. Let the user decide whether to approve them or make changes.
-
-Do not build until the user approves. Record the approval in `progress.md`, naming `architecture.md`, `implementation.md`, and `testing.md` and the scope approved. This freezes their substance for the build. Substantive changes reopen this same gate; formatting and evidence updates do not.
-
-## 5. Build and test
-
-Dispatch one `craft-coder` with the workspace path and named implementation steps/files, approved architecture and contracts, repo conventions, and check commands. The orchestrator owns canonical documents; the coder reports implementation results, check evidence, findings, and deviations for the orchestrator to record.
-
-Update each step’s status in `progress.md` as the coder reports it done, and record check results in `testing.md`. Record material findings and deviations in the appropriate document; reopen the approval gate if they change the approved design or scope.
-
-If the coder reports blocked, record the blocker in `progress.md`, show it, and ask the user.
-
-## 6. Polish
-
-Dispatch `craft-polisher` with the workspace path, check commands, and the files the coder touched as the footprint. Tell it to polish the working-tree diff.
-
-Record polish completion in `progress.md` once it reports with checks still green, and record its changes and flagged items in the appropriate document. Then report:
-
-- what changed
-- which checks ran and their results
-- any deviations or remaining risks
+Report changes, checks and results, deviations, and remaining risks.

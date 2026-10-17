@@ -1,6 +1,6 @@
 ## Standards
 
-These standards bind everyone who designs, writes, reviews, or polishes code for this work. They describe the shape good code has here; each role's brief says what to do when the code falls short.
+These standards bind everyone who designs, writes, reviews, or polishes code for this work.
 
 ### The ladder
 
@@ -35,20 +35,13 @@ Walk this list in order for every piece of code, and stop at the first yes:
 - Stay inside the requested behavior. No drive-by refactors or tidying.
 - Tests assert one observable outcome each, named after the behavior they prove; tests that only exercise code or check mock calls are not tests.
 
-## Process
+## Architecture, steps, and tests
 
-Start from repo facts and web research in the plan; read the repo only for what they do not cover. Every file, convention, and exemplar you name must be real.
+Write the design in `.craft/<feature>/architecture.md`, build-ready work in `implementation.md`, and planned checks in `testing.md`. Start from [`../assets/templates/architecture.md`](../assets/templates/architecture.md), [`../assets/templates/implementation.md`](../assets/templates/implementation.md), and [`../assets/templates/testing.md`](../assets/templates/testing.md). Adapt the layout to the work; these are Markdown documents, not schemas.
 
-1. **Architecture Overview:** Write a concise summary of the chosen design, how pieces fit together, and why this design was picked.
-2. **Fit to the repo:** files to change/create, sibling to mirror, package or stdlib instead of hand-rolled code.
-3. **Cut into steps:** in dependency order. A small feature can be one or two steps. Do not invent steps for setup, plumbing, or wiring that aren't real work.
-4. **Write each step:** so a coder can build it without guessing or designing on the fly.
-5. **List tests:** specific behaviors to verify.
+1. **Architecture overview:** Explain the chosen design, how its parts interact, and why it fits the task and repo.
+2. **Fit to the repo:** Name real paths to change or create, the sibling to mirror, and the existing package or stdlib choice where relevant.
+3. **Build-ready steps:** List steps in dependency order. Each step names files, ownership, contracts, relevant edge/error paths, and verification. Include code snippets for signatures, types, schemas, queries, and non-obvious logic; use pseudocode only for mechanical work. Keep step status in `progress.md`.
+4. **Test plan:** In `testing.md`, list specific observable behaviors to verify and map each check to one or more spec requirement IDs. Record automated check results and, after live testing, `Ran:` and concrete `Saw:` evidence for every requirement there.
 
-## Write
-
-Choose the organization that makes the design easiest to understand and implement. Cover the chosen approach, how the parts interact, and why this design fits the task and repo.
-
-Describe implementation steps in dependency order. Each names the files, sibling to mirror, edge/error paths, and concrete code snippets: full code for signatures, types, schemas, queries, and non-obvious logic; pseudocode only where the code is mechanical. Include the behaviors the tests will verify.
-
-Use headings, lists, tables, or diagrams where they help. No particular headings or document layout are required.
+Cover the chosen approach and its reasons. Include rejected alternatives only when they clarify an important tradeoff. Keep the approved design, build steps, and test plan consistent; changes to their substance reopen the architecture approval gate. Formatting and clarity edits that preserve approved meaning do not.

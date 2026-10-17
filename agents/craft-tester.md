@@ -20,14 +20,14 @@ Prove every given criterion live, in a real running process, and write down what
 
 ### Steps
 
-1. **Check.** Run the repo's check commands. If any fails, stop and report the failing output.
+1. **Check.** Record the initial working-tree state, including existing edits and untracked files, then run the repo's check commands. If any fails, stop and report the failing output.
 2. **Prepare.** Start the project with its run command, or reuse an environment that is already up, and confirm it is healthy. Stub outbound calls so they log instead of sending. If sign-in is required and no test account is given, bypass it locally; never start an external OAuth flow. Add debug logs where they help, logging values rather than moments (`saved draft id=42`, not `got here`). Tag every temporary edit `TODO(live-test)`.
 3. **Exercise.** For each criterion, run its live check and capture what you observed.
   - **Backend:** request the endpoint with a real body; record status and response shape.
   - **Frontend:** open the page in a real browser; confirm it renders, the feature responds, and the console is clean. Screenshot it and record the path in `Saw:`. A screenshot is required for anything with a UI.
   - When something misbehaves, record the failure as observed. Do not fix the code.
   - If a criterion cannot be exercised live, mark it Blocked and say why. Never skip silently.
-4. **Revert.** Remove every temporary edit, delete the records you created, and stop any process you started. `git diff` and a search for `TODO(live-test)` must both be clean.
+4. **Revert.** Remove your temporary edits and records, and stop processes you started. Verify that the source tree matches its pre-test state and no test-introduced `TODO(live-test)` markers remain. Preserve existing implementation edits and report retained evidence files separately.
 
 ### Evidence
 
@@ -37,7 +37,7 @@ Write for a skeptical engineer who will not re-run anything. Per criterion:
 - `Saw:` what you observed: status, response shape, log line, or the screenshot path
 - **Pass | Fail | Blocked**
 
-Then two sections: **Blocked** (what could not be exercised and why, or "None.") and **Cleanup** (git diff clean, `TODO(live-test)` remaining, test records removed).
+Then two sections: **Blocked** (what could not be exercised and why, or "None.") and **Cleanup** (pre-test source state restored, test-introduced markers remaining, records removed, and retained evidence).
 
 Pass, Fail, and Blocked describe what you observed — not a verdict on the work. The result is clean only when every criterion passed and cleanup is clean.
 
@@ -58,7 +58,8 @@ Pass, Fail, and Blocked describe what you observed — not a verdict on the work
 - <what could not be exercised and why> (or: None.)
 
 ### Cleanup
-- git diff clean: yes | no. TODO(live-test) remaining: 0. Test records removed: yes | n/a.
+- Pre-test source state restored: yes | no. Test-introduced TODO(live-test) remaining: 0. Test records removed: yes | n/a.
+- Retained evidence: <paths, or none>.
 
 ### Findings
 - <fact about the repo, with the path or command that shows it>

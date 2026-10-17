@@ -11,6 +11,8 @@ Make existing code simpler, modern, and more idiomatic **without changing what i
 
 Behavior, public APIs, and wire shapes stay. No new features. Keep the spec in this conversation — do not write it into the target repo.
 
+Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, use `craft-init`; if unavailable, report the limitation and gather the context needed for this task. Reuse repository facts, investigate target-specific gaps, and update the shared guides as durable facts change. Shared guide maintenance is separate from the behavior spec and implementation approval.
+
 Hold the spec to [spec](references/spec.md). Hold the design and the code to [architecture](references/architecture.md).
 
 ## 1. Explore
@@ -36,7 +38,7 @@ Omit internals unless they *are* the contract. If a behavior is inferred or unkn
 
 You write the nicer version. Do not dispatch a subagent for this. Design from the spec and [architecture](references/architecture.md), not by reshuffling the current internals. Look at how this repo does similar things *elsewhere*.
 
-Write Components, Seams, and Key decisions. Be concrete: shape, types, what gets deleted. Every element must trace to the spec. Do not edit the repo.
+Write Components, Seams, and Key decisions. Be concrete: shape, types, what gets deleted. Every element must trace to the spec. Keep the design in the conversation; implementation waits for approval.
 
 ## 4. Critic
 

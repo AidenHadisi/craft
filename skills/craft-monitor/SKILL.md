@@ -9,6 +9,8 @@ Prefer lower-cost models from the latest generation for straightforward explorat
 
 Identify the feature from the invocation or session; ask if unclear. Missing `docs/monitor/<feature>.md` means first run (write the guide); present means follow it. Dispatch subagents for legwork; skip what you already know.
 
+Read project instructions, `.craft/README.md`, and relevant observability, deployment, and database guides first. If the README is missing, use `craft-init`; if unavailable, report the limitation and gather the needed context. Reuse access instructions and investigate feature-specific gaps. Correct durable access or service facts in the shared guides; keep feature checks and findings in the monitor guide.
+
 ## 1. Write the guide
 
 Start from context; dispatch in parallel only for gaps:

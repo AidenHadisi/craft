@@ -9,6 +9,8 @@ Prefer lower-cost models from the latest generation for straightforward explorat
 
 Prove the feature by running it. You do not run it yourself — `craft-tester` does. You write the brief, judge the evidence, and report.
 
+Read project instructions, `.craft/README.md`, and the development, testing, and data guides relevant to this task. If the README is missing, use `craft-init`; if unavailable, report the limitation and gather the needed context. Use the guides to build the brief, checking current environment details before testing. Update durable setup or command corrections in the shared guides; feature evidence belongs in the feature's `testing.md` when a workspace exists.
+
 ## 1. Brief
 
 Gather what the tester needs. Pull from the conversation; dispatch a subagent to find anything missing in the repo; ask the user only if it still cannot be found.

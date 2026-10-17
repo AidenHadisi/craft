@@ -11,6 +11,8 @@ Mock and iterate UI directions until the user picks a winner or hybrid, then imp
 
 Hold the implementation to [architecture](references/architecture.md).
 
+Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, use `craft-init`; if unavailable, report the limitation and gather the context needed for this task. Investigate task-specific gaps and update the shared guides when durable repository facts change. Pass relevant conventions and commands into later briefs.
+
 ## 1. Understand
 
 Interview to settle details (multiple-choice when possible). Dispatch subagents for repo context: conventions, what exists, how this connects. Keep what they return and put it in later briefs.

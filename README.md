@@ -4,7 +4,7 @@ Shared coding workflows for Cursor, Codex, and Claude Code, maintained in one re
 
 AI agents are great at producing code that *works* and bad at producing code that is clean, modular, readable, and idiomatic. `craft` fixes that by making the main agent the **planner**: it owns understanding, the spec, the architecture, and the plan, while focused subagents explore, review, implement, polish, and live-test. Each agent carries the standards verbatim in its own file; the orchestrator owns every gate and proves the finished feature by running it locally.
 
-The `/craft` workflow is one elastic path: explore (codebase + web for non-trivial architectures) and interview, write a clean spec list and get it reviewed then approved, design the architecture (overview + concrete steps) and get it reviewed then approved, implement hands-off, polish, run a fresh-context code review over the full diff, and live-test the finished feature. The user approves two documents — the spec, then the architecture. A blocked coder comes back as a third gate.
+The `/craft` workflow is one elastic path: reuse shared repository guides, explore feature-specific gaps (plus web research for non-trivial architectures), interview, get the spec reviewed and approved, get the design and implementation plan reviewed and approved, implement hands-off, polish, review the full diff, and live-test. The user approves twice — the spec, then the design with its steps and test plan. A blocked coder comes back as a third gate.
 
 Every run proves the feature live before creating the PR.
 
@@ -13,7 +13,8 @@ Every run proves the feature live before creating the PR.
 | Component | Type | Role |
 |---|---|---|
 | `craft` | skill (`/craft`) | Writes spec then architecture with a review and a user gate on each, then implements hands-off |
-| `craft-quick` | skill (`/craft-quick`) | Quickly explores, critic-loops a short plan file, asks for approval, then builds and runs automated checks |
+| `craft-init` | skill (`/craft-init`) | Initializes or refreshes reusable repository guides in `.craft/` |
+| `craft-quick` | skill (`/craft-quick`) | Uses a small feature workspace, critic-loops the design, asks for approval, then builds and runs automated checks |
 | `craft-design` | skill (`/craft-design`) | Mocks 3–5 UI directions in one Canvas, iterates to a chosen design, then implements the UI |
 | `craft-test` | skill (`/craft-test`) | Proves a feature works by running it live; standalone or as craft's final step |
 | `craft-monitor` | skill (`/craft-monitor`) | Checks a shipped feature against live production data; reports problems and improvements worth considering |
@@ -35,7 +36,8 @@ Each agent carries the standards verbatim; shared references (spec and architect
 
 ```mermaid
 flowchart TD
-    start["/craft"] --> understand["Understand: explore repo + web, interview"]
+    start["/craft"] --> context["Read .craft guides; initialize if missing"]
+    context --> understand["Understand: explore feature + web, interview"]
     understand --> spec["Write Spec (short list of requirements)"]
     spec --> specReview["craft-reviewer on the spec"]
     specReview -->|"Needs changes: record ruling"| spec
@@ -58,8 +60,20 @@ flowchart TD
 
 ### Artifacts it produces (in the target repo)
 
-- `docs/plans/<feature>.md` — the living plan. For `craft` and `craft-quick`, the model chooses and evolves the layout to suit the task. It captures intent, findings, decisions, implementation details, tests, progress, and verification evidence without a fixed template.
+- `.craft/README.md` and the shared `conventions.md`, `development.md`, `testing.md`, `deployment.md`, `observability.md`, and `databases.md` — reusable project knowledge, initialized by `craft-init` and maintained as verified facts change.
+- `.craft/<feature>/` — full `craft` feature workspace: `progress.md` is the resume entry point; `spec.md` owns requirements; `architecture.md` owns design; `implementation.md` owns build steps; `testing.md` owns planned checks and evidence. Add `research.md` when useful. Each document has a flexible Markdown template.
+- `.craft/<task>/` — `craft-quick` uses the same document roles with a smaller set: `progress.md`, `architecture.md`, `implementation.md`, and `testing.md`. The request and completion criteria live in `architecture.md`; there is no separate spec. One approval covers the design, steps, and automated test plan.
 - `docs/monitor/<feature>.md` — written by `craft-monitor`. How the feature works, how to reach its data, four to six checks as literal queries with their observed normal ranges, and the running log of findings.
+
+### Shared repository guides
+
+`craft-init` discovers the project map, conventions, setup and verification commands, deployment procedures, logs, and database access. Existing project instructions, docs, scripts, configuration, and skills are its starting point. It records sources and distinguishes documented instructions from commands or access actually verified. Unknown topics remain explicit; initialization does not require a deployment or production credentials.
+
+Code workflows initialize these guides when `.craft/README.md` is missing, then read only the relevant guides and explore task-specific gaps. During work, they update durable repository facts in the shared files and keep feature decisions and evidence in the feature workspace. Brainstorming reads existing guides without writing them. Current project instructions and source evidence take precedence over cached notes.
+
+Use `/craft-init refresh` to revisit the whole guide or `/craft-init refresh testing` for an area. Routine work fills relevant gaps and corrects changed facts; an old date alone does not trigger a full scan. Existing custom content is preserved.
+
+Templates ship inside [craft-init](skills/craft-init/SKILL.md), [craft](skills/craft/SKILL.md), and [craft-quick](skills/craft-quick/SKILL.md). They provide concise default headings and prompts, with room to add, combine, reorder, or omit sections to suit the repository or feature. Keep the conventional filenames and each document's responsibility. Shared guides and feature workspaces are intended to be Git-tracked, subject to repository policy. Resuming a legacy Craft or Craft Quick plan migrates its content and approvals into the feature workspace and leaves a pointer in the old file.
 
 ## Install and refresh
 
@@ -97,11 +111,18 @@ For a fresh clone, build the packages before adding either local marketplace. Ge
 
 ## Usage
 
+Initialize repository knowledge explicitly, or let a code workflow do it on first use:
+
+```
+/craft-init
+/craft-init refresh development
+```
+
 ```
 /craft add OAuth login for the dashboard
 ```
 
-You approve two documents. First the spec — what and why, never how (a clean, short list of requirements) — after `craft-reviewer` checks it is complete and buildable. Then the architecture (an overview plus concrete steps with code snippets), after `craft-critic` looks for a simpler design and `craft-reviewer` gates it. A major redesign comes back to you before settled pieces are rewritten. After you approve the architecture, implementation is hands-off: the coder runs the repo's check commands; a blocked slice comes back as a gate. When every step is done, polish and `craft-code-reviewer` run over the full diff, followed by live testing with `craft-tester` to prove each spec requirement in a real running process before creating the PR.
+You approve twice. First `spec.md` — observable requirements and scope — after `craft-reviewer` checks it. Then `architecture.md`, `implementation.md`, and the planned checks in `testing.md`, after `craft-critic` looks for a simpler design and `craft-reviewer` gates it. Substantive changes reopen the relevant approval. After design approval, implementation is hands-off: coders run the repo's checks; a blocked step comes back as a gate. Polish and `craft-code-reviewer` cover the full diff, then `craft-tester` proves every requirement in a real running process. The planner records progress and approvals in `progress.md` and verification evidence in `testing.md` before creating the PR.
 
 Every `craft-*` agent is usable on its own, not only from a skill.
 
@@ -111,7 +132,7 @@ For a smaller change that needs design judgment without the full workflow:
 /craft-quick add filtering to the audit log
 ```
 
-It explores only the relevant code, asks questions only when blocked by a real decision, writes a short plan to `docs/plans/<task>.md` with concrete implementation steps, tests, and enough context and progress to resume, organized to suit the task, and runs it through `craft-critic` until it holds. You approve the plan once; then one `craft-coder` pass builds it and runs the repo's automated checks. It creates no spec, branch, commit, PR, or live test.
+It reuses the shared guides, explores relevant code, and asks questions only when blocked by a real decision. A concise `.craft/<task>/` workspace holds the request and design in `architecture.md`, steps in `implementation.md`, checks and results in `testing.md`, and approval and resume state in `progress.md`. Its templates adapt to the task. `craft-critic` checks the design until it holds; you approve the design, steps, and test plan once. Then one `craft-coder` builds it, runs automated checks, and hands the diff to `craft-polisher`. It creates no spec, branch, commit, PR, or live test.
 
 For UI work, compare 3–5 mock directions in one Canvas, refine or combine them, then implement the one you pick:
 

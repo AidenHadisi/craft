@@ -19,7 +19,7 @@ Restate the subject in one or two sentences. Ask at most a couple of questions, 
 
 Dispatch subagents for the lookup. You stay in the conversation. Only what the discussion needs, in parallel when the questions are independent:
 
-- Repo and code, when the subject lives in this project: a read-only subagent for what exists, where, patterns and constraints.
+- Repo and code, when the subject lives in this project: read the existing `.craft/README.md` and relevant shared guides, then use a read-only subagent for task-specific gaps: what exists, where, patterns and constraints. Keep discoveries in the conversation; brainstorming does not initialize or update repository guides.
 - Outside, when public sources would change the conversation: `craft-researcher` for papers, libraries, docs, how others handle it, known pitfalls.
 
 One pass is enough to start talking. Dispatch again when the conversation asks for another look.

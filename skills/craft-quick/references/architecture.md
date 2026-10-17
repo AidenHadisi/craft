@@ -40,14 +40,14 @@ Walk this list in order for every piece of code, and stop at the first yes:
 Start from repo facts you already have; read the repo only for what they do not cover. Every file, convention, and exemplar you name must be real.
 
 1. **List the jobs:** persist X, expose Y, render Z, …
-2. **Fit them to the repo** — files to change, sibling to mirror, package or stdlib instead of hand-rolled code.
+2. **Fit them to the repo** — relevant files, examples to follow, and package or stdlib choices where useful.
 3. **Cut into steps** in dependency order. A small feature can be one step. Do not invent steps for setup, plumbing, or wiring that aren't real work.
-4. **Write each step** so a coder can build it without guessing and without adding anything.
+4. **Explain each step** with enough implementation detail for the coder to understand the intended change; use the level of detail the task needs.
 
 ## Write
 
 Keep the quick plan in `.craft/<task>/architecture.md`, `implementation.md`, and `testing.md`; record workflow state in `progress.md`. Start with the [progress](../assets/templates/progress.md), [architecture](../assets/templates/architecture.md), [implementation](../assets/templates/implementation.md), and [testing](../assets/templates/testing.md) templates, then adapt their headings and layout. They are concise starting shapes, not schemas; keep the conventional filenames and each document’s responsibility.
 
-In `architecture.md`, state the request, what done looks like, constraints, out-of-scope items, and chosen design. In `implementation.md`, list only real steps in dependency order. Each step names owned files, a real sibling to mirror, relevant edge and error paths, and all the code it adds: full code for signatures, types, schemas, queries, and non-obvious logic; pseudocode only where work is mechanical. The step fixes the design and amount of code. If the coder must choose a name, shape, or whether to add a helper, the step is not done. A small feature can be one step. Keep its status in `progress.md`.
+In `architecture.md`, state the request, what done looks like, constraints, out-of-scope items, and chosen design. In `implementation.md`, use numbered steps and substeps in build order to explain the concrete changes and how they work. Choose prose, code snippets, pseudocode, schemas, queries, or logic as appropriate to make the work clear without guessing. Include relevant edge and error behavior where useful; adapt the outline to the task instead of repeating fixed fields. A small feature can be one step. Keep its status in `progress.md`.
 
 In `testing.md`, list automated checks with commands and expected observable outcomes, then record what ran and the result. Identify each check by the behavior it proves. Tests belong in the implementation step that owns them; do not invent a separate implementation step just for tests. There is no spec or live-test stage in Craft Quick.

@@ -40,7 +40,7 @@ Write observable, testable requirements with stable IDs and exclusions in `spec.
 
 ## 5. Design
 
-Write the chosen design in `architecture.md`, build-ready steps in `implementation.md`, and planned checks in `testing.md`; follow [architecture standards](references/architecture.md). Map checks to requirement IDs. Each step names files, ownership, contracts, relevant examples, edge paths, and checks.
+Write the chosen design in `architecture.md`, implementation steps in `implementation.md`, and planned checks in `testing.md`; follow [architecture standards](references/architecture.md). Map checks to requirement IDs. Use clearly named steps and substeps (`1.1`, `1.2`, `2.1`), explaining the implementation with code, pseudocode, schemas, or logic as appropriate.
 
 Send the design, steps, and checks to `craft-critic`. Adopt or reject findings with reasons and revise until Holds. After three unresolved rounds, ask the user. Then send the same materials to `craft-reviewer` and revise until Pass.
 

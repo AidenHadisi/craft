@@ -30,7 +30,7 @@ Ask only when a missing decision would change the implementation. Otherwise foll
 
 ## 4. Plan
 
-Write the request, done criteria, constraints, exclusions, and chosen design in `architecture.md`. Put ordered build-ready steps in `implementation.md` and automated checks, commands, and expected outcomes in `testing.md`. Each step names files, ownership, contracts, edge paths, and enough code detail to avoid design choices. Track step status in `progress.md`. Follow [architecture standards](references/architecture.md).
+Write the request, done criteria, constraints, exclusions, and chosen design in `architecture.md`. Put implementation steps in `implementation.md` and automated checks, commands, and expected outcomes in `testing.md`. Use clearly named steps and substeps (`1.1`, `1.2`, `2.1`), explaining the implementation with code, pseudocode, schemas, or logic as appropriate. Track step status in `progress.md`. Follow [architecture standards](references/architecture.md).
 
 ## 5. Critique
 

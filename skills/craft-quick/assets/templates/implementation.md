@@ -1,11 +1,19 @@
 # <Task> implementation plan
 
-List only real work in dependency order. Keep step status in `progress.md`.
+Adapt this outline to the task. Use numbered steps and substeps in build order; explain what changes and how each part works in prose, code, pseudocode, schemas, queries, or logic as useful. Keep status in `progress.md`.
 
-## Step 1: <name>
-- **Depends on:** <none or earlier step>
-- **Files and ownership:** <paths and responsibility>
-- **Mirror:** <real sibling path or none>
-- **Contract and behavior:** <interfaces, inputs/outputs, error paths, and non-obvious details>
-- **Implementation notes:** <complete snippets for important signatures, types, schemas, queries, or logic; omit when unnecessary>
-- **Checks owned:** <observable checks this step adds or affects>
+## 1. <Step title>
+
+### 1.1 <Substep title>
+
+Describe the concrete change and its behavior. Include only the technical detail needed to build it clearly.
+
+### 1.2 <Substep title>
+
+Describe the next concrete part, if needed.
+
+## 2. <Step title>
+
+### 2.1 <Substep title>
+
+Describe the concrete change and its behavior, if needed.

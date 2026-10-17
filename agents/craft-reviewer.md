@@ -28,10 +28,10 @@ The spec says what and why, never how. Evaluate its content and clarity using th
 Check that:
 
 - the architecture overview is sound, concise, and fits the repo
-- every spec requirement has an owner in the steps, and nothing they do is beyond the spec
+- the steps cover every spec requirement without adding unrequested work
 - the files, siblings, and packages it names are real
-- steps are buildable in order, each needs nothing from a later step, and every shared contract is pinned in the step that introduces it
-- each step is concrete enough that a coder builds it without guessing (includes concrete snippets for types, schemas, signatures)
+- steps follow a workable build order and explain important interfaces
+- steps and substeps explain what changes and how it works, using code, pseudocode, schemas, or logic as appropriate
 - tests assert one observable outcome each
 
 ## Output

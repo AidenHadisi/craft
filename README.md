@@ -73,7 +73,7 @@ When `.craft/README.md` is missing, code workflows run `craft-init`, then read t
 
 Use `/craft-init refresh` to revisit the whole guide or `/craft-init refresh testing` for an area. Routine work fills relevant gaps and corrects changed facts; an old date alone does not trigger a full scan. Existing custom content is preserved.
 
-Templates ship inside [craft-init](skills/craft-init/SKILL.md), [craft](skills/craft/SKILL.md), and [craft-quick](skills/craft-quick/SKILL.md). They provide concise default headings and prompts, with room to add, combine, reorder, or omit sections to suit the repository or feature. Keep the conventional filenames and each document's responsibility. Shared guides and feature workspaces are intended to be Git-tracked, subject to repository policy. Resuming a legacy Craft or Craft Quick plan migrates its content and approvals into the feature workspace and leaves a pointer in the old file.
+Templates ship inside [craft-init](skills/craft-init/SKILL.md), [craft](skills/craft/SKILL.md), and [craft-quick](skills/craft-quick/SKILL.md). They provide concise default headings and prompts, with room to add, combine, reorder, or omit sections to suit the repository or feature. Keep the conventional filenames and each document's responsibility. Shared guides and feature workspaces are intended to be Git-tracked, subject to repository policy.
 
 ## Install and refresh
 

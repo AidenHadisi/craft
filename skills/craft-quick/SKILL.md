@@ -20,7 +20,7 @@ Use `.craft/<task>/` (kebab-case). Adapt these templates as needed, keeping file
 - [implementation.md](assets/templates/implementation.md): build-ready ordered steps.
 - [testing.md](assets/templates/testing.md): automated commands, expected outcomes, and results.
 
-Resume from `progress.md`, preserve existing approvals and evidence, and migrate a legacy `docs/plans/<task>.md` into the workspace before replacing it with a pointer. Preserve any full-Craft spec or approvals.
+Resume from `progress.md` and preserve existing approvals and evidence.
 
 ## Plan and approve
 

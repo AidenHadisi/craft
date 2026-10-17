@@ -22,7 +22,7 @@ Use `.craft/<feature>/` (kebab-case) for the feature. Templates are adaptable st
 - [testing.md](assets/templates/testing.md): test plan, check results, and live `Ran:`/`Saw:` evidence.
 - [research.md](assets/templates/research.md): optional durable findings.
 
-On resume, read `progress.md` first and preserve existing approvals and evidence. Migrate an active `docs/plans/<feature>.md`, preserving decisions, rulings, approvals, progress, and evidence, then replace it with a pointer to `progress.md`. Keep progress as the sole workflow-state record.
+On resume, read `progress.md` first and preserve existing approvals and evidence. Keep progress as the sole workflow-state record.
 
 ## Explore and set up
 

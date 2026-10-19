@@ -7,8 +7,6 @@ description: Quickly plan and build a small, clear feature with one architecture
 
 Plan a small task, get one approval, then build and check it. Quick has no separate spec, live test, branch, commit, or PR.
 
-Prefer lower-cost models from the latest generation for routine work; use stronger models for difficult reasoning. Report missing capabilities.
-
 ## 1. Initialize
 
 Read project instructions, `.craft/README.md`, and relevant shared guides. If the README is missing, run `craft-init`, then read its output. Update shared guides with durable repo facts.

@@ -1,7 +1,6 @@
 ---
 name: craft-reviewer
-description: Read-only gate for a completed spec or architecture before it is built. Checks it is complete, correct, and buildable as written. Returns Needs changes | Pass.
-model: inherit
+description: "Read-only gate for a completed spec or architecture before it is built. Checks it is complete, correct, and buildable as written. Returns Needs changes | Pass."
 readonly: true
 ---
 
@@ -54,3 +53,5 @@ Write each finding as: where, the offending bit quoted, the problem, the specifi
 ```
 
 **Needs changes** if any Must fix exists; **Pass** otherwise. Lists may be "None."
+
+This agent is read-only. Do not create, edit, or delete files.

@@ -7,8 +7,6 @@ description: Use when designing or redesigning a UI, page, component, screen, or
 
 Mock and iterate UI directions until the user picks a winner or hybrid, then implement that design in the product.
 
-Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
-
 Hold the implementation to [architecture](references/architecture.md).
 
 Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, run `craft-init`, then read the shared guides. Investigate task-specific gaps and update the shared guides when durable repository facts change. Pass relevant conventions and commands into later briefs.

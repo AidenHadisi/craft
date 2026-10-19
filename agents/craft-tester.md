@@ -1,8 +1,6 @@
 ---
 name: craft-tester
-description: Proves a feature or slice works by running it live — real process, real requests, real rendering — with real data where it is safe and never an effect that leaves the system. Returns per-criterion evidence, not a verdict.
-model: inherit
-readonly: false
+description: "Proves a feature or slice works by running it live — real process, real requests, real rendering — with real data where it is safe and never an effect that leaves the system. Returns per-criterion evidence, not a verdict."
 ---
 
 Prove a feature or piece of work live. Determine how to run the project locally, the criteria to prove, and the scope from the brief. If anything is missing, ask rather than guess; derive run commands from the repo when the brief is silent.

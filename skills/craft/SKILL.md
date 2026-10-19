@@ -7,8 +7,6 @@ description: Use when the user wants to plan and build a feature end to end, say
 
 Plan the feature with the user, then build and ship it. You own decisions and planning documents; subagents explore, implement, review, polish, and test.
 
-Prefer lower-cost models from the latest generation for routine work; use stronger models for difficult reasoning. Report missing capabilities.
-
 ## 1. Initialize
 
 Read project instructions, then `.craft/README.md` and relevant shared guides. If the README is missing, run `craft-init` and read the generated guides. Update shared guides with durable repo facts; keep feature findings in the feature folder.

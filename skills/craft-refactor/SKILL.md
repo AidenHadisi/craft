@@ -7,8 +7,6 @@ description: Use when the user wants to refactor, clean up, modernize, or simpli
 
 Make existing code simpler, modern, and more idiomatic **without changing what it does**. The user points at a file, package, or feature.
 
-Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
-
 Behavior, public APIs, and wire shapes stay. No new features. Keep the spec in this conversation — do not write it into the target repo.
 
 Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, run `craft-init`, then read the shared guides. Reuse repository facts, investigate target-specific gaps, and update the shared guides as durable facts change. Shared guide maintenance is separate from the behavior spec and implementation approval.

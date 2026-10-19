@@ -1,6 +1,6 @@
 ## Standards
 
-These standards bind everyone who designs, writes, reviews, or polishes code for this work.
+These standards bind everyone who designs, writes, reviews, or polishes code for this work. Follow the document shapes in `SKILL.md`; this reference covers design quality and review behavior.
 
 ### The ladder
 
@@ -35,13 +35,9 @@ Walk this list in order for every piece of code, and stop at the first yes:
 - Stay inside the requested behavior. No drive-by refactors or tidying.
 - Tests assert one observable outcome each, named after the behavior they prove; tests that only exercise code or check mock calls are not tests.
 
-## Architecture, steps, and tests
+### Architecture, steps, and tests
 
-Write the design in `.craft/<feature>/architecture.md`, build-ready work in `implementation.md`, and planned checks in `testing.md`. Start from [`../assets/templates/architecture.md`](../assets/templates/architecture.md), [`../assets/templates/implementation.md`](../assets/templates/implementation.md), and [`../assets/templates/testing.md`](../assets/templates/testing.md). Adapt the layout to the work; these are Markdown documents, not schemas.
-
-1. **Architecture overview:** Explain the chosen design, how its parts interact, and why it fits the task and repo.
-2. **Fit to the repo:** Identify relevant paths, examples to follow, and existing package or stdlib choices where useful.
-3. **Build-ready steps:** Use numbered steps and substeps in dependency order to explain the implementation. Describe the concrete changes and how they work, choosing prose, code snippets, pseudocode, schemas, queries, or logic as appropriate. Include relevant edge and error behavior where it helps the coder build without guessing. Adapt the outline to the task rather than repeating fixed fields. Keep step status in `progress.md`.
-4. **Test plan:** In `testing.md`, list specific observable behaviors to verify and map each check to one or more spec requirement IDs. Record automated check results and, after live testing, `Ran:` and concrete `Saw:` evidence for every requirement there.
-
-Cover the chosen approach and its reasons. Include rejected alternatives only when they clarify an important tradeoff. Keep the approved design, build steps, and test plan consistent; changes to their substance reopen the architecture approval gate. Formatting and clarity edits that preserve approved meaning do not.
+- In `architecture.md`, explain the chosen design, how its parts interact, why it fits the task and repo, and meaningful tradeoffs. Identify relevant paths, examples, and existing package or stdlib choices where useful. Keep implementation detail out of this design rationale.
+- In `implementation.md`, describe concrete code changes in dependency order. Name real paths, symbols, existing patterns, approved contracts, and relevant error behavior. Include enough detail for a coder to build without guessing. Keep step status in `progress.md`.
+- In `testing.md`, list observable checks and map each to one or more spec requirement IDs. Record automated results and live `Ran:` / `Saw:` evidence for every requirement.
+- Keep the approved design, build steps, and test plan consistent; substantive changes reopen the architecture approval gate. Formatting and clarity edits that preserve approved meaning do not.

@@ -1,7 +1,6 @@
 ---
 name: craft-paper-reviewer
-description: Fresh-context reviewer for a research paper draft. Reviews it as a venue reviewer would — claims against evidence, soundness, prior work, clarity, venue fit — and checks reported numbers against the data. Returns Ready | Revise with ranked findings.
-model: inherit
+description: "Fresh-context reviewer for a research paper draft. Reviews it as a venue reviewer would — claims against evidence, soundness, prior work, clarity, venue fit — and checks reported numbers against the data. Returns Ready | Revise with ranked findings."
 readonly: true
 ---
 
@@ -60,3 +59,5 @@ Reviewer self-calibration:
 ```
 
 **Ready** when there are no major findings; **Revise** otherwise. Omit empty sections except Numbers checked.
+
+This agent is read-only. Do not create, edit, or delete files.

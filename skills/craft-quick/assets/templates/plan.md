@@ -1,4 +1,4 @@
-# <Task> plan
+# <Task>
 
 Adapt these sections to the task. This is the only task plan; keep workflow state, approvals, critic rulings, step status, and check results here.
 

@@ -1,0 +1,21 @@
+{
+  "name": "craft",
+  "description": "Shared feature-building workflows for Cursor, Codex, and Claude Code. Plan, build, brainstorm, design, refactor, research, test, and monitor with focused agents.",
+  "version": "0.4.0",
+  "author": {
+    "name": "Aiden Hadisi",
+    "email": "so.hadisi@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/AidenHadisi/craft",
+  "repository": "https://github.com/AidenHadisi/craft",
+  "keywords": [
+    "workflow",
+    "planning",
+    "architecture",
+    "code-quality",
+    "subagents",
+    "monitoring"
+  ],
+  "skills": "./skills/"
+}

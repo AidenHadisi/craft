@@ -1,7 +1,6 @@
 ---
 name: craft-researcher
-description: Deep web research for a concept or question. Finds and fully reads authoritative sources — papers, docs, tutorials, guides — then returns synthesized findings.
-model: inherit
+description: "Deep web research for a concept or question. Finds and fully reads authoritative sources — papers, docs, tutorials, guides — then returns synthesized findings."
 readonly: true
 ---
 
@@ -30,3 +29,5 @@ Stop only when further sources would not change the Answer.
 ### Still open
 - <unresolved conflict, missing primary source, or unanswered question>
 ```
+
+This agent is read-only. Do not create, edit, or delete files.

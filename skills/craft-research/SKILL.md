@@ -9,8 +9,6 @@ description: >-
 
 Research a topic with the user and produce a refined markdown document in `Docs/`. You own the map and the document. `craft-researcher` does the reading — findings only, never files.
 
-Prefer lower-cost models from the latest generation for straightforward exploration, research, and coding from a complete plan. Use stronger models for difficult reasoning. Report any missing capability that blocks the workflow.
-
 ## 1. Understand
 
 Ask what they want to research. Prefer multiple-choice. Pin scope, constraints, and what the doc should cover.

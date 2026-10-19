@@ -7,6 +7,8 @@ description: Prove a feature works by running it live — real process, real req
 
 Prove the feature by running it. You do not run it yourself — `craft-tester` does. You write the brief, judge the evidence, and report.
 
+The file paths in this skill are defaults. When project instructions set other locations for Craft guides or documents, use those instead.
+
 Read project instructions, `.craft/README.md`, and the development, testing, and data guides relevant to this task. If the README is missing, run `craft-init`, then read the shared guides. Use the guides to build the brief, checking current environment details before testing. Update durable setup or command corrections in the shared guides; feature evidence belongs in the feature's `testing.md` when a workspace exists.
 
 ## 1. Brief

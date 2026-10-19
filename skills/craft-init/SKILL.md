@@ -1,11 +1,13 @@
 ---
 name: craft-init
-description: Initialize or refresh the shared .craft/ repository guides when setting up Craft, when guides are missing, or when repository knowledge needs updating.
+description: Initialize or refresh the shared Craft repository guides when setting up Craft, when guides are missing, or when repository knowledge needs updating.
 ---
 
 # Craft Init
 
 Create or refresh concise project guides in `.craft/`. They complement `AGENTS.md` and do not replace project instructions or create rules and skills.
+
+The file paths in this skill are defaults. When project instructions set other locations for Craft guides or documents, use those instead.
 
 ## 1. Initialize
 

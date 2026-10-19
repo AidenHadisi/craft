@@ -2,12 +2,14 @@
 name: craft-research
 description: >-
   Deep research skill. Use when the user wants to research a topic, concept, or
-  question across many sources and produce a refined document in Docs/.
+  question across many sources and produce a refined document.
 ---
 
 # Craft Research
 
 Research a topic with the user and produce a refined markdown document in `Docs/`. You own the map and the document. `craft-researcher` does the reading — findings only, never files.
+
+The file paths in this skill are defaults. When project instructions set other locations for Craft guides or documents, use those instead.
 
 ## 1. Understand
 

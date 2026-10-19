@@ -1,11 +1,13 @@
 ---
 name: craft-monitor
-description: Monitor a shipped feature against live production data. The first invocation works out how to observe the feature and writes docs/monitor/<feature>.md; every invocation after follows that guide and reports what changed. Use right after shipping something, or whenever the user wants to know how a feature is really behaving in production.
+description: Monitor a shipped feature against live production data. The first invocation works out how to observe the feature and writes its monitor guide; every invocation after follows that guide and reports what changed. Use right after shipping something, or whenever the user wants to know how a feature is really behaving in production.
 ---
 
 # Craft Monitor
 
 Monitor a shipped feature against live production data and report meaningful changes or problems.
+
+The file paths in this skill are defaults. When project instructions set other locations for Craft guides or documents, use those instead.
 
 Identify the feature from the invocation or session; ask if unclear. Missing `docs/monitor/<feature>.md` means first run (write the guide); present means follow it. Dispatch subagents for legwork; skip what you already know.
 

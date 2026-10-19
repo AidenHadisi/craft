@@ -7,6 +7,8 @@ description: Use when designing or redesigning a UI, page, component, screen, or
 
 Mock and iterate UI directions until the user picks a winner or hybrid, then implement that design in the product.
 
+The file paths in this skill are defaults. When project instructions set other locations for Craft guides or documents, use those instead.
+
 Hold the implementation to [architecture](references/architecture.md).
 
 Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, run `craft-init`, then read the shared guides. Investigate task-specific gaps and update the shared guides when durable repository facts change. Pass relevant conventions and commands into later briefs.

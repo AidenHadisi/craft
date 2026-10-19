@@ -7,6 +7,8 @@ description: Quickly plan and build a small, clear feature with one architecture
 
 Plan a small task, get one approval, then build and check it. Quick has no separate spec, live test, branch, commit, or PR.
 
+The file paths in this skill are defaults. When project instructions set other locations for Craft guides or documents, use those instead.
+
 ## 1. Initialize
 
 Read project instructions, `.craft/README.md`, and relevant shared guides. If the README is missing, run `craft-init`, then read its output. Update shared guides with durable repo facts.

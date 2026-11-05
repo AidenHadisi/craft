@@ -11,7 +11,7 @@ The file paths in this skill are defaults. When project instructions set other l
 
 Behavior, public APIs, and wire shapes stay. No new features. Keep the spec in this conversation — do not write it into the target repo.
 
-Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, run `craft-init`, then read the shared guides. Reuse repository facts, investigate target-specific gaps, and update the shared guides as durable facts change. Shared guide maintenance is separate from the behavior spec and implementation approval.
+Read project instructions, `.craft/README.md`, and the relevant shared guides before exploring. If the README is missing, run `craft-init`, then read the shared guides. Reuse repository facts and investigate target-specific gaps. Apply [craft-init's Admission](../craft-init/SKILL.md#admission) before updating shared guides; keep refactor findings in the conversation. Shared guide maintenance is separate from the behavior spec and implementation approval.
 
 Hold the spec to [spec](references/spec.md). Hold the design and the code to [architecture](references/architecture.md).
 

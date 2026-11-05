@@ -11,7 +11,7 @@ The file paths in this skill are defaults. When project instructions set other l
 
 ## 1. Initialize
 
-Read project instructions, `.craft/README.md`, and relevant shared guides. If the README is missing, run `craft-init`, then read its output. Update shared guides with durable repo facts.
+Read project instructions, `.craft/README.md`, and relevant shared guides. If the README is missing, run `craft-init`, then read its output. Apply [craft-init's Admission](../craft-init/SKILL.md#admission) before updating shared guides; keep task findings in the plan.
 
 Use `.craft/<task>/plan.md` (kebab-case) as the task's only plan. Read that plan first on resume. Keep its progress, decisions, and results current.
 

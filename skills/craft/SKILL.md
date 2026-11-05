@@ -11,7 +11,7 @@ The file paths in this skill are defaults. When project instructions set other l
 
 ## 1. Initialize
 
-Read project instructions, then `.craft/README.md` and relevant shared guides. If the README is missing, run `craft-init` and read the generated guides. Update shared guides with durable repo facts; keep feature findings in the feature folder.
+Read project instructions, then `.craft/README.md` and relevant shared guides. If the README is missing, run `craft-init` and read the generated guides. Apply [craft-init's Admission](../craft-init/SKILL.md#admission) before updating shared guides; keep feature findings in the feature folder.
 
 Use `.craft/<feature>/` (kebab-case) with these documents. Follow the listed headings in order; `progress.md` uses a checklist instead. Read the linked examples for presentation and depth, adapting them to the current repository.
 
